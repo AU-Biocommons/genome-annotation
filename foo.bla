@@ -1,0 +1,6 @@
+total 12
+drwxrwxr-x. 3 nick nick   47 Jul  1 12:58 .
+drwxrwxr-x. 9 nick nick 4096 Jul  1 12:33 ..
+-rw-rw-r--. 1 nick nick    0 Jul  1 12:58 foo.bla
+drwxrwxr-x. 8 nick nick 4096 Jul  1 12:33 .git
+-rw-rw-r--. 1 nick nick   76 Jul  1 12:34 README.md

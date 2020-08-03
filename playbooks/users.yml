@@ -1,0 +1,115 @@
+---
+- hosts: "nick_sandpit"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+  vars:
+    users:
+    - username: "n.rhodes"
+      comment: "Nick Rhodes"
+      uid: 1729
+#      role: sudo
+      groups: "sudo, apollo_admin"
+      shell: /bin/bash
+#      key: "{{ lookup('file', 'n.rhodes.pub') }}"
+      key: files/keys/n.rhodes.pub
+    - username: "j.lee"
+      comment: "Justin Lee"
+      uid: 15929
+#      role: "sudo"
+      groups: "sudo, apollo_admin"
+      shell: /bin/bash
+      key: files/keys/j.lee.pub
+    - username: "m.thang"
+      comment: "Mike Thang"
+      uid: 13486
+#      role: "sudo"
+      groups: "sudo, apollo_admin"
+      shell: /bin/bash
+      key: files/keys/m.thang.pub
+    - username: "g.price"
+      comment: "Gareth Price"
+      uid: 14219
+#      role: "user"
+      groups:
+      shell: /bin/bash
+    inactive_users:
+    - "g.price"
+    remove_users:
+    - "mr_hacker"
+  handlers:
+  - name: "Restart sshd"
+    service:
+      name: "sshd"
+      state: "restarted"
+  tasks:
+  - name: "Ensure group apollo_admin is present"
+    group:
+      name: apollo_admin
+      state: present
+  - name: "Remove ga_admin"
+    group:
+      name: "ga_admin"
+      state: "absent"
+  - name: "Create user accounts"
+    user:
+      name: "{{ item.username }}"
+      uid: "{{ item.uid }}"
+#      role: "{{ item.role }}" THIS DOES NOTHING IN UBUNTU
+      groups: "{{ item.groups }}"
+      shell: "{{ item.shell }}"
+      comment: "{{ item.comment }}"
+      state: "present"
+    with_items: "{{ users }}"
+
+
+#      regexp: '^AllowUsers'
+#      line: "AllowUsers {{ item.username | join(' ')}}"
+#    with_items: "{{ users }}"
+  - name: "Add authorized key from file"
+    authorized_key:
+      user: "{{ item.username }}"
+      key: "{{ lookup('file', '/home/nick/NAS_documents/QFAB/ansible-playbooks/apollo/files/keys/{{ item.username }}.pub') }}"
+      path: "/home/{{ item.username }}/.ssh/authorized_keys"
+      manage_dir: yes
+    with_items: "{{ users }}"
+
+ 
+  - name: "Disable root login via SSH"
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+#  - name: "Add users to /etc/ssh/sshd_config AllowUsers"
+#    lineinfile:
+#      dest: "/etc/ssh/sshd_config"
+#      state: present
+#      line: "AllowUsers ubuntu"
+  - name: "Add group to /etc/ssh/sshd_config AllowGroups"
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      state: present
+      line: "AllowGroups ubuntu apollo_admin"
+  - name: "restart SSH to effect changes"
+    command: systemctl restart ssh
+      # notify: "Restart sshd"
+
+
+ 
+  - name: "Remove old user accounts in remove_users"
+    user:
+      name: "{{ item }}"
+      state: "absent"
+    with_items: "{{ remove_users }}"
+  - name: "Remove login privs from inactive users"
+    user: 
+      name: "{{ item }}"
+      shell: /sbin/nologin
+    with_items: "{{ inactive_users }}"
+  - name: "Allow sudo users to sudo without a password"
+    lineinfile:
+      dest: "/etc/sudoers" # path: in version 2.3
+      state: "present"
+      regexp: "^%sudo"
+      line: "%sudo ALL=(ALL) NOPASSWD: ALL"

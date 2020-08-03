@@ -1,0 +1,179 @@
+---
+- hosts: "nick_sandpit"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+  vars:
+    users:
+    - username: "n.rhodes"
+      comment: "Nick Rhodes"
+      uid: 1729
+#      role: sudo
+      groups: "sudo, apollo_admin"
+      shell: /bin/bash
+#      key: "{{ lookup('file', 'n.rhodes.pub') }}"
+      key: files/keys/n.rhodes.pub
+    - username: "j.lee"
+      comment: "Justin Lee"
+      uid: 15929
+#      role: "sudo"
+      groups: "sudo, apollo_admin"
+      shell: /bin/bash
+      key: files/keys/j.lee.pub
+    - username: "m.thang"
+      comment: "Mike Thang"
+      uid: 13486
+#      role: "sudo"
+      groups: "sudo, apollo_admin"
+      shell: /bin/bash
+      key: files/keys/m.thang.pub
+    - username: "g.price"
+      comment: "Gareth Price"
+      uid: 14219
+#      role: "user"
+      groups:
+      shell: /bin/bash
+    inactive_users:
+    - "g.price"
+    remove_users:
+    - "mr_hacker"
+  handlers:
+  - name: "Restart sshd"
+    service:
+      name: "sshd"
+      state: "restarted"
+  tasks:
+  - name: "Ensure group apollo_admin is present"
+    group:
+      name: apollo_admin
+      state: present
+  - name: "Remove ga_admin"
+    group:
+      name: "ga_admin"
+      state: "absent"
+  - name: "Create user accounts"
+    user:
+      name: "{{ item.username }}"
+      uid: "{{ item.uid }}"
+#      role: "{{ item.role }}" THIS DOES NOTHING IN UBUNTU
+      groups: "{{ item.groups }}"
+      shell: "{{ item.shell }}"
+      comment: "{{ item.comment }}"
+      state: "present"
+#    copy: src=files/keys/{{ item.username }}.pub dest=~{{ item.username }}/.ssh/authorized_keys owner={{ item.username }} mode=600
+    with_items: "{{ users }}"
+
+  - name: "Add authorized key from file"
+    authorized_key:
+      user: "{{ item.username }}"
+      key: "{{ lookup('file', '/home/nick/ansible-playbooks/genome-annotation/files/keys/{{ item.username }}.pub') }}"
+      path: "/home/{{ item.username }}/.ssh/authorized_keys"
+      manage_dir: no
+    with_items: "{{ users }}"
+
+#opy: src=files/keys/{{ item.username }}.pub dest=~{{ item.username }}/.ssh/authorized_keys owner={{ item.username }} mode=600
+#    authorized_key:
+#      user: "{{ item.username }}"
+#      state: present
+#      key: "{{ item.key }}"
+#    with_items: "{{ users }}"
+
+
+
+
+  - name: "Remove old user accounts in remove_users"
+    user:
+      name: "{{ item }}"
+      state: "absent"
+    with_items: "{{ remove_users }}"
+  - name: "Remove login privs from inactive users"
+    user: 
+      name: "{{ item }}"
+      shell: /sbin/nologin
+    with_items: "{{ inactive_users }}"
+  - name: "Allow sudo users to sudo without a password"
+    lineinfile:
+      dest: "/etc/sudoers" # path: in version 2.3
+      state: "present"
+      regexp: "^%sudo"
+      line: "%sudo ALL=(ALL) NOPASSWD: ALL"
+  - name: "Add users to /etc/ssh/sshd_config AllowUsers"
+#    username: {{ users.username }}
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: '^AllowUsers'
+      line: "AllowUsers {{ users.username | join(' ')}}"
+#      with_items: "{{ users }}"
+  - name: "Disable root login via SSH"
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+    notify: "Restart sshd"
+- name: Update the apt repos and base OS
+  apt:
+      upgrade: dist
+      update_cache: yes
+  become: yes
+  become_user: root
+
+- name: Install some common packages
+  apt:
+      name: "{{ common_packages }}"
+      state: latest
+  become: yes
+  become_user: root
+
+- name: Install group specific packages
+  apt:
+      name: "{{ group_packages }}"
+      state: latest
+  become: yes
+  become_user: root
+  when: group_packages is defined
+
+- name: Add to head node to all worker's hosts files
+  become: yes
+  become_user: root
+  lineinfile:
+      path: "/etc/hosts"
+      #regexp: "{{ hostvars[item].ansible_host }}\t{{ hostvars[item]['ansible_hostname']}}\t{{ hostvars[item]['ansible_hostname']}}"
+      #      line: "{{ hostvars[item].ansible_ssh_host }}\t{{ item }}"
+      #            state: present
+      #                  backup: yes
+      #                    when: add_hosts_head is defined and add_hosts_head == true
+      #                      with_items:
+      #                            "{{ head_nodes }}"
+      #
+      #                            - name: Add to worker nodes to head node's host file
+      #                              become: yes
+      #                                become_user: root
+      #                                  lineinfile:
+      #                                        path: "/etc/hosts"
+      #                                              #regexp: "{{ hostvars[item]['ansible_env'].SSH_CONNECTION.split(' ')[2] }}\t{{ hostvars[item]['ansible_hostname']}}\t{{ hostvars[item]['ansible_hostname']}}"
+      #                                                    line: "{{ hostvars[item].ansible_ssh_host }}\t{{ item }}"
+      #                                                          state: present
+      #                                                                backup: yes
+      #                                                                  when: add_hosts_workers is defined and add_hosts_workers == true
+      #                                                                    with_items:
+      #                                                                          "{{ worker_nodes }}"
+
+#common_packages:
+#    - python-is-python3
+#    - vim
+#    - acl
+#    - git
+#    - build-essential
+#    - python3-dev
+#    - libcurl4-openssl-dev
+#    - libssl-dev
+#    - python3-virtualenv
+#    - python3-pip
+#    - htop
+#    - nfs-common
+#    - atop
+#    - speedometer
+#    - byobu
+#    - apt-transport-https
+

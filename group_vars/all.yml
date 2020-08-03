@@ -1,0 +1,12 @@
+---
+common_packages:
+  - vim
+  - htop
+  - byobu
+  - firefox
+  - atop
+  - wget
+  - curl
+  - zip
+  - unzip
+  - ssl-cert

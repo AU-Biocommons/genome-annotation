@@ -1,0 +1,16 @@
+---
+web_apollo_deps:
+  - build-essential
+  - libpq-dev
+  - wget
+  - python3-pip
+  - libpq-dev
+  - lsb-release
+  - gnupg2
+  - xmlstarlet
+  - netcat
+  - libpng-dev
+  - libexpat1-dev
+  - openjdk-8-jdk-headless 
+  - ant
+  - tomcat9

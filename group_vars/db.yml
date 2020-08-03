@@ -1,0 +1,5 @@
+---
+database_packages:
+  - postgresql-common
+  - postgresql 
+  - postgresql-client

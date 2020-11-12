@@ -1,0 +1,43 @@
+---
+apollo_repos:
+    - ppa:certbot/certbot
+
+apollo_deps:
+    - nginx
+    - tomcat9
+    - software-properties-common
+    - certbot
+    - python3-certbot-nginx
+    - ssl-cert
+    - lsb-release
+    - curl
+    - wget
+    - netcat
+    - git
+    - zip
+    - unzip
+    - postgresql
+    - postgresql-client
+    - postgresql-common
+    - openjdk-8-jdk-headless 
+    - build-essential
+    - python3-pip
+    - libpq-dev
+    - gnupg2
+    - xmlstarlet
+    - libpng-dev
+    - zlib1g-dev
+    - libexpat1-dev
+    - ant
+
+monitoring_deps:
+    - nagios-nrpe-server
+    - nagios-plugins
+
+# TODO: prometheus exporters for Grafana
+#       wget -q -O - https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.gpg | sudo apt-key add -
+#       sudo apt-get update -y
+#       sudo apt-get install -y \
+#       prometheus-node-exporter prometheus-postgres-exporter prometheus-pushgateway prometheus-alertmanager
+# TODO part 2: then upgrade these packages to 19.10 versions directly with .deb files
+

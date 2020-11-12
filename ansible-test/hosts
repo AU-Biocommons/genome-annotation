@@ -1,0 +1,47 @@
+[ubuntutestvms]
+ansible-test.genome.edu.au
+
+[ubuntutestvms:vars]
+ansible_user=ubuntu
+admin_group=sudo
+allowed_groups="ubuntu apollo_admin backup_user"
+
+[centostestvms]
+ansible-centest.genome.edu.au
+
+[centostestvms:vars]
+ansible_user=centos
+admin_group=wheel
+allowed_groups="centos apollo_admin backup_user"
+
+[apollovms]
+apollo-001.genome.edu.au
+apollo-002.genome.edu.au
+apollo-003.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user wheat-data"
+apollo-004.genome.edu.au
+apollo-005.genome.edu.au
+
+[apollovms:vars]
+ansible_user=ubuntu
+admin_group=sudo
+allowed_groups="ubuntu apollo_admin backup_user"
+
+[otherubuntuvms]
+ansible-sandpit.genome.edu.au
+apollo-portal.genome.edu.au
+drupal-sandpit.genome.edu.au
+
+[otherubuntuvms:vars]
+ansible_user=ubuntu
+admin_group=sudo
+allowed_groups="ubuntu apollo_admin backup_user"
+
+[centosvms]
+apollo-monitor.genome.edu.au
+apollo-backup.genome.edu.au
+
+[centosvms:vars]
+ansible_user=centos
+admin_group=wheel
+allowed_groups="centos apollo_admin backup_user"
+

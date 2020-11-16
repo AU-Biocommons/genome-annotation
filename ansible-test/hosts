@@ -1,5 +1,5 @@
 [ubuntutestvms]
-ansible-test.genome.edu.au
+ubuntu-test.genome.edu.au
 
 [ubuntutestvms:vars]
 ansible_user=ubuntu
@@ -7,7 +7,7 @@ admin_group=sudo
 allowed_groups="ubuntu apollo_admin backup_user"
 
 [centostestvms]
-ansible-centest.genome.edu.au
+centos-test.genome.edu.au
 
 [centostestvms:vars]
 ansible_user=centos

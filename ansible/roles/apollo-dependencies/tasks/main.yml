@@ -1,0 +1,27 @@
+---
+- name: "Include apollo dependencies variables"
+  include_vars:
+    file: "apollo_deps.yml"
+
+- name: "add apollo repos"
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items: "{{ apollo_repos }}"
+
+- name: "install apollo dependencies"
+  apt:
+    pkg: "{{ apollo_deps }}"
+    state: present
+    update_cache: yes
+
+- name: "install monitoring dependencies"
+  apt:
+    pkg: "{{ monitoring_deps }}"
+    state: present
+    update_cache: yes
+#  - name: install software packages (ubuntu or centos)
+#    action: >
+#      {{ ansible_pkg_mgr }} name={{ item }} state=present update_cache=yes
+#    with_items: "{{ sw_packages }}"
+

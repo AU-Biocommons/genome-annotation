@@ -1,0 +1,40 @@
+users:
+  - username: "n.rhodes"
+    comment: "Nick Rhodes"
+    uid: 12143
+    groups: "QFAB,apollo_admin"
+    key: files/n.rhodes.pub
+  - username: "m.thang"
+    comment: "Mike Thang"
+    uid: 13486
+    groups: "QFAB,apollo_admin"
+    key: files/m.thang.pub
+  - username: "j.lee"
+    comment: "Justin Lee"
+    uid: 19529
+    groups: "QFAB,apollo_admin"
+    key: files/j.lee.pub
+  - username: "a.bulgaris"
+    comment: "Alejandro Bulgaris"
+    uid: 34928
+    groups: "QFAB,apollo_admin"
+    key: files/a.bulgaris.pub
+  - username: "backup_user"
+    comment: ""
+    uid: 9999
+    groups: "backup_user"
+    key: files/backup_user.pub
+
+admin_users:
+  - "n.rhodes"
+  - "m.thang"
+  - "j.lee"
+  - "a.bulgaris"
+
+inactive_users:
+  - "g.price"
+
+remove_users:
+  - "mr_hacker"
+
+

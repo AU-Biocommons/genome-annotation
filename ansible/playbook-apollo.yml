@@ -1,0 +1,13 @@
+---
+- hosts: all
+#   remote_user: "{{ ansible_user }}"
+#   become: yes
+#   become_method: sudo
+#   connection: "ssh"
+  tasks:
+    - import_role:
+        name: apollo-dependencies
+    - import_role:
+        name: common-nginx
+
+

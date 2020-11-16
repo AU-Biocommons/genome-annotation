@@ -1,0 +1,38 @@
+---
+- name: "install ngnix using apt"
+  apt:
+    name: "nginx={{ ngnix_version }}"
+    state: "present"
+    update_cache: yes
+
+# based on https://certbot.eff.org/lets-encrypt/ubuntubionic-other
+- name: "Install snapd to install certbot"
+  command: "snap install core"
+
+- name: "Update snapd to install certbot"
+  command: "snap refresh core"
+
+- name: "Remove any other certbot packages"
+  apt:
+    name:
+      - "certbot"
+      - "python3-certbot-nginx"
+    state: absent
+
+- name: "Install certbot using snapd"
+  command: "snap install --classic certbot"
+  args:
+    creates: "/snap/bin/certbot"
+
+- name: "Create symlink to ensure access to certbot command"
+  file:
+    src: "/snap/bin/certbot"
+    dest: "/usr/bin/certbot"
+    state: link
+    owner: root
+    group: root
+
+- name: "Run certbot renew as a dry run to create the renewal-hook directories"
+  command: "certbot --dry-run renew"
+  args:
+    creates: "{{ certbot_hook_post_path }}"

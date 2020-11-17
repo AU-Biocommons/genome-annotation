@@ -9,7 +9,7 @@ centos-test.genome.edu.au
 [apollovms]
 apollo-001.genome.edu.au
 apollo-002.genome.edu.au
-apollo-003.genome.edu.au
+apollo-003.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user wheat-data"
 apollo-004.genome.edu.au
 apollo-005.genome.edu.au
 

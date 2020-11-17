@@ -17,5 +17,5 @@
     - import_role:
         name: "setup-admin-users-groups-logins"
       vars:
-        admin_group: sudo
+        admin_group: wheel
         allowed_groups: "centos apollo_admin backup_user"

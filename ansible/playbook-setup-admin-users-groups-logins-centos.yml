@@ -1,0 +1,21 @@
+---
+- hosts: 
+    - centostestvms
+    - centosvms
+  remote_user: centos
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  handlers:
+  - name: "Restart sshd"
+    service:
+      name: "sshd"
+      state: "restarted"
+
+  tasks:
+    - import_role:
+        name: "setup-admin-users-groups-logins"
+      vars:
+        admin_group: sudo
+        allowed_groups: "centos apollo_admin backup_user"

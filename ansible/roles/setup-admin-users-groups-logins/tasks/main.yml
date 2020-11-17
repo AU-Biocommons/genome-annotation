@@ -1,0 +1,110 @@
+---
+- name: "import vars"
+  include_vars:
+    file: users.yml
+
+- name: "Ensure group apollo_admin is present"
+  group:
+    name: "apollo_admin"
+    state: present
+    gid: 1001
+
+- name: "Ensure group QFAB is present"
+  group:
+    name: "QFAB"
+    state: present
+    gid: 40018
+
+- name: "Ensure group backup_user is present"
+  group:
+    name: "backup_user"
+    state: present
+    gid: 9999
+
+- name: "adding system user {{ ansible_user }} to group apollo_admin"
+  user:
+    name: "{{ ansible_user }}"
+    groups: 
+     - "apollo_admin"
+    append: yes
+  become: yes
+
+- name: "in /etc/ssh/sshd_config comment out AllowUsers - as over-rides AllowGroups"
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^AllowUsers"
+    line: "#AllowUsers {{ ansible_user }}"
+
+- name: "Add groups to /etc/ssh/sshd_config AllowGroups"
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^AllowGroups"
+    line: "AllowGroups {{ allowed_groups }}"
+    state: present
+    #backup: yes
+  notify:
+    - Restart sshd
+
+#  - name: Print user defined variables
+#    debug:
+#      msg: "AllowGroups={{ allowed_groups }}"
+
+- name: "Disable root login via SSH"
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+  notify:
+    - Restart sshd
+
+- name: "Allow admin users to sudo without a password"
+  lineinfile:
+    dest: "/etc/sudoers"
+    state: "present"
+    regexp: "^%{{ admin_group }}"
+    line: "%{{ admin_group }} ALL=(ALL) NOPASSWD: ALL"
+
+- name: "Create user accounts and add users to groups"
+  user:
+    name: "{{ item.username }}"
+    groups: 
+     - "{{ item.groups }}"
+    uid: "{{ item.uid }}"
+    state: "present"
+  with_items: "{{ users }}"
+
+- name: "Add authorized key from file"
+  authorized_key:
+    user: "{{ item.username }}"
+    key: "{{ lookup('file', item.key) }}"
+  with_items: "{{ users }}"
+
+- name: "adding existing users to specified groups"
+  user:
+    name: "{{ item.username }}"
+    groups: 
+    - "{{ item.groups }}" 
+    append: yes
+  with_items: "{{ users }}"
+
+- name: "adding admin users to OS-specific admin group"
+  user:
+    name: "{{ item }}"
+    groups: 
+    - "{{ admin_group }}" 
+    append: yes
+  with_items: "{{ admin_users }}"
+
+- name: "Remove login privs from inactive users"
+  user: 
+    name: "{{ item }}"
+    shell: /sbin/nologin
+  with_items: "{{ inactive_users }}"
+
+- name: "Remove old user accounts in remove_users"
+  user:
+    name: "{{ item }}"
+    state: "absent"
+  with_items: "{{ remove_users }}"
+
+

@@ -1,0 +1,6 @@
+---
+- name: "Add authorized key from file"
+  authorized_key:
+    user: "{{ item.username }}"
+    key: "{{ lookup('file', item.key) }}"
+  with_items: "{{ users }}"

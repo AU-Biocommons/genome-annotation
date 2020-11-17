@@ -1,0 +1,22 @@
+---
+- hosts: 
+   - ubuntutestvms
+   - apollovms
+   - otherubuntuvms
+  remote_user: "ubuntu"
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+  
+  handlers:
+  - name: "Restart sshd"
+    service:
+      name: "sshd"
+      state: "restarted"
+      
+  tasks:
+    - import_role:
+        name: "setup-admin-users-groups-logins"
+      vars:
+        admin_group: sudo
+        allowed_groups: "ubuntu apollo_admin backup_user"

@@ -3,7 +3,7 @@
    - ubuntutestvms
    - apollovms
    - otherubuntuvms
-  remote_user: "ubuntu"
+  remote_user: "{{ansible_user}}"
   become: yes
   become_method: sudo
   connection: "ssh"
@@ -17,6 +17,3 @@
   tasks:
     - import_role:
         name: "setup-admin-users-groups-logins"
-      vars:
-        admin_group: sudo
-        allowed_groups: "ubuntu apollo_admin backup_user"

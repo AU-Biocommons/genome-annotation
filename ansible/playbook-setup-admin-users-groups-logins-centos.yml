@@ -2,7 +2,7 @@
 - hosts: 
     - centostestvms
     - centosvms
-  remote_user: centos
+  remote_user: "{{ansible_user}}"
   become: yes
   become_method: sudo
   connection: "ssh"
@@ -16,6 +16,3 @@
   tasks:
     - import_role:
         name: "setup-admin-users-groups-logins"
-      vars:
-        admin_group: wheel
-        allowed_groups: "centos apollo_admin backup_user"

@@ -67,6 +67,7 @@
 - name: "Create user accounts and add users to groups"
   user:
     name: "{{ item.username }}"
+    shell: /bin/bash
     groups: 
      - "{{ item.groups }}"
     uid: "{{ item.uid }}"

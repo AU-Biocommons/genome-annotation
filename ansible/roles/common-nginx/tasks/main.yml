@@ -1,6 +1,6 @@
 ---
 - name: "install ngnix using apt"
   apt:
-    name: "nginx={{ ngnix_version }}"
-    state: "present"
+    name: "nginx"
+    state: "latest"
     update_cache: yes

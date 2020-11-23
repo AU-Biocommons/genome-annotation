@@ -1,0 +1,65 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_version ">= 2.2"
+
+Vagrant.configure("2") do |config|
+
+  # provisioning
+  work_ansible_dir = "/home/vagrant/ansible_provision/local_dev"
+  work_roles_dir = "/home/vagrant/ansible_provision/ansible"
+
+  # configuration for hyper-v provider
+  # Set default provider using VAGRANT_DEFAULT_PROVIDER=hyperv
+  config.vm.provider "hyperv" do |provider, override_config|
+    provider.maxmemory = 2048
+    provider.memory = 1024
+    provider.cpus = 1
+
+    config.vm.synced_folder ".", work_ansible_dir, 
+        id: "playbook", 
+        type: "rsync", 
+        rsync__exclude: ['./Vagrantfile']
+
+    config.vm.synced_folder "../ansible", work_roles_dir, 
+        id: "roles",
+        type: "rsync", 
+        rsync__exclude: ['./ansible.cfg']
+  end
+
+  # configuration for virtual box provider
+  # Set default provider using VAGRANT_DEFAULT_PROVIDER=virtualbox
+  config.vm.provider "virtualbox" do |provider, override_config|
+    provider.maxmemory = 2048
+    provider.memory = 1024
+    provider.cpus = 1
+  end
+
+
+  config.vm.provision "create_vagrant_dir", type: "shell", inline: <<-SHELL
+    mkdir -p /vagrant
+    chown vagrant:vagrant /vagrant
+  SHELL
+
+  # machines
+  config.vm.define "apollo" do |instance|
+    instance.vm.box = "generic/ubuntu1804"
+    instance.vm.provision "install_ansible", type: "shell", inline: <<-SHELL
+      sudo DEBIAN_FRONTEND=noninteractive apt-get -yq update
+      sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install software-properties-common python3-apt python-apt-common
+      sudo DEBIAN_FRONTEND=noninteractive apt-add-repository --yes --update ppa:ansible/ansible
+      sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install ansible
+    SHELL
+    instance.vm.provision "run_ansible", type: "ansible_local" do |ans|
+      ans.compatibility_mode = "2.0"
+      ans.verbose = false
+      ans.config_file = "#{work_ansible_dir}/ansible.cfg"
+      ans.playbook = "#{work_ansible_dir}/playbook-test-roles.yml"
+      ans.extra_vars = {
+          cloud_provider_name: 'pawsey',
+          is_local_vagrant: 'yes'
+      }
+    end
+  end
+
+end

@@ -1,0 +1,28 @@
+- name: "Remove any other certbot packages"
+  apt:
+    name:
+      - "certbot"
+      - "python3-certbot-nginx"
+    state: absent
+
+- name: "Install software properties common"
+  apt:
+    name: "software-properties-common"
+    state: present
+
+- name: "Install ppa certbot repository"
+  apt_repository:
+    validate_certs: no
+    repo: "ppa:certbot/certbot"
+    state: present
+
+- name: "Perform apt update"
+  apt:
+    update_cache: yes
+
+- name: "Install certbot packages"
+  apt:
+    name:
+      - "certbot"
+      - "python3-certbot-nginx"
+    state: present

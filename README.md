@@ -1,4 +1,4 @@
 # genome-annotation
 Australian Biocommons Genome Annotation (Apollo)
 
-Files
+For more information see **README** file in ansible folder

@@ -1,6 +1,6 @@
-# genome-annotation
+# genome-annotation - this folder is for local development
 We define the state of the local development server with Ansible
-using Vagrant. In order to test Ansible in the local development 
+and Vagrant. In order to test Ansible in the local development 
 server follow the below instructions
 
 1. Install Vagrant in your local machine

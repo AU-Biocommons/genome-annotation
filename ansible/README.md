@@ -1,9 +1,9 @@
-# genome-annotation - this folder defines the state of servers 
+# genome-annotation - this folder defines the state of live and/or test servers 
 We define the state of the live and/or test servers with Ansible
 
 We run Ansible in two different locations 
-1. local_dev (Vagrant)
-2. ansible (Live or test servers)
+1. ansible (Live or test servers)
+2. local_dev (Vagrant)
 
 See local_dev folder for more details. Please be **Very Careful!** when
 running any of the ansible playbooks in the ansible folder as these may

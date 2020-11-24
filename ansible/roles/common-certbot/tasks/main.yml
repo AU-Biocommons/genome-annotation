@@ -16,13 +16,13 @@
     repo: "ppa:certbot/certbot"
     state: present
 
-- name: "Perform apt update"
-  apt:
-    update_cache: yes
-
 - name: "Install certbot packages"
   apt:
     name:
       - "certbot"
       - "python3-certbot-nginx"
     state: present
+
+- name: "Perform apt update"
+  apt:
+    update_cache: yes

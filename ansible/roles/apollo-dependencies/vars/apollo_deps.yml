@@ -1,13 +1,6 @@
 ---
-apollo_repos:
-    - ppa:certbot/certbot
-
 apollo_deps:
-    - nginx
     - tomcat9
-    - software-properties-common
-    - certbot
-    - python3-certbot-nginx
     - ssl-cert
     - lsb-release
     - curl

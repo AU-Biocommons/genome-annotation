@@ -3,12 +3,6 @@
   include_vars:
     file: "apollo_deps.yml"
 
-- name: "add apollo repos"
-  apt_repository:
-    repo: "{{ item }}"
-    state: present
-  with_items: "{{ apollo_repos }}"
-
 - name: "install apollo dependencies"
   apt:
     pkg: "{{ apollo_deps }}"

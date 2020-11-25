@@ -28,7 +28,7 @@
   apt:
     update_cache: yes
 
-- name: "Run certbot renew as a dry run to create letsencrypt/live directory"
+- name: "Run certbot renew as a dry run to create renewal-hooks directory"
   command: certbot --dry-run renew
   args:
-    creates: "{{ certbot_ssl_path }}"
+    creates: "{{ certbot_hook_post_path }}"

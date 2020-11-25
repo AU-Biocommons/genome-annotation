@@ -1,0 +1,4 @@
+---
+certbot_apt_repo: "ppa:certbot/certbot"
+certbot_ssl_path: "/etc/letsencrypt/live"
+certbot_installed: yes

@@ -1,3 +1,4 @@
+---
 - name: "Remove any other certbot packages"
   apt:
     name:
@@ -13,7 +14,7 @@
 - name: "Install ppa certbot repository"
   apt_repository:
     validate_certs: no
-    repo: "ppa:certbot/certbot"
+    repo: "{{ certbot_apt_repo }}"
     state: present
 
 - name: "Install certbot packages"
@@ -26,3 +27,8 @@
 - name: "Perform apt update"
   apt:
     update_cache: yes
+
+- name: "Run certbot renew as a dry run to create letsencrypt/live directory"
+  command: certbot --dry-run renew
+  args:
+    creates: "{{ certbot_ssl_path }}"

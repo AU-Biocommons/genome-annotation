@@ -1,0 +1,9 @@
+---
+- name: "Install Postgres Database Server"
+  apt:
+    name: 
+      - postgresql
+      - postgresql-client
+      - postgresql-common
+    state: "present"
+    update_cache: yes

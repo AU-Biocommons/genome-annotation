@@ -1,6 +1,5 @@
 ---
 apollo_deps:
-    - tomcat9
     - ssl-cert
     - lsb-release
     - curl
@@ -9,10 +8,6 @@ apollo_deps:
     - git
     - zip
     - unzip
-    - postgresql
-    - postgresql-client
-    - postgresql-common
-    - openjdk-8-jdk-headless 
     - build-essential
     - python3-pip
     - libpq-dev

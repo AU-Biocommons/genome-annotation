@@ -12,5 +12,10 @@
         name: common-certbot
     - import_role:
         name: common-nginx
-
+    - import_role:
+        name: common-open-jdk
+    - import_role:
+        name: common-tomcat
+    - import_role:
+        name: common-postgresql
 

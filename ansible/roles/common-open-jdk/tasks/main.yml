@@ -1,0 +1,6 @@
+---
+- name: "Install Open JDK"
+  apt:
+    name: "openjdk-8-jdk-headless"
+    state: "present"
+    update_cache: yes

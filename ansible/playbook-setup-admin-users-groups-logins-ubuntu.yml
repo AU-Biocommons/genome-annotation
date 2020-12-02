@@ -2,6 +2,7 @@
 - hosts: 
    - ubuntutestvms
    - apollovms
+   - newapollovms
    - otherubuntuvms
   remote_user: "{{ansible_user}}"
   become: yes

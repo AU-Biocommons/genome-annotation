@@ -9,17 +9,20 @@
     state: present
     gid: 1001
 
-- name: "Ensure group QFAB is present"
-  group:
-    name: "QFAB"
-    state: present
-    gid: 40018
+# deprecated - use apollo_admin
+#- name: "Ensure group QFAB is present"
+#  group:
+#    name: "QFAB"
+#    state: present
+#    gid: 40018
 
-- name: "Ensure group backup_user is present"
-  group:
-    name: "backup_user"
-    state: present
-    gid: 9999
+- name: "Create user accounts"
+  user:
+    name: "{{ item.username }}"
+    shell: /bin/bash
+    uid: "{{ item.uid }}"
+    state: "present"
+  with_items: "{{ users }}"
 
 - name: "adding system user {{ ansible_user }} to group apollo_admin"
   user:
@@ -64,37 +67,28 @@
     regexp: "^%{{ admin_group }}"
     line: "%{{ admin_group }} ALL=(ALL) NOPASSWD: ALL"
 
-- name: "Create user accounts and add users to groups"
-  user:
-    name: "{{ item.username }}"
-    shell: /bin/bash
-    groups: 
-     - "{{ item.groups }}"
-    uid: "{{ item.uid }}"
-    state: "present"
-  with_items: "{{ users }}"
+#- name: "adding existing users to specified groups"
+#  user:
+#    name: "{{ item.username }}"
+#    groups: 
+#    - "{{ item.groups }}" 
+#    append: yes
+#  with_items: "{{ users }}"
 
-- name: "Add authorized key from file"
-  authorized_key:
-    user: "{{ item.username }}"
-    key: "{{ lookup('file', item.key) }}"
-  with_items: "{{ users }}"
-
-- name: "adding existing users to specified groups"
-  user:
-    name: "{{ item.username }}"
-    groups: 
-    - "{{ item.groups }}" 
-    append: yes
-  with_items: "{{ users }}"
-
-- name: "adding admin users to OS-specific admin group"
+- name: "adding admin users to OS-specific sudo group and apollo_admin"
   user:
     name: "{{ item }}"
     groups: 
     - "{{ admin_group }}" 
+    - "apollo_admin" 
     append: yes
   with_items: "{{ admin_users }}"
+
+- name: "Add authorized key from file for login users"
+  authorized_key:
+    user: "{{ item.username }}"
+    key: "{{ lookup('file', item.key) }}"
+  with_items: "{{ login_users }}"
 
 - name: "Remove login privs from inactive users"
   user: 
@@ -107,5 +101,4 @@
     name: "{{ item }}"
     state: "absent"
   with_items: "{{ remove_users }}"
-
 

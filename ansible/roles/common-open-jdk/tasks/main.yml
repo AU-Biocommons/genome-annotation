@@ -4,3 +4,13 @@
     name: "openjdk-8-jdk-headless"
     state: "present"
     update_cache: yes
+
+- name: "Place java_home.sh template in profile d directory"
+  template:
+    src: "java_home.sh"
+    dest: "{{ open_jdk_profile_d_file_path }}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"

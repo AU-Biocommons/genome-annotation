@@ -1,0 +1,4 @@
+---
+postgresql_username_to_create: "apollo_user"
+postgresql_username_password: "jae:Doegahw0"
+postgresql_dbname_to_create: "apollo-production"

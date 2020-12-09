@@ -10,14 +10,16 @@
 
 # Need to check if user exists before creation as the create user task should not be executed if
 # it already exists because the executed command is not smart enough and it will throw an exception 
-- name: "Check if postgres user {{postgresql_username_to_create}} already exists"
+- name: "Check if user {{postgresql_username_to_create}} already exists in postgres database"
   become_user: "postgres"
+  become_method: "sudo"
   command: "psql -tAc \"SELECT 1 FROM pg_roles WHERE rolname='{{postgresql_username_to_create}}';\""
   register: "user_exists"
   ignore_errors: true
 
 - name: "Create {{postgresql_username_to_create}} in postgres database server user_exists.stdout = {{user_exists.stdout}}"
   become_user: "postgres"
+  become_method: "sudo"
   command: "createuser -RDIElPS {{postgresql_username_to_create}}"
   when: user_exists.stdout != "1"
 
@@ -25,19 +27,22 @@
 # it already exists because the executed command is not smart enough and it will throw an exception
 - name: "Check if database {{postgresql_dbname_to_create}} already exists"
   become_user: "postgres"
+  become_method: "sudo"
   command: "psql -tAc \"SELECT 1 FROM pg_database WHERE datname='{{postgresql_dbname_to_create}}';\""
   register: "db_exists"
   ignore_errors: true
 
 - name: "Create database {{postgresql_dbname_to_create}} owned by {{postgresql_username_to_create}} db_exists.stdout = {{db_exists.stdout}}"
   become_user: "postgres"
+  become_method: "sudo"
   command: "createdb -E UTF-8 -O {{postgresql_username_to_create}} {{postgresql_dbname_to_create}}"
   when: db_exists.stdout != "1"
 
 # Need to check if user exists after creation because the first time it runs user_exists.stdout value will be different 
 # to 1 but if successful then user_exists.stdout value has to be reset because it's relevant for alter password task
-- name: "Check if postgres user {{postgresql_username_to_create}} already exists"
+- name: "Check if user {{postgresql_username_to_create}} already exists in postgres database"
   become_user: "postgres"
+  become_method: "sudo"
   command: "psql -tAc \"SELECT 1 FROM pg_roles WHERE rolname='{{postgresql_username_to_create}}';\""
   register: "user_exists"
   ignore_errors: true
@@ -46,11 +51,13 @@
 # to 1 but if successful db_exists.stdout value has to be reset because it's relevant for alter password task
 - name: "Check if database {{postgresql_dbname_to_create}} already exists"
   become_user: "postgres"
+  become_method: "sudo"
   command: "psql -tAc \"SELECT 1 FROM pg_database WHERE datname='{{postgresql_dbname_to_create}}';\""
   register: "db_exists"
   ignore_errors: true
 
 - name: "Alter {{postgresql_username_to_create}} password user_exists.stdout = {{user_exists.stdout}} db_exists.stdout = {{db_exists.stdout}} "
   become_user: "postgres"
+  become_method: "sudo"
   command: "psql -tAc \"ALTER USER {{postgresql_username_to_create}} PASSWORD '{{postgresql_username_password}}';\""
   when: user_exists.stdout == "1" and db_exists.stdout == "1"

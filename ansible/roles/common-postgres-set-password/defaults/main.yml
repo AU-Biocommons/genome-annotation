@@ -1,0 +1,6 @@
+---
+postgresql_username_to_create: "apollo_user"
+postgresql_dbname_to_create: "apollo-production"
+# This role to be run by a playbook requires to enter password value through the command line
+# use  --extra-vars="postgresql_user_password=<type_password_here>"
+postgresql_user_password: "enter_password_through_command_line"

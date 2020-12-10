@@ -1,0 +1,22 @@
+---
+# Need to check if user exists first
+- name: "Check if user {{postgresql_username_to_create}} already exists in postgres database"
+  become_user: "postgres"
+  become_method: "sudo"
+  command: "psql -tAc \"SELECT 1 FROM pg_roles WHERE rolname='{{postgresql_username_to_create}}';\""
+  register: "user_exists"
+  ignore_errors: true
+
+# Check if database exists first. Not really required but it's a good safeguard
+- name: "Check if database {{postgresql_dbname_to_create}} already exists"
+  become_user: "postgres"
+  become_method: "sudo"
+  command: "psql -tAc \"SELECT 1 FROM pg_database WHERE datname='{{postgresql_dbname_to_create}}';\""
+  register: "db_exists"
+  ignore_errors: true
+
+- name: "Alter {{postgresql_username_to_create}} password user_exists.stdout = {{user_exists.stdout}} db_exists.stdout = {{db_exists.stdout}} "
+  become_user: "postgres"
+  become_method: "sudo"
+  command: "psql -tAc \"ALTER USER {{postgresql_username_to_create}} PASSWORD '{{postgresql_user_password}}';\""
+  when: user_exists.stdout == "1" and db_exists.stdout == "1"

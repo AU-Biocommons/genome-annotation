@@ -8,7 +8,7 @@
 - name: "Place nginx conf file from template"
   template:
     src: "apollo-00X.genome.edu.au"
-    dest: "{{ nginx_config_file_path }}"
+    dest: "{{nginx_config_file_path}}"
     force: yes
     backup: no
     owner: root
@@ -18,9 +18,16 @@
     template_nginx_domain: "{{nginx_domain}}"
   when: certbot_installed is defined and certbot_installed
 
+- name: "Create symbolic link in enabled-sites to available-sites conf"
+  file:
+    src: "{{nginx_config_file_path}}"
+    dest: "{{nginx_slink_file_path}}"
+    state: link
+    force: yes
+
 - name: "Create site root directory"
   file:
-    path: "{{ nginx_site_root_dir }}"
+    path: "{{nginx_site_root_dir}}"
     state: directory
     owner: "root"
     group: "root"
@@ -29,17 +36,17 @@
 - name: "Place index html file from template"
   template:
     src: "index.html"
-    dest: "{{ nginx_index_file_path }}"
+    dest: "{{nginx_index_file_path}}"
     force: yes
     backup: no
     owner: root
     group: root
     mode: "u=rwx,g=rx,o=rx"
 
-- name: "Create symbolic link for index html" 
+- name: "Create symbolic link for index html"
   file:
     src: "{{nginx_root_index}}"
-    dest: "{{ nginx_index_file_path }}"
+    dest: "{{nginx_index_file_path}}"
     state: link
     force: yes
 
@@ -53,5 +60,5 @@
 
 - name: "Remove default nginx vhost config file"
   file:
-    path: "{{ nginx_default_conf_file_path }}"
+    path: "{{nginx_default_conf_file_path}}"
     state: absent

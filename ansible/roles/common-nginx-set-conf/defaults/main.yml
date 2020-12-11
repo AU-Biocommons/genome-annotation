@@ -1,0 +1,6 @@
+---
+# This role to be run by a playbook requires to enter domain name value through the command line
+# use  --extra-vars="nginx_set_conf_domain_name=<enter_domain_name_here>"
+nginx_set_conf_domain_name: "enter_domain_name_in_command_line"
+nginx_set_conf_config_file_path: "/etc/nginx/sites-available/{{nginx_set_conf_domain_name}}.conf"
+nginx_set_conf_slink_file_path: "/etc/nginx/sites-enabled/{{nginx_set_conf_domain_name}}.conf"

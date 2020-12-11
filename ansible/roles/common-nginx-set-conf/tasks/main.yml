@@ -1,0 +1,19 @@
+---
+- name: "Place nginx conf file from template"
+  template:
+    src: "apollo-00X.genome.edu.au"
+    dest: "{{nginx_set_conf_config_file_path}}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  vars:
+    template_nginx_domain: "{{nginx_set_conf_domain_name}}"
+
+- name: "Create symbolic link in enabled-sites to available-sites conf"
+  file:
+    src: "{{nginx_set_conf_config_file_path}}"
+    dest: "{{nginx_set_conf_slink_file_path}}"
+    state: link
+    force: yes

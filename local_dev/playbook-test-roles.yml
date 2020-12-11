@@ -17,6 +17,10 @@
     #     users:
     #       - username: "vagrant"
     #         key: files/admin.pub
+    # - import_role:
+    #     name: common-postgres-set-password
+    # - import_role:
+    #     name: common-nginx-set-conf
     - import_role:
         name: apollo-dependencies
     - import_role:

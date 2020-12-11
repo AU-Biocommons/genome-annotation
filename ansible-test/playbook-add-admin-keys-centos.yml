@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: "yes"
+  tasks:
+    - import_role:
+        name: add-admin-keys
+      vars:
+        users:
+          - username: "centos"
+            key: files/admin.pub

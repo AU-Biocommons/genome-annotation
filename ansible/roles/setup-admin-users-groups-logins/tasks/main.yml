@@ -16,6 +16,19 @@
 #    state: present
 #    gid: 40018
 
+- name: "Ensure the system user's home directory is private"
+  file:
+    path: "/home/{{ ansible_user }}"
+    state: directory
+    mode: 0700
+
+- name: "Configure user home directories to be private"
+  lineinfile:
+    dest: "/etc/adduser.conf"
+    regexp: "^DIR_MODE="
+    line: "DIR_MODE=0700"
+    state: present
+
 - name: "Create user accounts"
   user:
     name: "{{ item.username }}"

@@ -1,5 +1,7 @@
 ---
-- hosts: all
+# Note this playbook is meant to be run in only one host as there it requires domain name to
+# be passed in as a parameter therefore be very careful when running this playbook
+- hosts: <enter_host_name_here>
   remote_user: ubuntu
   become: yes
   become_method: sudo

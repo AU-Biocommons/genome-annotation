@@ -1,0 +1,19 @@
+---
+- name: "check that war file is in my local machine"
+  stat: "path={{apollo_fetch_war_src_path}}"
+  delegate_to: "localhost"
+  register: "stat_result"
+
+- name: "scp apollo war using copy module to destination host {{inventory_hostname}}"
+  copy:
+    src: "{{apollo_fetch_war_src_path}}"
+    dest: "{{apollo_fetch_war_dest_path}}"
+  when: "stat_result.stat.exists"
+
+- name: "extract {{apollo_fetch_war_name}}"
+  unarchive:
+    src: "{{apollo_fetch_war_dest_path}}"
+    dest: "{{apollo_fetch_war_dest_unpack}}"
+    remote_src: "yes"
+    owner: "root"
+    group: "root"

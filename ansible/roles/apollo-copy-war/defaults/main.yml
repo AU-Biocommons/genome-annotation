@@ -1,0 +1,6 @@
+---
+apollo_fetch_war_name: "Apollo-2.6.0-deploy-20200916.tar.gz"
+apollo_fetch_war_src_path: "/home/data/apollo_files/deploy/{{apollo_fetch_war_name}}"
+apollo_fetch_war_dest_path: "/opt/{{apollo_fetch_war_name}}"
+apollo_fetch_war_dest_unpack: "/opt/"
+

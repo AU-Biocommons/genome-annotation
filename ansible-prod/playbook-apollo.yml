@@ -18,4 +18,8 @@
         name: common-tomcat
     - import_role:
         name: common-postgresql
+    - import_role:
+        name: apollo-copy-war
+    - import_role:
+        name: apollo-deploy-war
 

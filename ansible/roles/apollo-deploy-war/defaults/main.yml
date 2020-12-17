@@ -1,0 +1,4 @@
+---
+apollo_deploy_war_name: "apollo.war"
+apollo_deploy_war_dest_path: "/var/lib/tomcat9/webapps/{{apollo_deploy_war_name}}"
+

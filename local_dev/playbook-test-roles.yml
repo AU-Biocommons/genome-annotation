@@ -6,34 +6,36 @@
   connection: "ssh"
 
   tasks:
-    # - import_role:
-    #     name: "setup-admin-users-groups-logins"
-    #   vars:
-    #     admin_group: sudo
-    #     allowed_groups: "ubuntu apollo_admin backup_user"
-    # - import_role:
-    #     name: add-admin-keys
-    #   vars:
-    #     users:
-    #       - username: "vagrant"
-    #         key: files/admin.pub
-    # - import_role:
-    #     name: common-postgres-set-password
-    # - import_role:
-    #     name: common-nginx-set-conf
-    - import_role:
-        name: apollo-dependencies
-    - import_role:
-        name: common-certbot
-    - import_role:
-        name: common-nginx
-    - import_role:
-        name: common-open-jdk
-    - import_role:
-        name: common-tomcat
-    - import_role:
-        name: common-postgresql
-    - import_role:
-        name: apollo-copy-war
-    - import_role:
-        name: apollo-deploy-war
+      # - import_role:
+      #     name: "setup-admin-users-groups-logins"
+      #   vars:
+      #     admin_group: sudo
+      #     allowed_groups: "ubuntu apollo_admin backup_user"
+      # - import_role:
+      #     name: add-admin-keys
+      #   vars:
+      #     users:
+      #       - username: "vagrant"
+      #         key: files/admin.pub
+      # - import_role:
+      #     name: common-postgres-set-password
+      # - import_role:
+      #     name: common-nginx-set-conf
+      # - import_role:
+      #       name: apollo-restart-services
+      - import_role:
+          name: apollo-dependencies
+      - import_role:
+          name: common-certbot
+      - import_role:
+          name: common-nginx
+      - import_role:
+          name: common-open-jdk
+      - import_role:
+          name: common-tomcat
+      - import_role:
+          name: common-postgresql
+      - import_role:
+          name: apollo-copy-war
+      - import_role:
+          name: apollo-deploy-war

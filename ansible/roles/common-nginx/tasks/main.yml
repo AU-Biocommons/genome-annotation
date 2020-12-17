@@ -1,4 +1,5 @@
 ---
+#NOTE nginx service has to be restarted after manually obtaining certificates!!!
 - name: "install ngnix using apt"
   apt:
     name: "nginx"
@@ -58,7 +59,7 @@
     mode: "g+w"
     recurse: yes
 
-- name: "Remove default nginx vhost config file"
+- name: "Remove default nginx vhost config file - NOTE nginx service has to be restarted after manually obtaining certificates!!!"
   file:
     path: "{{nginx_default_conf_file_path}}"
     state: absent

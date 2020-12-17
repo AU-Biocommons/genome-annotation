@@ -9,8 +9,3 @@
     dest: "{{apollo_deploy_war_dest_path}}"
     remote_src: yes
   when: "stat_result.stat.exists"
-
-- name: "restart tomcat9 service after deployment"
-  systemd:
-    state: "restarted"
-    name: "tomcat9"

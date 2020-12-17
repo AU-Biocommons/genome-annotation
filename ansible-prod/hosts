@@ -20,6 +20,7 @@ apollo-002.genome.edu.au
 apollo-003.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user wheat-data"
 apollo-004.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user slimsuite-data"
 apollo-005.genome.edu.au
+apollo-006.genome.edu.au
 
 [apollovms:vars]
 ansible_user=ubuntu

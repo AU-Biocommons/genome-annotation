@@ -1,0 +1,7 @@
+---
+prometheus_exporters:
+  - prometheus-node-exporter
+  - prometheus-postgres-exporter
+  - prometheus-pushgateway
+  - prometheus-alertmanager
+

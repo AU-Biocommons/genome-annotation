@@ -8,19 +8,6 @@
     url: https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.gpg
     state: present
 
-# Note NOT needed
-#- name: "Add universe apt repository for ubuntu 18.04"
-#  apt_repository: 
-#    repo: 'deb  https://packages.ubuntu.com/ bionic universe'
-#    state: present 
-#    update_cache: yes
-
-#- name: "Add universe apt repository for ubuntu 19.10"
-#  apt_repository: 
-#    repo: 'deb  https://packages.ubuntu.com/ eoan universe'
-#    state: present 
-#    update_cache: yes
-
 - name: "Install prometheus exporters"
   apt: 
     name: '{{ prometheus_exporters }}'

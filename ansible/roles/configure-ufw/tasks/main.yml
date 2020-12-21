@@ -1,0 +1,44 @@
+---
+- name: "Include monotoring server variables"
+  include_vars:
+    file: "monitoring_servers.yml"
+
+- name: "Allow ssh connections"
+  ufw:
+    rule: allow
+    name: 'OpenSSH'
+
+- name: "Allow HTTP(s) in to Nginx"
+  ufw:
+    rule: allow
+    name: 'Nginx Full'
+
+- name: "Allow NRPE from nagios server"
+  ufw:
+    rule: allow
+    proto: tcp
+    port: '5666'
+    src: '{{ nagios_server }}'
+
+- name: "Allow connections to prometheus exporters from grafana server"
+  ufw:
+    rule: allow
+    proto: tcp
+    port: '{{ item }}'
+    src: '{{ grafana_server }}'
+  with_items:
+    - '9100'
+    - '9187'
+
+- name: "Allow connections from backup server"
+  ufw:
+    rule: allow
+    proto: tcp
+    port: '5432'
+    src: '{{ backup_server }}'
+
+- name: "AFTER allow rules configured - enable firewall with default policy deny"
+  ufw:
+    state: enabled
+    policy: deny
+

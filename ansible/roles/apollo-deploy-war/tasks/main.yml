@@ -1,11 +1,11 @@
 ---
-- name: "check that war file is in destination host {{inventory_hostname}}"
-  stat: "path={{apollo_copy_war_dest_path}}" #apollo_copy_war_dest_path variable comes from apollo-copy-war role
+- name: "check that war file is in destination host {{inventory_hostname}} {{apollo_copy_war_dest_unpack}}{{apollo_deploy_war_src_name}}"
+  stat: "path={{apollo_copy_war_dest_unpack}}{{apollo_deploy_war_src_name}}" #apollo_copy_war_dest_path variable comes from apollo-copy-war role
   register: "stat_result"
 
 - name: "deploy apollo war to tomcat {{apollo_deploy_war_dest_path}}"
   copy:
-    src: "{{apollo_copy_war_dest_path}}" #apollo_copy_war_dest_path variable comes from apollo-copy-war role
+    src: "{{apollo_copy_war_dest_unpack}}{{apollo_deploy_war_src_name}}" #apollo_copy_war_dest_path variable comes from apollo-copy-war role
     dest: "{{apollo_deploy_war_dest_path}}"
     remote_src: yes
   when: "stat_result.stat.exists"

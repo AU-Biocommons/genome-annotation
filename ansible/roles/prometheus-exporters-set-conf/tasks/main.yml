@@ -1,0 +1,24 @@
+---
+- name: "Place prometheus node exporter template in /etc/default directory"
+  template:
+    src: "prometheus-node-exporter"
+    dest: "/etc/default/prometheus-node-exporter"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+# NOTE: ensure only prometheus can read this file - contains postgres password!
+- name: "Place prometheus postgres exporter template in /etc/default directory"
+  template:
+    src: "prometheus-postgres-exporter"
+    dest: "/etc/default/prometheus-postgres-exporter"
+    force: yes
+    backup: no
+    owner: prometheus
+    group: prometheus
+    mode: "u=rw,g=r,o="
+  vars:
+    template_postgres_password: "{{prometheus_postgres_exporter_set_conf_password}}"
+

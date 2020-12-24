@@ -18,10 +18,4 @@ apollo_deps:
     - libexpat1-dev
     - ant
 
-# TODO: prometheus exporters for Grafana
-#       wget -q -O - https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.gpg | sudo apt-key add -
-#       sudo apt-get update -y
-#       sudo apt-get install -y \
-#       prometheus-node-exporter prometheus-postgres-exporter prometheus-pushgateway prometheus-alertmanager
-# TODO part 2: then upgrade these packages to 19.10 versions directly with .deb files
 

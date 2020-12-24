@@ -16,12 +16,13 @@
     state: "restarted"
     name: "nagios-nrpe-server"
 
-- name: "Restart nagios service"
-  systemd:
-    state: "restarted"
-    name: "nagios"
-
 - name: "Restart prometheus node exporter service"
   systemd:
     state: "restarted"
     name: "prometheus-node-exporter"
+
+- name: "Restart prometheus postgres exporter service"
+  systemd:
+    state: "restarted"
+    name: "prometheus-postgres-exporter"
+    

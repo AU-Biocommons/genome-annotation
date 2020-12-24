@@ -2,7 +2,7 @@
 The state of the test servers is defined with Ansible
 
 # Test Servers Hosts (Inventory) File
-The test servers are defined in the hosts (inventory) file in this directory `ansible-test/hosts`
+The test servers are defined in the hosts (inventory) file in this directory [ansible-test/hosts](hosts)
 
 # Before running Ansible Playbooks
 Before running any of the playbooks make sure of the following: 
@@ -13,11 +13,11 @@ Before running any of the playbooks make sure of the following:
     ~/.ssh/config
     ```
 
-3. Check/update hosts (inventory) `ansible-test/hosts` file and if required use limit and/or check options as required:
+3. Check/update hosts (inventory) [ansible-test/hosts](hosts) file and if required use limit and/or check options as required:
     ```
     ansible-playbook yourplaybook.yml --limit yourinventory_server_group_name --check
     ```
-4. Check andible.cfg file and make sure config is as required  in this folder `ansible-test/ansible.cfg`
+4. Check andible.cfg file and make sure config is as required  in this folder [ansible-test/ansible.cfg](ansible.cfg)
    
 5. Make sure your local genome-annotation repo is up to date and has the latest version of all ansible roles and playbooks in `ansible-test` folder 
    

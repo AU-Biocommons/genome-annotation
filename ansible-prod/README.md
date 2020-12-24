@@ -2,7 +2,7 @@
 The state of the prod servers is defined with Ansible
 
 # Prod Servers Hosts (Inventory) File
-The prod servers are defined in the hosts (inventory) file in this directory `ansible-prod/hosts`
+The prod servers are defined in the hosts (inventory) file in this directory [ansible-prod/hosts](hosts)
 
 # Before running Ansible Playbooks
 Before running any of the playbooks make sure of the following: 
@@ -13,11 +13,11 @@ Before running any of the playbooks make sure of the following:
     ~/.ssh/config
     ```
 
-3. Check/update hosts (inventory) file `ansible-prod/hosts` and if required use limit and/or check options as required:
+3. Check/update hosts (inventory) file [ansible-prod/hosts](hosts) and if required use limit and/or check options as required:
     ```
     ansible-playbook yourplaybook.yml --limit yourinventory_server_group_name --check
     ```
-4. Check andible.cfg file and make sure config is as required  in this folder `ansible-prod/ansible.cfg`
+4. Check andible.cfg file and make sure config is as required  in this folder [ansible-prod/ansible.cfg](ansible.cfg)
    
 5. Make sure your local genome-annotation repo is up to date and has the latest version of all ansible roles and playbooks in `ansible-prod` folder 
    

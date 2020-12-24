@@ -8,7 +8,7 @@ Australian Biocommons Genome Annotation (Apollo).
 2. Tasks are grouped into [roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).
 3. Roles can be used by [playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html) to make the steps for each system easy to understand and define.
 
-# Structure of the genome-annotation repo:
+# Structure of the genome-annotation repo
 The structure of this repo is as below: 
 
 1. ansible-test
@@ -16,14 +16,14 @@ The structure of this repo is as below:
    - `ansible.cfg`: Ansible configuration file
    - `hosts`: Ansible inventory file
    - `playbook-*`: playbooks are `lightweight` and contain a list of roles to be executed for a `purpose`
-   - For more information see **README** files in `ansible-test/README.md`
+   - For more information see **README** files in [ansible-test/README.md](ansible-test/README.md)
 
 2. ansible-prod
    
    - `ansible.cfg`: Ansible configuration file
    - `hosts`: Ansible inventory file
    - `playbook-*`: playbooks are `lightweight` and contain a list of roles to be executed for a `purpose`
-   - For more information see **README** files in `ansible-prod/README.md` 
+   - For more information see **README** files in [ansible-prod/README.md](ansible-prod/README.md) 
 
 3. ansible/roles
 

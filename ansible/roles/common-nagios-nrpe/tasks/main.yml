@@ -1,0 +1,40 @@
+---
+- name: "Install Nagios NRPE Server"
+  apt:
+    name: "nagios-nrpe-server"
+    state: "present"
+    update_cache: yes
+
+- name: "Install Nagios Plugins"
+  apt:
+    name: "nagios-plugins"
+    state: "present"
+    update_cache: yes
+
+- name: "Get ip address in current host {{inventory_hostname}}"
+  shell: "hostname -I | awk '{print $1}'"
+  register: "current_host_ip_address"
+  ignore_errors: true
+
+- name: "Place nrpe.cfg template in {{nagios_rpe_file_path}} directory IP {{current_host_ip_address.stdout}}"
+  template:
+    src: "nrpe.cfg"
+    dest: "{{nagios_rpe_file_path}}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  vars:
+    host_ip_address: "{{current_host_ip_address.stdout}}"
+    allowed_hosts_ips: "{{nagios_allowed_hosts_ips}}"
+
+- name: "Place nrpe_local.cfg template in {{nagios_rpe_file_path}}"
+  template:
+    src: "nrpe_local.cfg"
+    dest: "{{nagios_rpe_file_path}}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"

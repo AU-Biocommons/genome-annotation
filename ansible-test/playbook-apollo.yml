@@ -22,4 +22,6 @@
         name: apollo-copy-war
     - import_role:
         name: apollo-deploy-war
+    - import_role:
+        name: common-nagios-nrpe
 

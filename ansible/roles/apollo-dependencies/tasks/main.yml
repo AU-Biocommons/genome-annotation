@@ -9,13 +9,4 @@
     state: present
     update_cache: yes
 
-- name: "install monitoring dependencies"
-  apt:
-    pkg: "{{ monitoring_deps }}"
-    state: present
-    update_cache: yes
-#  - name: install software packages (ubuntu or centos)
-#    action: >
-#      {{ ansible_pkg_mgr }} name={{ item }} state=present update_cache=yes
-#    with_items: "{{ sw_packages }}"
 

@@ -18,10 +18,6 @@ apollo_deps:
     - libexpat1-dev
     - ant
 
-monitoring_deps:
-    - nagios-nrpe-server
-    - nagios-plugins
-
 # TODO: prometheus exporters for Grafana
 #       wget -q -O - https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.gpg | sudo apt-key add -
 #       sudo apt-get update -y

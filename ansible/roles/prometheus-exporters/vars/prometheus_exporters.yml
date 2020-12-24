@@ -5,3 +5,28 @@ prometheus_exporters:
   - prometheus-pushgateway
   - prometheus-alertmanager
 
+# Note: URLs are no longer valid - Ubuntu 19.10 versions no longer available via universe repo
+prometheus_exporters_eoan_packages:
+  - name: "prometheus-node-exporter"
+    version: "0.18.1+ds-1_amd64"
+    base_url: "http://mirrors.kernel.org/ubuntu/pool/universe/p"
+  - name: "prometheus-postgres-exporter"
+    version: "0.5.1+ds-1_amd64"
+    base_url: "http://mirrors.kernel.org/ubuntu/pool/universe/p"
+  - name: "prometheus-pushgateway"
+    version: "0.7.0+ds-1_amd64"
+    base_url: "http://mirrors.kernel.org/ubuntu/pool/universe/p"
+  - name: "prometheus-alertmanager"
+    version: "0.15.3+ds-3_amd64"
+    base_url: "http://mirrors.kernel.org/ubuntu/pool/universe/p"
+
+prometheus_exporters_debs_src_path: "/home/data/apollo_files/deploy/prometheus-upgrades"
+prometheus_exporters_debs_dest: "/tmp"
+
+prometheus_node_exporter_deb: "prometheus-node-exporter_0.18.1+ds-1_amd64.deb"
+
+prometheus_exporters_update_debs:
+  - "prometheus-postgres-exporter_0.5.1+ds-1_amd64.deb"
+  - "prometheus-pushgateway_0.7.0+ds-1_amd64.deb"
+  - "prometheus-alertmanager_0.15.3+ds-3_amd64.deb"
+

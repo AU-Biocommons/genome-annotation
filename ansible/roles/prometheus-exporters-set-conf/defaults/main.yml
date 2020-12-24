@@ -1,0 +1,5 @@
+---
+# This role requires the postgres password to be passed through the command line
+# use  --extra-vars="prometheus_postgres_exporter_set_conf_password=<postgres_password>"
+prometheus_postgres_exporter_set_conf_password: "enter_postgres_password_in_command_line"
+

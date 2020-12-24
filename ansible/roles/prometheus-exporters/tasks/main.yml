@@ -14,3 +14,45 @@
     state: present
     update_cache: yes
 
+# deprecated - many 19.10 package versions are no longer available from the universe repo
+#- name: "Download packages for prometheus exporter updates"
+#  get_url: 
+#    url: "{{ item.base_url }}/{{ item.name }}/{{ item.name }}_{{ item.version }}.deb"
+#    dest: "{{ prometheus_exporters_debs_dest }}/{{ item.name }}_{{ item.version }}.deb"
+#  with_items: "{{ prometheus_exporters_eoan_packages }}"
+
+- name: "check prometheus exporter deb files are on local machine"
+  stat: "path={{ prometheus_exporters_debs_src_path }}"
+  delegate_to: "localhost"
+  register: "stat_result"
+
+# note trailing / on src so that directory contents are copied to dest without parent directory
+- name: "scp prometheus exporter deb files to destination host {{inventory_hostname}}"
+  copy:
+    src: "{{ prometheus_exporters_debs_src_path }}/"
+    dest: "{{ prometheus_exporters_debs_dest }}"
+  when: "stat_result.stat.exists"
+
+- name: "Test version of installed Node Exporter"
+  shell: dpkg-query --showformat='${Version}\n' --show prometheus-node-exporter
+  register: "node_exporter_ver"
+
+- name: "Upgrade Node Exporter from 18.04 to 19.10 versions"
+  block:
+    # note: this will throw a dependency error
+  - name: "Attempt Node Exporter update"
+    shell: dpkg -i "{{ prometheus_exporters_debs_dest }}/{{ prometheus_node_exporter_deb }}"
+    register: "dpkg_result"
+    failed_when: "dpkg_result.rc != 0"
+  rescue:
+  - name: "Fix Node Exporter upgrade dependency problems"
+    shell: apt install -f -y
+  when: '"0.18.1" not in node_exporter_ver.stdout'
+  become: yes
+
+- name: "Upgrade remaining Exporters from 18.04 to 19.10 versions"
+  shell: dpkg -i "{{ prometheus_exporters_debs_dest }}/{{ item }}"
+  with_items: "{{ prometheus_exporters_update_debs }}"
+  become: yes
+
+

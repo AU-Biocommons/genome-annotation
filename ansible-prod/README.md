@@ -27,7 +27,19 @@ Before running any of the playbooks make sure of the following:
     ```
 
 # Order of Ansible Playbooks to create Apollo VM
-Please `Note that the below playbooks will run in all of the prod hosts` defined in the hosts (inventory) file therefore be careful when running the below playbooks. To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
+Please **`Note that the below playbooks will run in all of the prod hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. The limit option can be used if required. In example, the below command will run in all VMs in inventory file:
+
+```
+ansible-playbook playbook-configure-host.yml 
+```
+
+While the below command will run in VMs that belong to a group (name tag) defined in the inventory file, in the example case below in only the test VMs:
+
+```
+ansible-playbook playbook-configure-host.yml --limit ubuntutestvms
+```
+
+To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
 
 1. playbook-configure-host.yml
 2. playbook-add-admin-keys-ubuntu.yml

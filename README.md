@@ -11,7 +11,7 @@ Australian Biocommons Genome Annotation (Apollo).
 # Structure of the genome-annotation repo
 The structure of this repo is as below: 
 
-1. The **ansible-test** folder is virtually identical to its counterpart **ansible-prod** folder. The difference is in the hosts (inventory) file and as its name suggests the hosts files has only test VMs. The main files in this folder are listed below:
+1. The **ansible-test** folder is virtually identical to its counterpart **ansible-prod** folder. The difference is in the hosts (inventory) file and as its name suggests the hosts file has only test VMs. The main files in this folder are listed below:
    
    - `ansible.cfg`: Ansible configuration file
    - `hosts`: Ansible inventory file with test VMs

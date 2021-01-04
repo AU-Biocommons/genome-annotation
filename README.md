@@ -21,7 +21,7 @@ The structure of this repo is as below:
 2. The **ansible-prod** folder has the below content:
    
    - `ansible.cfg`: Ansible configuration file
-   - `hosts`: Ansible inventory file with prod VMs
+   - `hosts`: Ansible inventory file with **`ALL`** VMs, meaning prod VMs and test VMs
    - `playbook-*`: playbooks are `lightweight` and contain a list of roles to be executed for a `purpose`
    - For more information see **README** files in [ansible-prod/README.md](ansible-prod/README.md) 
 

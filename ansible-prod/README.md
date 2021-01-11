@@ -60,6 +60,8 @@ To install and configure an Apollo VM or VMs the following playbooks have to be 
     1.  This playbook will do a reboot at the end
 
 
+# How to create/modify Ansible Roles
+For more information see **`README`** file in [ansible/README.md](../ansible/README.md)
 
 
 

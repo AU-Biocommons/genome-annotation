@@ -48,6 +48,8 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     1.  This playbook will do a reboot at the end
 
 
+# How to create/modify Ansible Roles
+For more information see **`README`** file in [ansible/README.md](../ansible/README.md)
 
 
 

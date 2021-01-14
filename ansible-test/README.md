@@ -17,6 +17,20 @@ Before running any of the playbooks make sure of the following:
     ```
     ansible-playbook yourplaybook.yml --limit yourinventory_server_group_name --check
     ```
+    In example, the below command will not apply any changes given it's using `--check` option and the target server(s) will be limited by the `--limit` option:
+
+    ```
+    ansible-playbook playbook-apollo.yml --limit ubuntutestvms --check 
+    ```
+    In example, to apply changes remove the `--check` option as below:
+    ```
+    ansible-playbook playbook-apollo.yml --limit ubuntutestvms 
+    ```
+    Because this is the `ansible-test` folder is relatively safe but still recommended to always narrow the target servers by using the `--limit` option however if one intention is to target all tests servers then it would be something like below command:
+    ```
+    ansible-playbook playbook-apollo.yml 
+    ``` 
+
 4. Check andible.cfg file and make sure config is as required  in this folder [ansible-test/ansible.cfg](ansible.cfg)
    
 5. Make sure your local genome-annotation repo is up to date and has the latest version of all ansible roles and playbooks in `ansible-test` folder 

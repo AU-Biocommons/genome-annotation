@@ -17,6 +17,21 @@ Before running any of the playbooks make sure of the following:
     ```
     ansible-playbook yourplaybook.yml --limit yourinventory_server_group_name --check
     ```
+    In example, the below command will not apply any changes given it's using `--check` option and the target server(s) will be limited by the `--limit` option:
+
+    ```
+    ansible-playbook playbook-apollo.yml --limit ubuntutestvms --check 
+    ```
+    In example, to apply changes to the tests servers group remove the `--check` option as below:
+    ```
+    ansible-playbook playbook-apollo.yml --limit ubuntutestvms 
+    ```
+    Because this is the `ansible-prod` folder it's not recommended to run without the `--limit` option, therefore in order to apply changes to the target servers it would be something like below command:
+    ```
+    ansible-playbook playbook-apollo.yml --limit ubuntuprodvms
+    ``` 
+    Note that in some cases one may not want to target all prod VMs, if that's the case then first create a new group in the hosts (inventory) file and use it to target a selection or only one server(s)
+
 4. Check andible.cfg file and make sure config is as required  in this folder [ansible-prod/ansible.cfg](ansible.cfg)
    
 5. Make sure your local genome-annotation repo is up to date and has the latest version of all ansible roles and playbooks in `ansible-prod` folder 

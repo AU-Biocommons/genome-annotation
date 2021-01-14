@@ -1,0 +1,28 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  tasks:
+    - import_role:
+        name: apollo-dependencies
+    - import_role:
+        # Have to use snapd to install certbot in Ubuntu 20.04
+        name: common-certbot-snapd 
+    - import_role:
+        name: common-nginx
+    - import_role:
+        name: common-open-jdk
+    - import_role:
+        name: common-tomcat
+    - import_role:
+        name: common-postgresql
+    - import_role:
+        name: apollo-copy-war
+    - import_role:
+        name: apollo-deploy-war
+    - import_role:
+        name: common-nagios-nrpe
+

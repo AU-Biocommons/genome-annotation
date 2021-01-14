@@ -1,0 +1,30 @@
+---
+# This package is installed by the common-certbot role used for Ubuntu 18.04, unsure 
+# if it's required in Ubuntu 20.04 but it will not harm to leave it in case is needed
+- name: "Install software properties common"
+  apt:
+    name: "software-properties-common"
+    state: present
+
+# Followed instructions to install certbot in Ubuntu 20.04 in below url
+# https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx.html 
+- name: "Make sure snapd is installed"
+  command: "snap install core"
+
+- name: "Make sure it's the latest version of snapd"
+  command: "snap refresh core"
+
+- name: "Install certbot packages"
+  command: "snap install --classic certbot"
+
+- name: "Create symbolic link to ensure that the certbot command can be run"
+  file:
+    src: "/usr/bin/certbot"
+    dest: "/snap/bin/certbot"
+    state: link
+    force: yes
+
+- name: "Run certbot renew as a dry run to create renewal-hooks directory"
+  command: "certbot --dry-run renew"
+  args:
+    creates: "{{ certbot_hook_post_path }}"

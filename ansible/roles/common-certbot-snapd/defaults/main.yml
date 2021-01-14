@@ -1,0 +1,3 @@
+---
+certbot_hook_post_path: "/etc/letsencrypt/renewal-hooks/post"
+certbot_installed: yes

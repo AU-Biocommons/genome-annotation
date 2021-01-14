@@ -1,9 +1,7 @@
 ---
 - hosts: 
    - ubuntutestvms
-   - apollovms
-   - newapollovms
-   - otherubuntuvms
+   - ubuntu20testvms
   remote_user: "{{ansible_user}}"
   become: yes
   become_method: sudo

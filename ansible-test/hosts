@@ -5,3 +5,11 @@ ubuntu-test.genome.edu.au
 ansible_user=ubuntu
 admin_group=sudo
 allowed_groups="ubuntu apollo_admin backup_user"
+
+[ubuntu20testvms]
+ubuntu20-test.genome.edu.au
+
+[ubuntu20testvms:vars]
+ansible_user=ubuntu
+admin_group=sudo
+allowed_groups="ubuntu apollo_admin backup_user"

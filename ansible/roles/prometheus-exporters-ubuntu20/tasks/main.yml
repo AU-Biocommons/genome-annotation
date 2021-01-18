@@ -1,0 +1,16 @@
+---
+- name: "Include monitoring server variables"
+  include_vars:
+    file: "prometheus_exporters.yml"
+
+- name: "Add key for prometheus packages"
+  apt_key:
+    url: "{{ prometheus_url_key }}"
+    state: present
+
+- name: "Install prometheus exporters"
+  apt:
+    name: "{{ prometheus_exporters }}"
+    state: present
+    update_cache: yes
+

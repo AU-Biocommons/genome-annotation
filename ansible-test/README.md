@@ -40,7 +40,7 @@ Before running any of the playbooks make sure of the following:
     ansible-playbook playbook-postgres-set-password.yml --extra-vars="postgresql_user_password=<type_password_here>" --verbose --limit ubuntutestvms
     ```
 
-# Order of Ansible Playbooks to create Apollo VM
+# Order of Running Ansible Playbooks to create an Apollo VM
 Please **`Note that the below playbooks will run in all of the test hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
 
 1. playbook-configure-host.yml

@@ -1,5 +1,5 @@
 # Genome Annotation
-Australian Biocommons Genome Annotation (Apollo). The purpose of this repo is to **`Automate`** the installation of all required software and its dependencies in an Apollo VM using Ansible.  
+Australian Biocommons Genome Annotation (Apollo). The purpose of this repo is to **`Automate`** the installation of all required software and its dependencies in an **`Apollo VM`** using **`Ansible`**.  
 
 # Ansible
 
@@ -8,7 +8,7 @@ Australian Biocommons Genome Annotation (Apollo). The purpose of this repo is to
 2. Tasks are grouped into [roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).
 3. Roles can be used by [playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html) to make the steps for each system easy to understand and define.
 
-# Structure of the Genome Annotation Repo
+# Folders Structure of the Genome Annotation Repo
 The structure of this repo is as below: 
 
 1. The **ansible-test** folder is virtually identical to its counterpart **ansible-prod** folder. The difference is in the hosts (inventory) file and as its name suggests the hosts file has only test VMs. The main files in this folder are listed below:
@@ -49,4 +49,4 @@ An Apollo VM will run an [Apollo Web App](https://genomearchitect.readthedocs.io
 6. Monitoring tools
 7. Among Others
 
-For more details refer to old manual instructions [Apollo Deployment Document](https://qcif.sharepoint.com/:w:/r/sites/3.Services/_layouts/15/Doc.aspx?sourcedoc=%7B0616808E-B7D0-4AAF-BE19-77A293661CD1%7D&file=Deploying%20a%20Production%20Web%20Apollo%20Instance.docx&action=default&mobileredirect=true). Note that this document is only for reference and give a better understanding of all that is required to have an Apollo VM up and running as currently the Ansible Playbooks will automate the software installation process.
+For more details refer to old manual instructions [Apollo Deployment Document](https://qcif.sharepoint.com/:w:/r/sites/3.Services/_layouts/15/Doc.aspx?sourcedoc=%7B0616808E-B7D0-4AAF-BE19-77A293661CD1%7D&file=Deploying%20a%20Production%20Web%20Apollo%20Instance.docx&action=default&mobileredirect=true). Note that this document is only for reference and to give a better understanding of all that is required to have an Apollo VM up and running as currently the Ansible Playbooks will automate the software installation process.

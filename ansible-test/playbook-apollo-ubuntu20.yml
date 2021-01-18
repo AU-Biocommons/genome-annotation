@@ -9,7 +9,7 @@
     - import_role:
         name: apollo-dependencies
     - import_role:
-        # Have to use snapd to install certbot in Ubuntu 20.04
+        # Need to use snapd to install certbot in Ubuntu 20.04
         name: common-certbot-snapd
     - import_role:
         name: common-nginx

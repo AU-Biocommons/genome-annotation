@@ -19,8 +19,8 @@
 
 - name: "Create symbolic link to ensure that the certbot command can be run"
   file:
-    src: "/usr/bin/certbot"
-    dest: "/snap/bin/certbot"
+    src: "/snap/bin/certbot"
+    dest: "/usr/bin/certbot"
     state: link
     force: yes
 

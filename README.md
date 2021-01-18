@@ -8,7 +8,7 @@ Australian Biocommons Genome Annotation (Apollo). The purpose of this repo is to
 2. Tasks are grouped into [roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).
 3. Roles can be used by [playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html) to make the steps for each system easy to understand and define.
 
-# Folders Structure of the Genome Annotation Repo
+# Folder Structure of the Genome Annotation Repo
 The structure of this repo is as below: 
 
 1. The **ansible-test** folder is virtually identical to its counterpart **ansible-prod** folder. The difference is in the hosts (inventory) file and as its name suggests the hosts file has only test VMs. The main files in this folder are listed below:

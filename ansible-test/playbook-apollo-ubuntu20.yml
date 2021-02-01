@@ -18,7 +18,11 @@
     - import_role:
         name: common-tomcat
     - import_role:
-        name: common-postgresql
+        name: common-docker
+   # TODO in progress
+   # - import_role:
+        # Need to install postgres 10 in a docker container in Ubuntu 20.04
+        # name: common-postgresql-docker 
     - import_role:
         name: apollo-copy-war
     - import_role:

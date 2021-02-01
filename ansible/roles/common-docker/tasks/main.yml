@@ -1,0 +1,64 @@
+---
+- name: "Remove any old docker versions"
+  apt:
+    name:
+      - docker
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+
+- name: "Install docker dependencies"
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+    state: present
+
+- name: "Add the docker apt repo key"
+  apt_key:
+    id: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+
+- name: "Add docker repository"
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: "Install docker"
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+    update_cache: yes
+
+- name: "Create the docker group"
+  group:
+    name: docker
+    state: present
+
+- name: "Add user {{ ansible_user }} to docker group"
+  user:
+    name: "{{ ansible_user }}"
+    append: yes
+    groups:
+      - docker
+
+# maybe not required according to link below
+# https://docs.docker.com/engine/install/linux-postinstall/
+# On Debian and Ubuntu, the Docker service is configured to start on boot by default.
+- name: "Enable docker service and start at boot"
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: "Check docker installation"
+  command: "docker run --rm hello-world"

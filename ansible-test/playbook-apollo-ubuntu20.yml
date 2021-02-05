@@ -9,6 +9,8 @@
     - import_role:
         name: apollo-dependencies
     - import_role:
+        name: common-docker
+    - import_role:
         # Need to use snapd to install certbot in Ubuntu 20.04
         name: common-certbot-snapd
     - import_role:
@@ -16,17 +18,14 @@
     - import_role:
         name: common-open-jdk
     - import_role:
-        name: common-tomcat
-    - import_role:
-        name: common-docker
-   # TODO in progress
-   # - import_role:
-        # Need to install postgres 10 in a docker container in Ubuntu 20.04
-        # name: common-postgresql-docker 
+        name: common-tomcat-ubuntu20
     - import_role:
         name: apollo-copy-war
     - import_role:
         name: apollo-deploy-war
     - import_role:
+        # Need to install postgres 10 in a docker container in Ubuntu 20.04
+        name: common-postgres-docker 
+    - import_role:
         name: common-nagios-nrpe
-
+    

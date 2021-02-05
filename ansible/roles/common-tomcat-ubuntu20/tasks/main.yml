@@ -1,0 +1,31 @@
+---
+- name: "Install tomcat 9"
+  apt:
+    name: "tomcat9"
+    state: "present"
+    update_cache: yes
+
+- name: "Place setenv.sh template in tomcat9 bin directory"
+  template:
+    src: "setenv.sh"
+    dest: "{{ tomcat_setenv_file_path }}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rwx,g=rx,o=rx" 
+
+- name: "Place tomcat9 template in etc default directory"
+  template:
+    src: "tomcat9"
+    dest: "{{ tomcat_default_file_path }}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+- name: "Remove ROOT directory"
+  file:
+    path: "{{ tomcat_root_file_path }}"
+    state: absent

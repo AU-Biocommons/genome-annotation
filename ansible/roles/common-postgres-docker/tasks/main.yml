@@ -1,0 +1,39 @@
+---
+# Need to check if user exists before creation as the create user task should not be executed if
+# it already exists because the executed command is not smart enough and it will throw an exception 
+- name: "Connect to docker container and check if user {{postgresql_username_to_create}} already exists in postgres database"
+  command: "docker exec -it {{postgresql_container_name}} psql -U postgres -tAc \"SELECT 1 FROM pg_roles WHERE rolname='{{postgresql_username_to_create}}';\""
+  register: "user_exists"
+  ignore_errors: true
+
+- name: "Create {{postgresql_username_to_create}} in postgres database server user_exists.stdout = {{user_exists.stdout}}"
+  command: "docker exec -it {{postgresql_container_name}} psql -U postgres -tAc \"CREATE USER {{postgresql_username_to_create}} NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT;\""
+  when: user_exists.stdout != "1"
+
+# Need to check if database exists before creation as the create database task should not be executed if
+# it already exists because the executed command is not smart enough and it will throw an exception
+- name: "Connect to docker container and check if database {{postgresql_dbname_to_create}} already exists"
+  command: "docker exec -it {{postgresql_container_name}} psql -U postgres -tAc \"SELECT 1 FROM pg_database WHERE datname='{{postgresql_dbname_to_create}}';\""
+  register: "db_exists"
+  ignore_errors: true
+
+- name: "Create database {{postgresql_dbname_to_create}} owned by {{postgresql_username_to_create}} db_exists.stdout = {{db_exists.stdout}}"
+  command: "docker exec -it {{postgresql_container_name}} psql -U postgres -tAc \"CREATE DATABASE \\\"{{postgresql_dbname_to_create}}\\\" OWNER {{postgresql_username_to_create}} ENCODING UTF8;\""
+  when: db_exists.stdout != "1"
+
+# Need to check again if user exists before alter password 
+- name: "Connect to docker container and check if user {{postgresql_username_to_create}} already exists in postgres database"
+  command: "docker exec -it {{postgresql_container_name}} psql -U postgres -tAc \"SELECT 1 FROM pg_roles WHERE rolname='{{postgresql_username_to_create}}';\""
+  register: "user_exists"
+  ignore_errors: true
+
+# Need to check again if database exists before alter password
+- name: "Connect to docker container and check if database {{postgresql_dbname_to_create}} already exists"
+  command: "docker exec -it {{postgresql_container_name}} psql -U postgres -tAc \"SELECT 1 FROM pg_database WHERE datname='{{postgresql_dbname_to_create}}';\""
+  register: "db_exists"
+  ignore_errors: true
+
+- name: "Alter {{postgresql_username_to_create}} password user_exists.stdout = {{user_exists.stdout}} db_exists.stdout = {{db_exists.stdout}} "
+  command: "docker exec -it {{postgresql_container_name}} psql -U postgres -tAc \"ALTER USER {{postgresql_username_to_create}} ENCRYPTED PASSWORD '{{postgresql_user_password}}';\""
+  when: user_exists.stdout == "1" and db_exists.stdout == "1"
+

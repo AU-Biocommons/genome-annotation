@@ -41,7 +41,41 @@ Before running any of the playbooks make sure of the following:
     ansible-playbook playbook-postgres-set-password.yml --extra-vars="postgresql_user_password=<type_password_here>" --verbose --limit ubuntuprodvms
     ```
 
-# Order of Running Ansible Playbooks to create an Apollo VM
+# Order of Running Ansible Playbooks to create an Apollo VM 20.04
+Please **`Note that the below playbooks will run in all of the prod hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. The limit option can be used if required. In example, the below command will run in all VMs in inventory file:
+
+```
+ansible-playbook playbook-configure-host.yml 
+```
+
+While the below command will run in VMs that belong to a group (name tag) defined in the inventory file, in the example case below in only the test VMs:
+
+```
+ansible-playbook playbook-configure-host.yml --limit ubuntutestvms
+```
+
+To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
+
+1. playbook-configure-host.yml
+2. playbook-add-admin-keys-ubuntu.yml
+3. playbook-setup-admin-users-groups-logins-ubuntu.yml
+4. playbook-apollo-ubuntu20.yml
+    1. requires postgres root password passed in as command line
+    2. requires apollo postgres user password passed in the command line
+5. playbook-configure-ufw-ubuntu.yml
+6. playbook-prometheus-exporters-ubuntu.yml
+7. playbook-prometheus-exporters-set-conf.yml
+    1. requires password passed in as command line 
+8. **`Before running the following playbooks it's required to manually run certbot`**
+9.  playbook-nginx-set-conf.yml
+    1.  requires domain name to be passed in as a parameter
+    2.  requires to use --limit to make sure this runs for `only one` server/host at a time
+10. playbook-apollo-restart-services.yml
+11. playbook-update-base-ubuntu.yml
+    1.  This playbook will do a reboot at the end
+
+
+# Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 18.04
 Please **`Note that the below playbooks will run in all of the prod hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. The limit option can be used if required. In example, the below command will run in all VMs in inventory file:
 
 ```

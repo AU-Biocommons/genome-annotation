@@ -1,0 +1,13 @@
+---
+- name: "Remove symbolic link {{dns_resolv_conf_slink_to_create}} if it exists"
+  file:
+    path: "{{dns_resolv_conf_slink_to_create}}"
+    state: absent
+    force: yes
+
+- name: "Create symbolic {{dns_resolv_conf_slink_to_create}} link to {{dns_resolv_conf_slink_file_path}}"
+  file:
+    src: "{{dns_resolv_conf_slink_file_path}}"
+    dest: "{{dns_resolv_conf_slink_to_create}}"
+    state: link
+    force: yes

@@ -1,0 +1,3 @@
+---
+dns_resolv_conf_slink_to_create: "/etc/resolv.conf"
+dns_resolv_conf_slink_file_path: "/run/systemd/resolve/stub-resolv.conf"

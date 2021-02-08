@@ -41,7 +41,7 @@ Before running any of the playbooks make sure of the following:
     ansible-playbook playbook-postgres-set-password.yml --extra-vars="postgresql_user_password=<type_password_here>" --verbose --limit ubuntuprodvms
     ```
 
-# Order of Running Ansible Playbooks to create an Apollo VM 20.04
+# Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 20.04
 Please **`Note that the below playbooks will run in all of the prod hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. The limit option can be used if required. In example, the below command will run in all VMs in inventory file:
 
 ```

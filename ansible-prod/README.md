@@ -56,7 +56,7 @@ ansible-playbook playbook-configure-host.yml --limit ubuntutestvms
 
 To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
 
-1. playbook-configure-host.yml
+1. playbook-configure-host-ubuntu20.yml
 2. playbook-add-admin-keys-ubuntu.yml
 3. playbook-setup-admin-users-groups-logins-ubuntu.yml
 4. playbook-apollo-ubuntu20.yml

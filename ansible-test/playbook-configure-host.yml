@@ -4,6 +4,4 @@
   tasks:
     - import_role:
         name: configure-host
-    - import_role:
-        name: common-dns-resolv-conf
 

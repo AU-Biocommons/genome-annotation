@@ -43,7 +43,7 @@ Before running any of the playbooks make sure of the following:
 # Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 20.04
 Please **`Note that the below playbooks will run in all of the test hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
 
-1. playbook-configure-host.yml
+1. playbook-configure-host-ubuntu20.yml
 2. playbook-add-admin-keys-ubuntu.yml
 3. playbook-setup-admin-users-groups-logins-ubuntu.yml
 4. playbook-apollo-ubuntu20.yml

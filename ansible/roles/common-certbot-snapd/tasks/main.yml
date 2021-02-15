@@ -17,12 +17,18 @@
 - name: "Install certbot packages"
   command: "snap install --classic certbot"
 
+- name: "Check if {{certbot_symlink_path}} symbolic link exists"
+  stat:
+    path: "{{certbot_symlink_path}}"
+  register: sym
+
 - name: "Create symbolic link to ensure that the certbot command can be run"
   file:
-    src: "/snap/bin/certbot"
-    dest: "/usr/bin/certbot"
+    src: "{{certbot_snap_path}}"
+    dest: "{{certbot_symlink_path}}"
     state: link
     force: yes
+  when: sym.stat.islnk is not defined
 
 - name: "Run certbot renew as a dry run to create renewal-hooks directory"
   command: "certbot --dry-run renew"

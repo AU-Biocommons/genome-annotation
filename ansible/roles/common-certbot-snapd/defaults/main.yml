@@ -1,3 +1,5 @@
 ---
 certbot_hook_post_path: "/etc/letsencrypt/renewal-hooks/post"
+certbot_snap_path: "/snap/bin/certbot"
+certbot_symlink_path: "/usr/bin/certbot"
 certbot_installed: yes

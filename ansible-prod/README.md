@@ -63,7 +63,7 @@ To install and configure an Apollo VM or VMs the following playbooks have to be 
     1. requires postgres root password passed in as command line
     2. requires apollo postgres user password passed in the command line
 5. playbook-configure-ufw-ubuntu.yml
-6. playbook-prometheus-exporters-ubuntu.yml
+6. playbook-prometheus-exporters-ubuntu20.yml
 7. playbook-prometheus-exporters-set-conf.yml
     1. requires password passed in as command line 
 8. **`Before running the following playbooks it's required to manually run certbot`**

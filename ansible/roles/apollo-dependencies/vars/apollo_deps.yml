@@ -17,5 +17,5 @@ apollo_deps:
     - zlib1g-dev
     - libexpat1-dev
     - ant
-
+    - atop
 

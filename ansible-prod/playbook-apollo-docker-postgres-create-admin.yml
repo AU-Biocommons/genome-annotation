@@ -7,5 +7,4 @@
 
   tasks:
     - import_role:
-        # Need to install postgres 10 in a docker container in Ubuntu 20.04
-        name: common-postgres-docker 
+        name: apollo-docker-postgres-create-admin

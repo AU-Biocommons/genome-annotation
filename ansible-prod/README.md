@@ -74,7 +74,7 @@ To install and configure an Apollo VM or VMs the following playbooks have to be 
 10. playbook-apollo-restart-services.yml
 11. **`Wait 3mins to allow apollo database tables to be created`**
 12. playbook-apollo-docker-postgres-create-admin.yml
-11. playbook-update-base-ubuntu.yml
+13. playbook-update-base-ubuntu.yml
     1.  This playbook will do a reboot at the end
 
 ## Optional

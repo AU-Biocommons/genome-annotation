@@ -61,16 +61,16 @@ To install and configure an Apollo VM or VMs the following playbooks have to be 
 2. playbook-add-admin-keys-ubuntu.yml
 3. playbook-setup-admin-users-groups-logins-ubuntu.yml
 4. playbook-apollo-ubuntu20.yml
-    1. requires postgres root password passed in as command line
-    2. requires apollo postgres user password passed in the command line
+    1.  Requires postgres root password passed in as command line
+    2.  Requires apollo postgres user password passed in the command line
 5. playbook-configure-ufw-ubuntu.yml
 6. playbook-prometheus-exporters-ubuntu20.yml
 7. playbook-prometheus-exporters-set-conf.yml
-    1. requires password passed in as command line 
+    1.  Requires password passed in as command line 
 8. **`Before running the following playbooks it's required to manually run certbot`**
 9.  playbook-nginx-set-conf.yml
-    1.  requires domain name to be passed in as a parameter
-    2.  requires to use --limit to make sure this runs for `only one` server/host at a time
+    1.  Requires `machine name` as domain name to be passed in as a parameter
+    2.  Requires to use --limit to make sure this runs for `only one` server/host at a time
 10. playbook-apollo-restart-services.yml
 11. **`Wait 3mins to allow apollo database tables to be created`**
 12. playbook-apollo-docker-postgres-create-admin.yml
@@ -80,11 +80,11 @@ To install and configure an Apollo VM or VMs the following playbooks have to be 
 ## Optional
 ### If apollo user password needs to be changed 
 1. playbook-apollo-docker-postgres-set-password.yml
-   1. requires apollo postgres user password passed in the command line
+    1.  Requires apollo postgres user password passed in the command line
 ### If additional domains are required
 2. playbook-nginx-set-conf.yml
-    1.  requires additional domain name to be passed in as a parameter
-    2.  requires to use --limit to make sure this runs for `only one` server/host at a time
+    1.  Requires additional domain name to be passed in as a parameter
+    2.  Requires to use --limit to make sure this runs for `only one` server/host at a time
 
 # Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 18.04
 Please **`Note that the below playbooks will run in all of the prod hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. The limit option can be used if required. In example, the below command will run in all VMs in inventory file:

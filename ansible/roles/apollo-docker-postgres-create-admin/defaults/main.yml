@@ -13,9 +13,9 @@ apollo_cmd_select_count_username: "\"SELECT COUNT(1) FROM grails_user WHERE grai
 apollo_cmd_select_count_extension: "\"SELECT COUNT(1) FROM pg_extension WHERE extname = '{{apollo_extname}}';\"" 
 apollo_cmd_create_extension: "\"CREATE EXTENSION {{apollo_extname}};\""
 apollo_cmd_insert_grails_user_1: "\"INSERT INTO grails_user (id, version, first_name, inactive, last_name, password_hash, username) VALUES" 
-apollo_cmd_insert_grails_user_2: "((SELECT nextval('public.\"hibernate_sequence\"')), 1, '{{apollo_admin_first_name}}', 'f', '{{apollo_admin_last_name}}',"
+apollo_cmd_insert_grails_user_2: "(34, 1, '{{apollo_admin_first_name}}', 'f', '{{apollo_admin_last_name}}',"
 apollo_cmd_insert_grails_user_3: "(SELECT encode(digest('{{apollo_admin_password}}', 'sha256'), 'hex')), '{{apollo_admin_username}}');\""
 apollo_cmd_insert_grails_user_roles_1: "\"INSERT INTO grails_user_roles (role_id,user_id) VALUES ((SELECT id FROM role WHERE name = 'ADMIN')"
-apollo_cmd_insert_grails_user_roles_2: ",(SELECT last_value from public.\"hibernate_sequence\"));\""
+apollo_cmd_insert_grails_user_roles_2: ",34);\""
 
 

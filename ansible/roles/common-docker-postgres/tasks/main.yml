@@ -63,11 +63,23 @@
 - name: "Check docker installation"
   command: "docker run --rm hello-world"
 
-- name: "docker stop {{postgres_docker_container_name}}"
-  command: "docker stop {{postgres_docker_container_name}}"
+- name: "check if container is running"
+  shell: "docker ps -a | grep {{postgres_docker_container_name}} | grep Up | awk '{print $2}'"
+  register: "docker_image_name"
 
-- name: "docker rm {{postgres_docker_container_name}}"
+- name: "docker stop {{postgres_docker_container_name}} docker_image_name.stdout = {{docker_image_name.stdout}}"
+  command: "docker stop {{postgres_docker_container_name}}"
+  when:
+    docker_image_name.stdout == "postgres:10"
+
+- name: "check if container exists"
+  shell: "docker ps -a | grep {{postgres_docker_container_name}} | awk '{print $2}'"
+  register: "docker_image_name"
+
+- name: "docker rm {{postgres_docker_container_name}} docker_image_name.stdout = {{docker_image_name.stdout}}"
   command: "docker rm {{postgres_docker_container_name}}"
+  when:
+    docker_image_name.stdout == "postgres:10"
 
 - name: "Install and run docker container based on docker image {{postgres_docker_container_image}}"
   command: "docker run --name {{postgres_docker_container_name}} -p {{postgres_docker_container_port}} -e POSTGRES_PASSWORD={{postgres_docker_root_password}} -d {{postgres_docker_container_image}}"

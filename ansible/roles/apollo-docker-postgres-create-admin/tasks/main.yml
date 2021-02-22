@@ -1,26 +1,33 @@
 ---
-- name: "Connect to docker container and check if Admin user already exists in postgres database"
-  command: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_1}} {{apollo_cmd_select_count_2}}"
-  register: "user_exists"
-  ignore_errors: true
+- name: "Connect to docker container and check if extension {{apollo_cmd_select_count_extension}} already exists in postgres database"
+  command: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_extension}}"
+  register: "extension_exists"
 
 - name: "Print command executed from the previous task 1"
   debug:
-    msg: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_1}} {{apollo_cmd_select_count_2}}"
+    msg: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_extension}}"
 
-- name: "Create extension pgcrypto user_exists.stdout = {{user_exists.stdout}}"
+- name: "Create extension {{apollo_extname}} extension_exists.stdout = {{extension_exists.stdout}}"
   command: "{{apollo_cmd_section_1}} {{apollo_cmd_create_extension}}"
-  when: user_exists.stdout == "0"
+  when: extension_exists.stdout == "0"
 
 - name: "Print command executed from the previous task 2"
   debug:
     msg: "{{apollo_cmd_section_1}} {{apollo_cmd_create_extension}}"
 
+- name: "Connect to docker container and check if Admin user already exists in postgres database"
+  command: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_username}}"
+  register: "user_exists"
+
+- name: "Print command executed from the previous task 3"
+  debug:
+    msg: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_username}}"
+
 - name: "Insert row in grails_user table in postgres database {{apollo_dbname}} user_exists.stdout = {{user_exists.stdout}}"
   command: "{{apollo_cmd_section_1}} {{apollo_cmd_insert_grails_user_1}} {{apollo_cmd_insert_grails_user_2}} {{apollo_cmd_insert_grails_user_3}}"
   when: user_exists.stdout == "0"
 
-- name: "Print command executed from the previous task 3"
+- name: "Print command executed from the previous task 4"
   debug:
     msg: "{{apollo_cmd_section_1}} {{apollo_cmd_insert_grails_user_1}} {{apollo_cmd_insert_grails_user_2}} {{apollo_cmd_insert_grails_user_3}}"
 
@@ -28,6 +35,6 @@
   command: "{{apollo_cmd_section_1}} {{apollo_cmd_insert_grails_user_roles_1}} {{apollo_cmd_insert_grails_user_roles_2}}"
   when: user_exists.stdout == "0"
 
-- name: "Print command executed from the previous task 4"
+- name: "Print command executed from the previous task 5"
   debug:
     msg: "{{apollo_cmd_section_1}} {{apollo_cmd_insert_grails_user_roles_1}} {{apollo_cmd_insert_grails_user_roles_2}}"

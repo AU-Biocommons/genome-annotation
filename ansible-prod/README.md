@@ -56,6 +56,7 @@ ansible-playbook playbook-configure-host.yml --limit ubuntutestvms
 
 To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
 
+## Required
 1. playbook-configure-host-ubuntu20.yml
 2. playbook-add-admin-keys-ubuntu.yml
 3. playbook-setup-admin-users-groups-logins-ubuntu.yml
@@ -74,6 +75,14 @@ To install and configure an Apollo VM or VMs the following playbooks have to be 
 11. playbook-update-base-ubuntu.yml
     1.  This playbook will do a reboot at the end
 
+## Optional
+### If apollo user password needs to be changed 
+1. playbook-apollo-docker-postgres-set-password.yml
+   1. requires apollo postgres user password passed in the command line
+### If additional domains are required
+2. playbook-nginx-set-conf.yml
+    1.  requires additional domain name to be passed in as a parameter
+    2.  requires to use --limit to make sure this runs for `only one` server/host at a time
 
 # Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 18.04
 Please **`Note that the below playbooks will run in all of the prod hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. The limit option can be used if required. In example, the below command will run in all VMs in inventory file:

@@ -61,6 +61,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
 10. playbook-apollo-restart-services.yml
 11. **`Wait 3mins to allow apollo database tables to be created`**
 12. playbook-apollo-docker-postgres-create-admin.yml
+    1.  Requires password of apollo admin user to passed in as a parameter
 13. playbook-update-base-ubuntu.yml
     1.  This playbook will do a reboot at the end
 

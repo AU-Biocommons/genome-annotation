@@ -59,8 +59,9 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     1.  requires machine name domain to be passed in as a parameter
     2.  requires to use --limit to make sure this runs for `only one` server/host at a time
 10. playbook-apollo-restart-services.yml
-11. playbook-apollo-docker-postgres-create-admin.yml
-12. playbook-update-base-ubuntu.yml
+11. **`Wait 3mins to allow apollo database tables to be created`**
+12. playbook-apollo-docker-postgres-create-admin.yml
+13. playbook-update-base-ubuntu.yml
     1.  This playbook will do a reboot at the end
 
 ## Optional

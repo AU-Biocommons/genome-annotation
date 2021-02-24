@@ -28,7 +28,7 @@ admin_group=sudo
 allowed_groups="ubuntu apollo_admin backup_user"
 
 [newapollovms]
-#apollo-004.genome.edu.au
+apollo-007.genome.edu.au
 
 [newapollovms:vars]
 ansible_user=ubuntu

@@ -18,4 +18,5 @@ apollo_deps:
     - libexpat1-dev
     - ant
     - atop
+    - tree
 

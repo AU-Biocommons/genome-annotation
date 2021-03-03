@@ -82,4 +82,4 @@
     docker_image_name.stdout == "postgres:10"
 
 - name: "Install and run docker container based on docker image {{postgres_docker_container_image}}"
-  command: "docker run --name {{postgres_docker_container_name}} -p {{postgres_docker_container_port}} -e POSTGRES_PASSWORD={{postgres_docker_root_password}} -d {{postgres_docker_container_image}}"
+  command: "docker run --restart unless-stopped --name {{postgres_docker_container_name}} -p {{postgres_docker_container_port}} -e POSTGRES_PASSWORD={{postgres_docker_root_password}} -d {{postgres_docker_container_image}}"

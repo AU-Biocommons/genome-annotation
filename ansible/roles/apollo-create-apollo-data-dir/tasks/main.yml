@@ -10,6 +10,6 @@
     state: "directory"
     owner: "tomcat"
     group: "tomcat"
-    mode: "0775"
+    mode: "02775"
     recurse: yes
   when: "stat_result.stat.exists == false"

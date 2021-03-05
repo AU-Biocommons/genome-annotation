@@ -27,8 +27,8 @@
 - name: "Replace domain name in new nginx config file"
   replace:
     path: "{{nginx_add_conf_config_file_path}}"
-    regexp: "{{simple_domain_name[0]}}"
-    replace: "{{simple_add_domain_name[0]}}"
+    regexp: "server_name[ ]*{{simple_domain_name[0]}}"
+    replace: "server_name {{simple_add_domain_name[0]}}"
     owner: root
     group: root
     mode: "u=rw,g=r,o=r"
@@ -42,6 +42,3 @@
     force: yes
   when: "stat_result.stat.exists"
 
-- name: "Re-run certbot for existing certificate adding new domain"
-  command: "certbot certonly --nginx --cert-name {{nginx_conf_domain_name}} --domains {{nginx_conf_domain_name}},{{nginx_add_conf_domain_name}}"
-  when: "stat_result.stat.exists"

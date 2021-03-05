@@ -1,7 +1,6 @@
 ---
 - name: "Check that dir {{nginx_current_config_file_path}} exists and register result"
   stat: "path={{nginx_current_config_file_path}}"
-  delegate_to: "localhost"
   register: "stat_result"
 
 - name: "Copy {{nginx_current_config_file_path}} to {{nginx_add_conf_config_file_path}} stat_result.stat.exists = {{stat_result.stat.exists}}"

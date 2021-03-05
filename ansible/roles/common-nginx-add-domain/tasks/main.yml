@@ -26,7 +26,7 @@
 - name: "Replace domain name in new nginx config file"
   replace:
     path: "{{nginx_add_conf_config_file_path}}"
-    regexp: "server_name[ ]*{{simple_domain_name[0]}}"
+    regexp: "server_name[\\s+\\t+]*{{simple_domain_name[0]}}"
     replace: "server_name {{simple_add_domain_name[0]}}"
     owner: root
     group: root

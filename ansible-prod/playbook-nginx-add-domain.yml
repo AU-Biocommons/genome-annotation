@@ -1,0 +1,18 @@
+---
+# Note this playbook is meant to be run in only one host at a time using --limit
+# option therefore be very careful when running this playbook
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  # The role to be run by this playbook requires to enter current domain name and new domain name 
+  # through the command line using --extra-vars like in the example below:
+  #
+  # use  --extra-vars="nginx_add_conf_domain_name=<current_domain_name_here>"
+  # use  --extra-vars="nginx_conf_domain_name=<new_domain_name_here>"
+  #
+  tasks:
+    - import_role:
+        name: common-nginx-add-domain

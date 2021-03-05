@@ -140,7 +140,7 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
 1. playbook-apollo-docker-postgres-set-password.yml
     1.  Can also be run ad-hoc following above instructions
 #### If more than one additional domains are required
-2. playbook-nginx-set-conf.yml
+2. playbook-nginx-add-domain.yml
     1.  Can also be run ad-hoc following above instructions
     2.  Ensuring this playbook is run for only one target host at anyone time
 

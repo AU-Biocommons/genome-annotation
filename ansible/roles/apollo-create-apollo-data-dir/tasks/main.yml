@@ -1,7 +1,6 @@
 ---
 - name: "check that dir {{apollo_data_dir_path}} exists and register result"
   stat: "path={{apollo_data_dir_path}}"
-  delegate_to: "localhost"
   register: "stat_result"
 
 - name: "Create dir {{apollo_data_dir_path}} stat_result.stat.exists = {{stat_result.stat.exists}}"

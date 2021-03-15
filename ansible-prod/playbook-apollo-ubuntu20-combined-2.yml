@@ -27,3 +27,5 @@
         nginx_conf_domain_name: "{{nginx_set_conf_domain_name}}"
     - import_role:
         name: apollo-docker-postgres-create-admin
+    - import_role:
+        name: apollo-restart-services

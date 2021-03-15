@@ -71,13 +71,23 @@ Also note that the `--check` option should be used first, and then if no errors 
 
 To install and configure an Apollo VM or VMs the following playbooks should be run in the specified order. These will need to be run from the ansible-sandpit host: 
 
-1. playbook-apollo-ubuntu20-combined-1.yml
+1. **playbook-apollo-ubuntu20-combined-1.yml**
     1.  Requires postgres root password passed in on the command line, with
         `--extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>"`
     2.  Requires apollo postgres user password passed in on the command line, with
         `-extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>"`
     3.  Requires the apollo postgres user password passed in on the command line , with
         `--extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>"`
+        
+    Please see example command below:
+    ```
+    ansible-playbook playbook-apollo-ubuntu20-combined-1.yml \
+    --extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>" \
+    --extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>" \
+    --extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>" \
+    --limit newapollovms
+    ```
+
 2. **`Before running playbook-apollo-ubuntu20-combined-2.yml certbot needs to be manually run using below commands`**
     ```
     sudo certbot certonly --nginx --domains <FQDN>
@@ -98,7 +108,8 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     sudo ln -s /etc/nginx/sites-available/<CUSTOM-FQDN>.conf /etc/nginx/sites-enabled/<CUSTOM-FQDN>.conf
     sudo systemctl restart nginx
     ```
-3.  playbook-apollo-ubuntu20-combined-2.yml
+
+3.  **playbook-apollo-ubuntu20-combined-2.yml**
     1.  Requires default `apollo-*` domain name to be passed in as a parameter
         `--extra-vars="nginx_set_conf_domain_name=<FQDN>"`
     2.  Requires custom `host name` (ie __not__ the default `apollo-*` name) as domain name
@@ -109,9 +120,18 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
         This will be used to protect the apollo application from being commandeered
         between when apollo is created and when the admin account is registered via the UI
         Note that the password can be changed to something more permanent on first login.
-        `--extra-vars="apollo_admin_password=<type_password_here>"`
+        `--extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>"`
     4.  Requires the use of `--limit` to make sure this runs for __only one__ server/host at a time
         `--limit <APOLLO-FQDN>`
+
+    Please see example command below:
+    ```
+    ansible-playbook playbook-apollo-ubuntu20-combined-2.yml \
+    --extra-vars="nginx_set_conf_domain_name=<apollo-***>.genome.edu.au" \
+    --extra-vars="nginx_add_conf_domain_name=<relevant-name>.genome.edu.au" \
+    --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" \
+    --limit <apollo-***>.genome.edu.au
+    ```
 
 
 # Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 20.04

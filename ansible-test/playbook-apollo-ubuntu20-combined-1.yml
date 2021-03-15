@@ -50,5 +50,7 @@
     - import_role:
         name: prometheus-exporters-set-conf
     - import_role:
+        name: apollo-restart-services
+    - import_role:
         name: update-base
     

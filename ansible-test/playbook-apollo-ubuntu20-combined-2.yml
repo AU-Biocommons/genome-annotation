@@ -1,0 +1,29 @@
+---
+# Note this playbook is meant to be run in only one host as there it requires domain name to
+# be passed in as a parameter therefore be very careful when running this playbook
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  # The role to be run by this playbook requires to enter domain name value through the command line
+  # using --extra-vars like in the example below:
+  #
+  # --extra-vars="nginx_set_conf_domain_name=<default_domain_name_here>"
+  # --extra-vars="nginx_add_conf_domain_name=<additional_domain_name_here>"
+  # --extra-vars="apollo_admin_password=<type_password_here>"
+  # 
+  # i.e.
+  # default_domain_name_here = apollo-***.genome.edu.au
+  # additional_domain_name_here = other-relevant-name.genome.edu.au
+  #
+  tasks:
+    - import_role:
+        name: common-nginx-set-conf
+    - import_role:
+        name: common-nginx-add-domain
+      vars:
+        nginx_conf_domain_name: "{{nginx_set_conf_domain_name}}"
+    - import_role:
+        name: apollo-docker-postgres-create-admin

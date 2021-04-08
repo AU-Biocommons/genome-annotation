@@ -14,4 +14,7 @@
   copy:
     src: "{{ copy_exec_src_path }}/{{ item }}"
     dest: "{{ copy_exec_dest_path }}/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "755"
   with_items: "{{ copy_exec_name }}"

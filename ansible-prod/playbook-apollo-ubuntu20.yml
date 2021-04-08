@@ -7,6 +7,8 @@
 
   tasks:
     - import_role:
+        name: "common-copy-exec-to-bin"
+    - import_role:
         name: apollo-dependencies
     - import_role:
        # Need to install postgres 10 in a docker container in Ubuntu 20.04

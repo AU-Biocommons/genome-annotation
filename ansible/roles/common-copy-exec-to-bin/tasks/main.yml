@@ -1,0 +1,17 @@
+---
+- name: "check that exec files are in my local machine"
+  stat: "path={{ copy_exec_src_path }}/{{ item }}"
+  delegate_to: "localhost"
+  register: "stat_result"
+  with_items: "{{ copy_exec_name }}"
+
+- name: "Print stat_result exists for each file"
+  debug: 
+    msg: "result={{item.stat.exists}}"
+  with_items: "{{ stat_result.results }}"
+
+- name: "scp exec files using copy module to destination host {{inventory_hostname}}"
+  copy:
+    src: "{{ copy_exec_src_path }}/{{ item }}"
+    dest: "{{ copy_exec_dest_path }}/{{ item }}"
+  with_items: "{{ copy_exec_name }}"

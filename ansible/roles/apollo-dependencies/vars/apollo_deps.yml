@@ -19,4 +19,8 @@ apollo_deps:
     - ant
     - atop
     - tree
+    - mlocate
+    - net-tools
+    - nfs-common
+    - quota
 

@@ -29,3 +29,5 @@
         name: apollo-docker-postgres-create-admin
     - import_role:
         name: apollo-restart-services
+    - import_role:
+        name: update-base

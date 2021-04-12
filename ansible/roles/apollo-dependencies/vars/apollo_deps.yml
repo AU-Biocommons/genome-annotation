@@ -23,4 +23,5 @@ apollo_deps:
     - net-tools
     - nfs-common
     - quota
+    - samtools
 

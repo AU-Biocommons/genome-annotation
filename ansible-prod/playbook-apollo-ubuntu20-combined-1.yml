@@ -52,7 +52,7 @@
     - import_role:
         name: prometheus-exporters-set-conf
     - import_role:
-        name: apollo-restart-services
+        name: apollo-restart-tomcat
     - import_role:
         name: update-base
     

@@ -1,0 +1,7 @@
+---
+- name: "Restart tomcat9 service"
+  systemd:
+    state: "restarted"
+    name: "tomcat9"
+
+    

@@ -24,6 +24,7 @@ apollo-006.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user tsi-dat
 apollo-007.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user moths-data"
 apollo-008.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user degnan_user"
 apollo-009.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user slimsuite_user"
+apollo-010.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user coral_user"
 
 [apollovms:vars]
 ansible_user=ubuntu

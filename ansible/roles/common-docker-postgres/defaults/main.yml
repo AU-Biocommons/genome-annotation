@@ -1,7 +1,7 @@
 ---
 postgres_docker_container_name: "postgres10container"
 postgres_docker_container_image: "postgres:10"
-postgres_docker_container_port: "127.0.0.1:5432:5432"
+postgres_docker_container_port: "0.0.0.0:5432:5432"
 # This role to be run by a playbook requires to enter password value through the command line
 # use  --extra-vars="postgres_docker_root_password=<type_password_here>"
 postgres_docker_root_password: "enter_password_through_command_line"

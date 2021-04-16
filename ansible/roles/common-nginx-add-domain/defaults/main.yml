@@ -1,8 +1,8 @@
 ---
-# use  --extra-vars="nginx_conf_domain_name=<current_domain_name_here>"
-nginx_conf_domain_name: "enter_domain_name_in_command_line"
+# use  --extra-vars="nginx_set_conf_domain_name=<current_domain_name_here>"
+nginx_set_conf_domain_name: "enter_domain_name_in_command_line"
 # use  --extra-vars="nginx_add_conf_domain_name=<new_domain_name_here>"
 nginx_add_conf_domain_name: "enter_domain_name_in_command_line"
 nginx_add_conf_config_file_path: "/etc/nginx/sites-available/{{nginx_add_conf_domain_name}}.conf"
 nginx_add_conf_slink_file_path: "/etc/nginx/sites-enabled/{{nginx_add_conf_domain_name}}.conf"
-nginx_current_config_file_path: "/etc/nginx/sites-available/{{nginx_conf_domain_name}}.conf"
+nginx_current_config_file_path: "/etc/nginx/sites-available/{{nginx_set_conf_domain_name}}.conf"

@@ -12,12 +12,17 @@
     template_nginx_domain: "{{nginx_set_conf_domain_name}}"
   when: certbot_installed is defined and certbot_installed
 
-- name: "Create symbolic link in enabled-sites to available-sites conf"
+- name: "Check that dir {{nginx_set_conf_config_file_path}} exists and register result"
+  stat: "path={{nginx_set_conf_config_file_path}}"
+  register: "stat_result"
+
+- name: "Create symbolic link in sites-enabled to available-sites conf exists {{stat_result.stat.exists}}"
   file:
     src: "{{nginx_set_conf_config_file_path}}"
     dest: "{{nginx_set_conf_slink_file_path}}"
     state: link
     force: yes
+  when: "stat_result.stat.exists"
 
 - name: "Create site root directory"
   file:

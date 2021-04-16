@@ -10,6 +10,7 @@
     mode: "u=rw,g=r,o=r"
   vars:
     template_nginx_domain: "{{nginx_set_conf_domain_name}}"
+  when: certbot_installed is defined and certbot_installed
 
 - name: "Create symbolic link in enabled-sites to available-sites conf"
   file:
@@ -17,3 +18,43 @@
     dest: "{{nginx_set_conf_slink_file_path}}"
     state: link
     force: yes
+
+- name: "Create site root directory"
+  file:
+    path: "{{nginx_set_conf_site_root_dir}}"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: "u=rwx,g=rx,o=rx"
+
+- name: "Place index html file from template"
+  template:
+    src: "index.html"
+    dest: "{{nginx_set_conf_index_file_path}}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rwx,g=rx,o=rx"
+
+- name: "Create symbolic link for index html"
+  file:
+    src: "{{nginx_set_conf_root_index}}"
+    dest: "{{nginx_set_conf_index_file_path}}"
+    state: link
+    force: yes
+
+- name: "Change group to www-data and mode to g+w in /var/www directory"
+  file:
+    path: "/var/www"
+    state: directory
+    group: "www-data"
+    mode: "g+w"
+    recurse: yes
+
+- name: "Remove default nginx vhost config file - NOTE nginx service has to be restarted after manually obtaining certificates!!!"
+  file:
+    path: "{{nginx_set_conf_default_conf_file_path}}"
+    state: absent
+
+

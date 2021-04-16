@@ -1,11 +1,2 @@
 ---
 ngnix_version: "1.14.0-0ubuntu1.7"
-nginx_domain: "{{inventory_hostname}}" 
-nginx_root_index: "/var/www/html/index.nginx-debian.html" 
-nginx_available_dir: "/etc/nginx/sites-available"
-nginx_enabled_dir: "/etc/nginx/sites-enabled"
-nginx_config_file_path: "{{nginx_available_dir}}/{{nginx_domain}}.conf"
-nginx_slink_file_path: "{{nginx_enabled_dir}}/{{nginx_domain}}.conf"
-nginx_site_root_dir: "/var/www/{{nginx_domain}}/public_html"
-nginx_index_file_path: "{{nginx_site_root_dir}}/index.html"
-nginx_default_conf_file_path: "{{nginx_enabled_dir}}/default"

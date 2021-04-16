@@ -3,5 +3,3 @@
   systemd:
     state: "restarted"
     name: "tomcat9"
-
-    

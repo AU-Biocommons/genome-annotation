@@ -10,7 +10,6 @@
     mode: "u=rw,g=r,o=r"
   vars:
     template_nginx_domain: "{{nginx_set_conf_domain_name}}"
-  when: certbot_installed is defined and certbot_installed
 
 - name: "Check that dir {{nginx_set_conf_config_file_path}} exists and register result"
   stat: "path={{nginx_set_conf_config_file_path}}"

@@ -38,6 +38,8 @@
     - import_role:
         name: apollo-copy-war-ubuntu20
     - import_role:
+        name: apollo-create-apollo-data-dir
+    - import_role:
         name: apollo-deploy-war
     - import_role:
         name: apollo-docker-postgres

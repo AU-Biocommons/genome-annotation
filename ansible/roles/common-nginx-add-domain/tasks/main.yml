@@ -17,7 +17,7 @@
 
 - name: "set fact"
   set_fact:
-    simple_add_domain_name: "{{ nginx_add_conf_domain_name.split('.') }}"
+    simple_add_domain_name: "{{ nginx_add_conf_full_domain_name.split('.') }}"
 
 - name: "debug"
   debug:

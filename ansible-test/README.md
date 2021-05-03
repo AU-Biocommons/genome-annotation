@@ -83,11 +83,11 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     ```
     
 3.  **playbook-apollo-ubuntu20-combined-2.yml**
-    1.  Requires default `apollo-*` domain name to be passed in as a parameter
-        `--extra-vars="nginx_set_conf_domain_name=<FQDN>"`
-    2.  Requires custom `host name` (ie __not__ the default `apollo-*` name) as domain name
+    1.  Requires number that will be used to construnct default `apollo-*` domain name to be passed in as a parameter
+        `--extra-vars="nginx_set_conf_apollo_number=<apollo instance number without leading zeros>"`
+    2.  Requires custom `subdomain name` (ie __not__ the default `apollo-*` name) as domain name
         to be passed in as a parameter 
-        `--extra-vars="nginx_add_conf_domain_name=<CUSTOM-FQDN>"`
+        `--extra-vars="nginx_add_conf_domain_name=<custom subdomain name without .genome.edu.au>"`
     3.  Requires password of apollo admin user (ops@qfab.org) to passed in as a parameter,
         and the password cannot contain special characters.
         This will be used to protect the apollo application from being commandeered
@@ -100,8 +100,8 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     Please see example command below:
     ```
     ansible-playbook playbook-apollo-ubuntu20-combined-2.yml \
-    --extra-vars="nginx_set_conf_domain_name=ubuntu20-test.genome.edu.au" \
-    --extra-vars="nginx_add_conf_domain_name=startwars.genome.edu.au" \
+    --extra-vars="nginx_set_conf_apollo_number=20" \
+    --extra-vars="nginx_add_conf_domain_name=startwars" \
     --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" \
     --limit ubuntu20-test.genome.edu.au
     ```
@@ -155,7 +155,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     ```
 10. playbook-nginx-set-conf.yml 
     1.  requires domain name to be passed in as a parameter
-        `--extra-vars="nginx_set_conf_domain_name=<FQDN>"`
+        `--extra-vars="nginx_set_conf_apollo_number=<FQDN>"`
     1.  requires to use --limit to make sure this runs for `only one` server/host at a time
 11. playbook-nginx-add-domain.yml
     1.  Requires custom `host name` (ie __not__ the default `apollo-*` name) as domain name
@@ -234,7 +234,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     ```
 11. playbook-nginx-set-conf.yml
     1.  requires domain name to be passed in as a parameter
-        `--extra-vars="nginx_set_conf_domain_name=<FQDN>"`
+        `--extra-vars="nginx_set_conf_apollo_number=<FQDN>"`
     2.  requires to use --limit to make sure this runs for `only one` server/host at a time
 12. playbook-nginx-add-domain.yml
     1.  Requires custom `host name` (ie __not__ the default `apollo-*` name) as domain name

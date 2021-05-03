@@ -1,4 +1,78 @@
 ---
+# set facts based on the apollo number 
+# if number is less than 10 then add lead zeros 00*
+# if number is bigger or equal to 10 and less than 100 add lead zero 0**
+# if number is bogger or equal to 100 will not add lead zeros
+# then it will crate all required facts based on this number
+# i.e. if number entered is 8 full domain name fact will be apollo-008.genome.edu.au
+- name: "Check instance number {{nginx_set_conf_apollo_number}} is bigger or equal to 10 and less than 100"
+  set_fact:
+    one_decimals: "0"
+  when: nginx_set_conf_apollo_number|int >= 10 and nginx_set_conf_apollo_number|int < 100
+
+- name: "Check instance number {{nginx_set_conf_apollo_number}} is less than 10"
+  set_fact:
+    two_decimals: "00"
+  when: nginx_set_conf_apollo_number|int < 10
+
+- name: "Print debug message one"
+  debug: 
+    msg: "Complete instance number with {{one_decimals}}"
+  when: one_decimals is defined
+
+- name: "set fact nginx_set_conf_full_domain_name append lead zeros 0"
+  set_fact:
+    nginx_set_conf_full_domain_name_temp: "apollo-{{one_decimals}}{{nginx_set_conf_apollo_number}}.genome.edu.au"
+    nginx_set_conf_number_only: "{{one_decimals}}{{nginx_set_conf_apollo_number}}"
+  when: one_decimals is defined
+
+- name: "Print debug message two"
+  debug: 
+    msg: "Complete instance number with {{two_decimals}}"
+  when: two_decimals is defined
+
+- name: "set fact nginx_set_conf_full_domain_name append lead zeros 00"
+  set_fact:
+    nginx_set_conf_full_domain_name_temp: "apollo-{{two_decimals}}{{nginx_set_conf_apollo_number}}.genome.edu.au"
+    nginx_set_conf_number_only: "{{two_decimals}}{{nginx_set_conf_apollo_number}}"
+  when: two_decimals is defined
+
+- name: "set fact nginx_set_conf_full_domain_name no need to append"
+  set_fact:
+    nginx_set_conf_full_domain_name_temp: "apollo-{{nginx_set_conf_apollo_number}}.genome.edu.au"
+    nginx_set_conf_number_only: "{{nginx_set_conf_apollo_number}}"
+  when: two_decimals is not defined and one_decimals is not defined
+
+# Override full domain name fact to ubuntu20-test.genome.edu.au if environment is test 
+- name: "set fact nginx_set_conf_full_domain_name overried if apollo_evironment is test"
+  set_fact:
+    nginx_set_conf_full_domain_name: "{{ nginx_conf_dev_domain if nginx_conf_apollo_environment == 'test' else nginx_set_conf_full_domain_name_temp }}"
+    nginx_set_conf_padded_number: "{{nginx_set_conf_number_only}}"
+
+- name: "Print full domain name"
+  debug: 
+    msg: "Full domain = {{nginx_set_conf_full_domain_name}}"
+
+- name: "set fact nginx_set_conf_config_file_path"
+  set_fact:
+    nginx_set_conf_config_file_path: "{{nginx_set_conf_available_dir}}/{{nginx_set_conf_full_domain_name}}.conf"
+
+- name: "set fact nginx_set_conf_slink_file_path"
+  set_fact:
+    nginx_set_conf_slink_file_path: "{{nginx_set_conf_enabled_dir}}/{{nginx_set_conf_full_domain_name}}.conf"
+
+- name: "set fact nginx_set_conf_site_root_dir"
+  set_fact:
+    nginx_set_conf_site_root_dir: "/var/www/{{nginx_set_conf_full_domain_name}}/public_html"
+    
+- name: "set fact nginx_set_conf_index_file_path"
+  set_fact:
+    nginx_set_conf_index_file_path: "{{nginx_set_conf_site_root_dir}}/index.html"
+    
+- name: "set fact nginx_set_conf_default_conf_file_path"
+  set_fact:
+    nginx_set_conf_default_conf_file_path: "{{nginx_set_conf_enabled_dir}}/default"
+
 - name: "Place nginx conf file from template"
   template:
     src: "apollo-00X.genome.edu.au"
@@ -9,7 +83,7 @@
     group: root
     mode: "u=rw,g=r,o=r"
   vars:
-    template_nginx_domain: "{{nginx_set_conf_domain_name}}"
+    template_nginx_domain: "{{nginx_set_conf_full_domain_name}}"
 
 - name: "Check that dir {{nginx_set_conf_config_file_path}} exists and register result"
   stat: "path={{nginx_set_conf_config_file_path}}"

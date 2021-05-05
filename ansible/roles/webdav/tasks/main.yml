@@ -1,0 +1,13 @@
+---
+- name: "install davfs2 (webdav support) using apt"
+  apt:
+    name: "davfs2"
+    state: "present"
+    update_cache: yes
+
+- name: "configure davfs2 to allow copying files onto mount"
+  ansible.builtin.lineinfile:
+    path: /etc/davfs2/davfs2.conf
+    insertafter: '^# use_locks'
+    line: use_locks       0
+

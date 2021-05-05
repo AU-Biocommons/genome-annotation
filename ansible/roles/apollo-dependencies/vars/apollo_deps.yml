@@ -24,5 +24,4 @@ apollo_deps:
     - nfs-common
     - quota
     - samtools
-    - davfs2
 

@@ -88,12 +88,13 @@
 #    append: yes
 #  with_items: "{{ users }}"
 
-- name: "adding admin users to OS-specific sudo group and apollo_admin"
+- name: "adding admin users to OS-specific sudo group, apollo_admin and tomcat"
   user:
     name: "{{ item }}"
     groups: 
     - "{{ admin_group }}" 
     - "apollo_admin" 
+    - "tomcat" 
     append: yes
   with_items: "{{ admin_users }}"
 

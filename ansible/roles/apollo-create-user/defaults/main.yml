@@ -1,0 +1,3 @@
+---
+create_user_padded_number: "{{apollo_padded_number}}"
+create_user_subdomain_name: "{{apollo_subdomain_name}}"

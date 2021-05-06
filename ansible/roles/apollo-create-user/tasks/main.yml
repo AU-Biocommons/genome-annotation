@@ -1,0 +1,47 @@
+---
+- name: "Print debug message"
+  debug: 
+    msg: "Instance padded number {{create_user_padded_number}}"
+  when: create_user_padded_number is defined and create_user_padded_number|int > 0
+
+- name: "Create apollo user group"
+  group:
+    name: "{{create_user_subdomain_name}}_user"
+    state: "present"
+
+- name: "Create apollo user account"
+  user:
+    name: "{{create_user_subdomain_name}}_user"
+    shell: "/bin/bash"
+    uid: "16{{create_user_padded_number}}"
+    state: "present"
+
+- name: "Adding user to group"
+  user:
+    name: "{{create_user_subdomain_name}}_user"
+    groups: "{{create_user_subdomain_name}}_user"
+    append: yes
+
+- name: "Read /etc/ssh/sshd_config content"
+  shell:
+    cmd: "cat /etc/ssh/sshd_config"
+  register: var_sshd_config
+
+- set_fact:
+    var_regex_sshd_config: "{{ var_sshd_config.stdout | regex_search('AllowGroups.*') }}"
+
+- name: "Print"
+  debug:
+    msg: "Resultado de regex = {{ var_regex_sshd_config}}"
+
+- name: "Add groups to /etc/ssh/sshd_config AllowGroups"
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^AllowGroups"
+    line: "{{var_regex_sshd_config}} {{create_user_subdomain_name}}_user"
+    state: present
+    #backup: yes
+  notify:
+    - Restart sshd
+
+

@@ -9,4 +9,4 @@
 
   tasks:
     - import_role:
-        name: "setup-admin-users-groups-logins"
+        name: "create-admin-users-groups-logins"

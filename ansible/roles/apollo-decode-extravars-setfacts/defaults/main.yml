@@ -1,0 +1,4 @@
+---
+# This role to be run by a playbook requires to enter domain name value through the command line
+# use  --extra-vars="apollo_instance_number=<enter_domain_name_here>"
+apollo_instance_number: "enter_in_command_line"

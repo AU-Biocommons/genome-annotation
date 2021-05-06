@@ -10,9 +10,9 @@
   # The role to be run by this playbook requires to enter domain name value through the command line
   # using --extra-vars like in the example below:
   #
-  # --extra-vars="nginx_set_conf_apollo_number=<enter_apollo_number_here>"
-  # --extra-vars="nginx_add_conf_domain_name=<additional_subdomain_name_here>"
-  # --extra-vars="apollo_admin_password=<type_password_here>"
+  # --extra-vars="apollo_instance_number=<enter_in_command_line>"
+  # --extra-vars="apollo_subdomain_name=<enter_in_command_line>"
+  # --extra-vars="apollo_admin_password=<enter_in_command_line>"
   # 
   # i.e.
   # enter_apollo_number_here = 00* or 0** or ***
@@ -20,14 +20,16 @@
   #
   tasks:
     - import_role:
-        name: common-nginx-set-conf
+        name: apollo-decode-extravars-setfacts
       vars:
-        nginx_conf_apollo_environment: "test"
-        nginx_conf_dev_domain: "ubuntu20-test.genome.edu.au"
+        apollo_environment: "test"
+        apollo_dev_domain: "ubuntu20-test.genome.edu.au"
+    - import_role:
+        name: common-nginx-set-conf
     - import_role:
         name: common-nginx-add-domain
-      vars:
-        nginx_conf_domain_name: "{{nginx_set_conf_full_domain_name}}"
+    - import_role:
+        name: apollo-create-user
     - import_role:
         name: apollo-docker-postgres-create-admin
     - import_role:

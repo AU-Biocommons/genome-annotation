@@ -7,7 +7,7 @@
 
   tasks:
       # - import_role:
-      #     name: "setup-admin-users-groups-logins"
+      #     name: "create-admin-users-groups-logins"
       #   vars:
       #     admin_group: sudo
       #     allowed_groups: "ubuntu apollo_admin backup_user"

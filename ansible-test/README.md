@@ -87,7 +87,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
         `--extra-vars="nginx_set_conf_apollo_number=<apollo instance number without leading zeros>"`
     2.  Requires custom `subdomain name` (ie __not__ the default `apollo-*` name) as domain name
         to be passed in as a parameter 
-        `--extra-vars="nginx_add_conf_domain_name=<custom subdomain name without .genome.edu.au>"`
+        `--extra-vars="apollo_subdomain_name=<custom subdomain name without .genome.edu.au>"`
     3.  Requires password of apollo admin user (ops@qfab.org) to passed in as a parameter,
         and the password cannot contain special characters.
         This will be used to protect the apollo application from being commandeered
@@ -101,7 +101,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     ```
     ansible-playbook playbook-apollo-ubuntu20-combined-2.yml \
     --extra-vars="nginx_set_conf_apollo_number=20" \
-    --extra-vars="nginx_add_conf_domain_name=startwars" \
+    --extra-vars="apollo_subdomain_name=startwars" \
     --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" \
     --limit ubuntu20-test.genome.edu.au
     ```
@@ -113,7 +113,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
 ### Required
 1. playbook-configure-host-ubuntu20.yml
 2. playbook-add-admin-keys-ubuntu.yml
-3. playbook-setup-admin-users-groups-logins-ubuntu.yml
+3. playbook-create-admin-users-groups-logins-ubuntu.yml
 4. playbook-apollo-ubuntu20.yml
     1.  Requires postgres root password passed in on the command line, with
         `--extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>"`
@@ -161,7 +161,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     1.  Requires custom `host name` (ie __not__ the default `apollo-*` name) as domain name
         to be passed in as a parameter, along with original apollo host name, with
         `--extra-vars="nginx_conf_domain_name=<APOLLO-FQDN>"`
-        `--extra-vars="nginx_add_conf_domain_name=<CUSTOM-FQDN>"`
+        `--extra-vars="apollo_subdomain_name=<CUSTOM-FQDN>"`
     2.  Requires the use of `--limit` to make sure this runs for __only one__ server/host at a time
         `--limit <APOLLO-FQDN>`
 12. playbook-apollo-restart-services.yml
@@ -191,7 +191,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
 
 1. playbook-configure-host.yml
 2. playbook-add-admin-keys-ubuntu.yml
-3. playbook-setup-admin-users-groups-logins-ubuntu.yml
+3. playbook-create-admin-users-groups-logins-ubuntu.yml
 4. playbook-apollo.yml
 5. playbook-configure-ufw-ubuntu.yml
 6. playbook-prometheus-exporters-ubuntu.yml **`Note this playbook is broken since latest ubuntu 18 image update in pawsey`**
@@ -240,7 +240,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     1.  Requires custom `host name` (ie __not__ the default `apollo-*` name) as domain name
         to be passed in as a parameter, along with original apollo host name, with
         `--extra-vars="nginx_conf_domain_name=<APOLLO-FQDN>"`
-        `--extra-vars="nginx_add_conf_domain_name=<CUSTOM-FQDN>"`
+        `--extra-vars="apollo_subdomain_name=<CUSTOM-FQDN>"`
     2.  Requires the use of `--limit` to make sure this runs for __only one__ server/host at a time
         `--limit <APOLLO-FQDN>`
 13. playbook-apollo-restart-services.yml

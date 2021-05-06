@@ -1,7 +1,6 @@
 ---
-# This role to be run by a playbook requires to enter domain name value through the command line
-# use  --extra-vars="nginx_set_conf_apollo_number=<enter_domain_name_here>"
-nginx_set_conf_apollo_number: "enter_domain_name_in_command_line"
+# TODO comment if running individually need to enter extravars value of apollo_full_domain_name
+nginx_set_conf_full_domain_name: "{{ apollo_full_domain_name }}"
 nginx_set_conf_root_index: "/var/www/html/index.nginx-debian.html" 
 nginx_set_conf_available_dir: "/etc/nginx/sites-available"
 nginx_set_conf_enabled_dir: "/etc/nginx/sites-enabled"

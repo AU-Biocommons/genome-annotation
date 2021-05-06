@@ -5,7 +5,26 @@
   become_method: sudo
   connection: "ssh"
 
+
+  # The role to be run by this playbook requires to enter domain name value through the command line
+  # using --extra-vars like in the example below:
+  #
+  # --extra-vars="postgres_docker_root_password=<enter_in_command_line>"
+  # --extra-vars="postgresql_user_password=<enter_in_command_line>"
+  # --extra-vars="prometheus_postgres_exporter_set_conf_password=<enter_in_command_line>"
+  # --extra-vars="apollo_instance_number=<enter_in_command_line>"
+  # --extra-vars="apollo_subdomain_name=<enter_in_command_line>"
+  # 
+  # i.e.
+  # enter_apollo_number_here = 00* or 0** or ***
+  # additional_subdomain_name_here = other-relevant-name (without .genome.edu.au)
+  #
   tasks:
+    - import_role:
+        name: apollo-decode-extravars-setfacts
+      vars:
+        apollo_environment: "test"
+        apollo_dev_domain: "ubuntu20-test.genome.edu.au"
     - import_role:
         name: configure-host
     # This role is required to be run in Ubuntu 20
@@ -17,8 +36,6 @@
         users:
           - username: "ubuntu"
             key: files/admin.pub
-    - import_role:
-        name: "setup-admin-users-groups-logins"
     - import_role:
         name: "common-copy-exec-to-bin"
     - import_role:
@@ -52,7 +69,13 @@
     - import_role:
         name: prometheus-exporters-set-conf
     - import_role:
+        name: common-webdav
+    - import_role:
         name: apollo-restart-tomcat
     - import_role:
         name: apollo-restart-nginx
+    - import_role:
+        name: "create-admin-users-groups-logins"
+    - import_role:
+        name: apollo-create-user
     

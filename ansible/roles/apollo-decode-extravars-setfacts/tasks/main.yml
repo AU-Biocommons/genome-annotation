@@ -1,0 +1,57 @@
+---
+# set facts based on the apollo number 
+# if number is less than 10 then add lead zeros 00*
+# if number is bigger or equal to 10 and less than 100 add lead zero 0**
+# if number is bigger or equal to 100 will not add lead zeros
+# then it will create all required facts based on this number
+# i.e. if number entered is 8 full domain name fact will be constructed to apollo-008.genome.edu.au
+#
+# NOTE: all these facts are "global" for the playbook at run time and can be re-used in subsequent roles
+#
+- name: "Check instance number {{apollo_instance_number}} is bigger or equal to 10 and less than 100"
+  set_fact:
+    one_decimals: "0"
+  when: apollo_instance_number|int >= 10 and apollo_instance_number|int < 100
+
+- name: "Check instance number {{apollo_instance_number}} is less than 10"
+  set_fact:
+    two_decimals: "00"
+  when: apollo_instance_number|int < 10
+
+- name: "Print debug message one"
+  debug: 
+    msg: "Complete instance number with {{one_decimals}}"
+  when: one_decimals is defined
+
+- name: "set fact apollo_full_domain_name append lead zeros 0"
+  set_fact:
+    apollo_full_domain_name_temp: "apollo-{{one_decimals}}{{apollo_instance_number}}.genome.edu.au"
+    apollo_number_only: "{{one_decimals}}{{apollo_instance_number}}"
+  when: one_decimals is defined
+
+- name: "Print debug message two"
+  debug: 
+    msg: "Complete instance number with {{two_decimals}}"
+  when: two_decimals is defined
+
+- name: "set fact apollo_full_domain_name append lead zeros 00"
+  set_fact:
+    apollo_full_domain_name_temp: "apollo-{{two_decimals}}{{apollo_instance_number}}.genome.edu.au"
+    apollo_number_only: "{{two_decimals}}{{apollo_instance_number}}"
+  when: two_decimals is defined
+
+- name: "set fact apollo_full_domain_name no need to append"
+  set_fact:
+    apollo_full_domain_name_temp: "apollo-{{apollo_instance_number}}.genome.edu.au"
+    apollo_number_only: "{{apollo_instance_number}}"
+  when: two_decimals is not defined and one_decimals is not defined
+
+# Override full domain name fact to ubuntu20-test.genome.edu.au if environment is test 
+- name: "set fact apollo_full_domain_name overried if apollo_evironment is test"
+  set_fact:
+    apollo_full_domain_name: "{{ apollo_dev_domain if apollo_environment == 'test' else apollo_full_domain_name_temp }}"
+    apollo_padded_number: "{{apollo_number_only}}"
+
+- name: "Print full domain name"
+  debug: 
+    msg: "Full domain = {{apollo_full_domain_name}}"

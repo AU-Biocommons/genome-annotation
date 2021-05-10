@@ -1,3 +1,13 @@
 ---
 create_user_padded_number: "{{apollo_padded_number}}"
 create_user_subdomain_name: "{{apollo_subdomain_name}}"
+create_user_id: "16{{create_user_padded_number}}"
+create_user_name: "{{create_user_subdomain_name}}_user"
+create_user_home_dir_ssh_path: "/home/{{create_user_name}}/.ssh"
+create_user_empty_auth_keys_file_name: "authorized_keys"
+create_user_slink_dir_apollo_data: "apollo_data"
+create_user_slink_dir_sourcedata: "sourcedata"
+create_user_slink_from_apollo_data: "/home/{{create_user_name}}/{{create_user_slink_dir_apollo_data}}"
+create_user_slink_from_sourcedata: "/home/{{create_user_name}}/{{create_user_slink_dir_sourcedata}}"
+create_user_slink_to_apollo_data: "/home/data/{{create_user_slink_dir_apollo_data}}"
+create_user_slink_to_sourcedata: "/home/data/{{create_user_slink_dir_sourcedata}}"

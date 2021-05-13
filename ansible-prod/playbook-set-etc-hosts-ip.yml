@@ -1,0 +1,19 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+
+  # The role to be run by this playbook requires to use --limit invetory_group_name
+  # to limit the target host list i.e. --limit ubuntu20testvms
+  tasks:
+    - import_role:
+        name: common-set-etc-hosts-ip
+      vars:
+        target_environment: "prod"
+        target_test_domain: ""
+        target_test_dir: "" # If any changes are made to the playbook or role it's recomended  
+                            # to test changes using fisrt the playbook in ansible-test folder   
+    

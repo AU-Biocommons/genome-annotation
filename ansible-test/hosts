@@ -13,3 +13,12 @@ ubuntu20-test.genome.edu.au
 ansible_user=ubuntu
 admin_group=sudo
 allowed_groups="ubuntu apollo_admin backup_user"
+
+[changeiptestvms]
+ubuntu20-test.genome.edu.au private_ip=192.168.0.88
+apollo-data.genome.edu.au private_ip=192.168.0.78
+
+[changeiptestvms:vars]
+ansible_user=ubuntu
+admin_group=sudo
+private_ip=192.168.0.78

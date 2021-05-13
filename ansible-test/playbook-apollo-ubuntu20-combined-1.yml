@@ -21,10 +21,12 @@
   #
   tasks:
     - import_role:
-        name: apollo-decode-extravars-setfacts
+        name: common-decode-extravars-setfacts
       vars:
-        apollo_environment: "test"
-        apollo_dev_domain: "ubuntu20-test.genome.edu.au"
+        target_environment: "test"
+        target_dev_domain: "ubuntu20-test.genome.edu.au"
+        target_dev_short_machine_name: "ubuntu20-test"
+        target_dev_user_id: "999"
     - import_role:
         name: configure-host
     # This role is required to be run in Ubuntu 20

@@ -22,3 +22,10 @@ apollo-data.genome.edu.au private_ip=192.168.0.78
 ansible_user=ubuntu
 admin_group=sudo
 private_ip=192.168.0.78
+
+[nfsservertest]
+apollo-data.genome.edu.au
+
+[nfsservertest:vars]
+ansible_user=ubuntu
+admin_group=sudo

@@ -26,23 +26,29 @@
   # or as below which I think it's a cleaner way
   failed_when: var_etc_hosts.rc != 1 and var_etc_hosts.rc != 0
 
-- set_fact:
-    var_regex_sshd_config: "{{ var_etc_hosts.stdout }}"
+- name: "set facts"
+  set_fact:
+    var_regex_etc_hosts: "{{ var_etc_hosts.stdout }}"
+    var_line_to_append: "{{ invetory_host_private_ip }}    {{ host_machine_simple_name }}"
 
 - name: "debug result of regex"
   debug:
-    msg: "Result of regex = {{ var_regex_sshd_config}}"
+    msg: "Result of regex = {{ var_regex_etc_hosts }}"
+
+- name: "debug line to append"
+  debug:
+    msg: "Line to append = {{ var_line_to_append }}"
 
 - name: "Replace IP address in hosts file if host already exists"
   lineinfile:
     dest: "{{ etc_hosts_dir_path }}"
     regexp: '.*{{ host_machine_simple_name }}$'
-    line: "{{ invetory_host_private_ip }}    {{ host_machine_simple_name }}"
+    line: "{{ var_line_to_append }}"
     state: present
   when: var_etc_hosts.stdout != ""
 
 - name: "Append IP address and host name in hosts file at the end of the file"
   lineinfile:
     dest: "{{ etc_hosts_dir_path }}"
-    line: "{{ invetory_host_private_ip }}    {{ host_machine_simple_name }}"
+    line: "{{ var_line_to_append }}"
   when: var_etc_hosts.stdout == ""

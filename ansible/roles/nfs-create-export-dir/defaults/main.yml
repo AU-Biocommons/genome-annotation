@@ -1,0 +1,9 @@
+---
+# Variables that can be used
+# apollo_full_domain_name
+# apollo_short_machine_name 
+# apollo_padded_number 
+create_nfs_machine_name: "{{apollo_short_machine_name}}"
+create_nfs_export_dir_path: "/home/data/{{create_nfs_machine_name}}"
+create_nfs_export_file_path: "/etc/exports"
+

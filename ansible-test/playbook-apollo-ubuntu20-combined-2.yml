@@ -20,10 +20,10 @@
   #
   tasks:
     - import_role:
-        name: apollo-decode-extravars-setfacts
+        name: common-decode-extravars-setfacts
       vars:
-        apollo_environment: "test"
-        apollo_dev_domain: "ubuntu20-test.genome.edu.au"
+        target_environment: "test"
+        target_dev_domain: "ubuntu20-test.genome.edu.au"
     - import_role:
         name: common-nginx-set-conf
     - import_role:

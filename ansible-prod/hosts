@@ -59,3 +59,9 @@ ansible_user=centos
 admin_group=wheel
 allowed_groups="centos apollo_admin backup_user"
 
+[nfsservervms]
+apollo-data.genome.edu.au
+
+[nfsservervms:vars]
+ansible_user=ubuntu
+admin_group=sudo

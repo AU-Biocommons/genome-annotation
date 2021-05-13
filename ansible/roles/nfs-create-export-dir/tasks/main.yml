@@ -1,0 +1,67 @@
+---
+- name: "check that dir {{create_nfs_export_dir_path}} exists and register result"
+  stat: "path={{create_nfs_export_dir_path}}"
+  register: "stat_result"
+
+- name: "Create dir {{create_nfs_export_dir_path}} stat_result.stat.exists = {{stat_result.stat.exists}}"
+  file:
+    path: "{{create_nfs_export_dir_path}}"
+    state: "directory"
+    owner: "a.bulgaris"
+    group: "a.bulgaris"
+    mode: "755"
+    recurse: yes
+  when: "stat_result.stat.exists == false"
+
+- name: "set facts"
+  set_fact:
+    host_machine_simple_name: "{{ 'ubuntu20-test' if target_environment == 'test' else create_nfs_machine_name }}"
+    etc_exports_dir_path: "{{ '/home/ubuntu/exports' if target_environment == 'test' else create_nfs_export_dir_path }}"
+
+- name: "debug invetory_host_full_domain_name"
+  debug:
+    msg: "Host/machine simple name = {{ host_machine_simple_name }} - dir path = {{etc_exports_dir_path}}"
+
+- name: "Read {{ etc_exports_dir_path }} content"
+  shell: "cat {{ etc_exports_dir_path }} | grep {{host_machine_simple_name}}"
+  register: var_etc_hosts
+  # There are two ways this can be done as per below SO question
+  # https://stackoverflow.com/questions/50440515/ansible-error-on-shell-command-returning-zero
+  # using "ignore_errors: true"
+  # or as below which I think it's a cleaner way
+  failed_when: var_etc_hosts.rc != 1 and var_etc_hosts.rc != 0
+
+- name: "set facts"
+  set_fact:
+    var_regex_etc_exports: "{{ var_etc_hosts.stdout }}"
+    var_line_to_append: "/srv/export/data/{{ host_machine_simple_name }} {{ host_machine_simple_name }}(rw,nohide,sync,subtree_check)"
+
+- name: "debug result of regex"
+  debug:
+    msg: "Result of regex = {{ var_regex_etc_exports }}"
+
+- name: "debug line to append"
+  debug:
+    msg: "Line to append = {{ var_line_to_append }}"
+
+- name: "Replace IP address in hosts file if host already exists"
+  lineinfile:
+    dest: "{{ etc_exports_dir_path }}"
+    regexp: '.*{{ host_machine_simple_name }}$'
+    line: "{{ var_line_to_append }}"
+    state: present
+  when: var_etc_hosts.stdout != ""
+
+- name: "Append IP address and host name in hosts file at the end of the file"
+  lineinfile:
+    dest: "{{ etc_exports_dir_path }}"
+    line: "{{ var_line_to_append }}"
+  when: var_etc_hosts.stdout == ""
+
+- name: "check that dir {{create_nfs_export_dir_path}} exists and register result"
+  stat: "path={{create_nfs_export_dir_path}}"
+  register: "stat_result_after"
+
+- name: "Export new directory to be mounted by apollo VM {{create_nfs_machine_name}}"
+  command: "exportfs -ra"
+  when: "stat_result_after.stat.exists == true"

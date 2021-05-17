@@ -5,5 +5,5 @@ create_user_slink_dir_apollo_data: "apollo_data"
 create_user_slink_dir_sourcedata: "sourcedata"
 create_user_slink_from_apollo_data: "/home/{{create_user_name}}/{{create_user_slink_dir_apollo_data}}"
 create_user_slink_from_sourcedata: "/home/{{create_user_name}}/{{create_user_slink_dir_sourcedata}}"
-create_user_slink_to_apollo_data: "/home/data/{{create_user_slink_dir_apollo_data}}"
-create_user_slink_to_sourcedata: "/home/data/{{create_user_slink_dir_sourcedata}}"
+create_user_slink_to_apollo_data: "{{set_nfs_mount_dir_path}}{{create_user_slink_dir_apollo_data}}" # set_nfs_mount_dir_path is from role apollo-add-nfs-mount-to-fstab
+create_user_slink_to_sourcedata: "{{set_nfs_mount_dir_path}}{{create_user_slink_dir_sourcedata}}" # set_nfs_mount_dir_path is from role apollo-add-nfs-mount-to-fstab

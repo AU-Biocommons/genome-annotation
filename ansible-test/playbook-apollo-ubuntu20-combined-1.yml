@@ -55,6 +55,8 @@
     - import_role:
         name: common-tomcat-ubuntu20
     - import_role:
+        name: apollo-add-nfs-mount-to-fstab  
+    - import_role:
         name: apollo-copy-war-ubuntu20
     - import_role:
         name: apollo-create-apollo-data-dir
@@ -80,4 +82,6 @@
         name: "create-admin-users-groups-logins"
     - import_role:
         name: apollo-create-user
+    - import_role:
+        name: apollo-setup-user-home-dir
     

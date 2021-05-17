@@ -1,6 +1,6 @@
 ---
 apollo_copy_war_name: "Apollo-2.6.0-deploy-Ubuntu20.tar.gz"
-apollo_copy_war_src_path: "/home/data/apollo_files/deploy/{{apollo_copy_war_name}}"
+apollo_copy_war_src_path: "{{set_nfs_mount_dir_path}}apollo_files/deploy/{{apollo_copy_war_name}}" # set_nfs_mount_dir_path is from role apollo-add-nfs-mount-to-fstab
 apollo_copy_war_dest_path: "/opt/{{apollo_copy_war_name}}"
 apollo_copy_war_dest_unpack: "/opt/"
 

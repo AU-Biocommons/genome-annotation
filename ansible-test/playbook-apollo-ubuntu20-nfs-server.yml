@@ -23,6 +23,8 @@
         target_dev_domain: "ubuntu20-test.genome.edu.au"
         target_dev_short_machine_name: "ubuntu20-test"
         target_dev_user_id: "999"
+        target_dev_dir: "/etc" # /home/ubuntu
+        target_dev_dir2: "/home/data" # /home/ubuntu
     - import_role:
         name: nfs-create-user
     - import_role:

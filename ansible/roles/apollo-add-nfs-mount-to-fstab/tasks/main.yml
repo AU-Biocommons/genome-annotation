@@ -1,0 +1,29 @@
+---
+- name: "set fact"
+  set_fact:
+    nfs_server_private_ip: "{{ set_nfs_mount_server_private_ip }}"
+    host_machine_simple_name: "{{ set_nfs_mount_machine_name }}"
+
+- name: "debug invetory_host_full_domain_name"
+  debug:
+    msg: "NFS server ip = {{nfs_server_private_ip}} - Host  name = {{ host_machine_simple_name }}"
+
+- name: "Install nfs-common"
+  apt:
+    name: "nfs-common"
+    state: "present"
+
+- name: "Install quota"
+  apt:
+    name: "quota"
+    state: "present"
+
+- name: "Mount {{set_nfs_mount_dir_path}}"
+  mount:
+    path: "{{set_nfs_mount_dir_path}}"
+    src: "{{ nfs_server_private_ip }}:/{{ host_machine_simple_name }}"
+    fstype: "nfs"
+    opts: "_netdev,auto"
+    dump: "0"
+    passno: "0"
+    state: "mounted"

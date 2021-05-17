@@ -1,24 +1,16 @@
 ---
 - name: "set fact"
   set_fact:
-    invetory_host_full_domain_name: "{{ target_test_domain if target_environment == 'test' else inventory_hostname }}"
-    etc_hosts_dir_path: "{{ target_test_dir if target_environment == 'test' else set_etc_hosts_dir_path }}"
+    etc_hosts_dir_path: "{{ '{{target_dev_dir}}/hosts' if target_environment == 'test' else set_etc_hosts_dir_path }}"
+    inventory_hostname_for_ip: "{{ hostname_for_ip }}"
     invetory_host_private_ip: "{{ private_ip }}"
 
 - name: "debug invetory_host_full_domain_name"
   debug:
-    msg: " Inventory host name = {{ invetory_host_full_domain_name }} - dir path = {{etc_hosts_dir_path}} - ip = {{invetory_host_private_ip}}"
-
-- name: "set fact"
-  set_fact:
-    host_machine_simple_name: "{{ invetory_host_full_domain_name.split('.')[0] }}"
-
-- name: "debug host/machine simple name"
-  debug:
-    msg: "Host/machine simple name = {{ host_machine_simple_name }}"
+    msg: "Inventory host name = {{ inventory_hostname_for_ip }} - dir path = {{etc_hosts_dir_path}} - ip = {{invetory_host_private_ip}}"
 
 - name: "Read {{ etc_hosts_dir_path }} content"
-  shell: "cat {{ etc_hosts_dir_path }} | grep {{host_machine_simple_name}}"
+  shell: "cat {{ etc_hosts_dir_path }} | grep {{inventory_hostname_for_ip}}"
   register: var_etc_hosts
   # There are two ways this can be done as per below SO question
   # https://stackoverflow.com/questions/50440515/ansible-error-on-shell-command-returning-zero
@@ -29,7 +21,7 @@
 - name: "set facts"
   set_fact:
     var_regex_etc_hosts: "{{ var_etc_hosts.stdout }}"
-    var_line_to_append: "{{ invetory_host_private_ip }}    {{ host_machine_simple_name }}"
+    var_line_to_append: "{{ invetory_host_private_ip }}    {{ inventory_hostname_for_ip }}"
 
 - name: "debug result of regex"
   debug:
@@ -42,7 +34,7 @@
 - name: "Replace IP address in hosts file if host already exists"
   lineinfile:
     dest: "{{ etc_hosts_dir_path }}"
-    regexp: '.*{{ host_machine_simple_name }}$'
+    regexp: '.*{{ inventory_hostname_for_ip }}$'
     line: "{{ var_line_to_append }}"
     state: present
   when: var_etc_hosts.stdout != ""

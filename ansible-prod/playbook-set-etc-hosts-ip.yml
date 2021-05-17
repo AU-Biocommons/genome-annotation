@@ -13,7 +13,6 @@
         name: common-set-etc-hosts-ip
       vars:
         target_environment: "prod"
-        target_test_domain: ""
-        target_test_dir: "" # If any changes are made to the playbook or role it's recomended  
+        target_dev_dir: "" # If any changes are made to the playbook or role it's recomended  
                             # to test changes using fisrt the playbook in ansible-test folder   
     

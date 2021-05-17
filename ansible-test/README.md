@@ -44,7 +44,27 @@ Before running any of the playbooks make sure of the following:
 # Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 20.04 (Simplified)
 Please **`Note that the below playbooks will run in all of the test hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
 
-1. **playbook-apollo-ubuntu20-combined-1.yml**
+1. **playbook-set-etc-hosts-ip.yml** 
+   1. Run playbbok to add/update entries in /etc/hosts file
+   2. Modify `changeiptestvms` host list in invetory file as required
+   3. Requires `--limit changeiptestvms`
+   
+   Please see command example below:
+    ```
+   ansible-playbook playbook-set-etc-hosts-ip.yml --limit changeiptestvms
+    ```
+
+2. **playbook-apollo-ubuntu20-nfs-server.yml**
+   1. Run NFS playbook to setup a new apollo VM in the NFS server
+   2. Modify `nfsservertest` host list in invetory file if required (currently should have only one host which is `apollo-data.genome.edu.au`)
+   3. Requires apollo instance number to be passed in on the command line with `--extra-vars="apollo_instance_number=N"` where `N` is jut a number without padding with zeros and also requires `--limit nfsservertest`
+   
+   Please see command example below:
+    ```
+   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --extra-vars="apollo_instance_number=8" --limit nfsservertest
+    ```
+
+3. **playbook-apollo-ubuntu20-combined-1.yml**
     1.  Requires postgres root password passed in on the command line, with
         `--extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>"`
     2.  Requires apollo postgres user password passed in on the command line, with
@@ -61,7 +81,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     --limit ubuntu20testvms
     ```
 
-2. **`Before running playbook-apollo-ubuntu20-combined-2.yml certbot needs to be manually run using below commands`**
+4. **`Before running playbook-apollo-ubuntu20-combined-2.yml certbot needs to be manually run using below commands`**
     ```
     sudo certbot certonly --nginx --domains <FQDN>
     sudo certbot certonly --nginx --cert-name <FQDN> --domains <FQDN>,<CUSTOM-FQDN>
@@ -82,7 +102,7 @@ Please **`Note that the below playbooks will run in all of the test hosts`** def
     sudo systemctl restart nginx
     ```
     
-3.  **playbook-apollo-ubuntu20-combined-2.yml**
+5.  **playbook-apollo-ubuntu20-combined-2.yml**
     1.  Requires number that will be used to construnct default `apollo-*` domain name to be passed in as a parameter
         `--extra-vars="nginx_set_conf_apollo_number=<apollo instance number without leading zeros>"`
     2.  Requires custom `subdomain name` (ie __not__ the default `apollo-*` name) as domain name

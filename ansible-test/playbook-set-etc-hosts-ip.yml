@@ -13,8 +13,7 @@
         name: common-set-etc-hosts-ip
       vars:
         target_environment: "test"
-        target_test_domain: "test-name.genome.edu.au"
-        target_test_dir: "/home/ubuntu/hosts" # If any changes are made to the playbook or role it's recomended  
-                                              # to copy /etc/hosts file to a different location like ubuntu home 
-                                              # directory and test any changes first on the copied file 
+        target_dev_dir: "/home/ubuntu" # If any changes are made to the playbook or role it's recomended to copy  
+                                       # hosts file in /etc folder to a different location like /home/ubuntu
+                                       # directory and test any changes first on the copied file
     

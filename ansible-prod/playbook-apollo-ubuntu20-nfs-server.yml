@@ -23,6 +23,8 @@
         target_dev_domain: ""
         target_dev_short_machine_name: ""
         target_dev_user_id: ""
+        target_dev_dir: ""
+        target_dev_dir2: ""
     - import_role:
         name: nfs-create-user
     - import_role:

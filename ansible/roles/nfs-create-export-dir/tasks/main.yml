@@ -1,11 +1,23 @@
 ---
-- name: "check that dir {{create_nfs_export_dir_path}} exists and register result"
-  stat: "path={{create_nfs_export_dir_path}}"
+- name: "set facts"
+  set_fact:
+    host_machine_simple_name: "{{ target_dev_short_machine_name if target_environment == 'test' else create_nfs_machine_name }}"
+    etc_exports_file_path: "{{ '{{target_dev_dir}}/exports' if target_environment == 'test' else create_nfs_export_file_path }}"
+    home_data_hostname_dir_path: "{{ '{{target_dev_dir2}}/{{target_dev_short_machine_name}}' if target_environment == 'test' else create_nfs_export_main_dir_path }}"
+    apollo_data_dir_path: "{{ '{{target_dev_dir2}}/{{ host_machine_simple_name }}/apollo_data' if target_environment == 'test' else '{{create_nfs_home_data_dir_path}}/{{create_nfs_apollo_data_dir_path}}' }}"
+    sourcedata_dir_path: "{{ '{{target_dev_dir2}}/{{ host_machine_simple_name }}/sourcedata' if target_environment == 'test' else '{{create_nfs_home_data_dir_path}}/{{create_nfs_apollo_data_dir_path}}' }}"
+
+- name: "debug host_machine_simple_name"
+  debug:
+    msg: "Host/machine simple name = {{ host_machine_simple_name }} - dir path = {{etc_exports_file_path}}"
+
+- name: "check that dir {{home_data_hostname_dir_path}} exists and register result"
+  stat: "path={{home_data_hostname_dir_path}}"
   register: "stat_result"
 
-- name: "Create dir {{create_nfs_export_dir_path}} stat_result.stat.exists = {{stat_result.stat.exists}}"
+- name: "Create dir {{home_data_hostname_dir_path}} stat_result.stat.exists = {{stat_result.stat.exists}}"
   file:
-    path: "{{create_nfs_export_dir_path}}"
+    path: "{{home_data_hostname_dir_path}}"
     state: "directory"
     owner: "root"
     group: "root"
@@ -13,17 +25,8 @@
     recurse: yes
   when: "stat_result.stat.exists == false"
 
-- name: "set facts"
-  set_fact:
-    host_machine_simple_name: "{{ 'ubuntu20-test' if target_environment == 'test' else create_nfs_machine_name }}"
-    etc_exports_dir_path: "{{ '/home/ubuntu/exports' if target_environment == 'test' else create_nfs_export_dir_path }}"
-
-- name: "debug invetory_host_full_domain_name"
-  debug:
-    msg: "Host/machine simple name = {{ host_machine_simple_name }} - dir path = {{etc_exports_dir_path}}"
-
-- name: "Read {{ etc_exports_dir_path }} content"
-  shell: "cat {{ etc_exports_dir_path }} | grep {{host_machine_simple_name}}"
+- name: "Read {{ etc_exports_file_path }} content"
+  shell: "cat {{ etc_exports_file_path }} | grep {{host_machine_simple_name}}"
   register: var_etc_hosts
   # There are two ways this can be done as per below SO question
   # https://stackoverflow.com/questions/50440515/ansible-error-on-shell-command-returning-zero
@@ -46,7 +49,7 @@
 
 - name: "Replace IP address in hosts file if host already exists"
   lineinfile:
-    dest: "{{ etc_exports_dir_path }}"
+    dest: "{{ etc_exports_file_path }}"
     regexp: '.*{{ host_machine_simple_name }}$'
     line: "{{ var_line_to_append }}"
     state: present
@@ -54,22 +57,17 @@
 
 - name: "Append IP address and host name in hosts file at the end of the file"
   lineinfile:
-    dest: "{{ etc_exports_dir_path }}"
+    dest: "{{ etc_exports_file_path }}"
     line: "{{ var_line_to_append }}"
   when: var_etc_hosts.stdout == ""
 
-- name: "check that dir {{create_nfs_export_dir_path}} exists and register result"
-  stat: "path={{create_nfs_export_dir_path}}"
+- name: "check that dir {{home_data_hostname_dir_path}} exists and register result"
+  stat: "path={{home_data_hostname_dir_path}}"
   register: "stat_result_after"
 
 - name: "Export new directory to be mounted by apollo VM {{create_nfs_machine_name}}"
   command: "exportfs -ra"
   when: "stat_result_after.stat.exists == true"
-
-- name: "set facts"
-  set_fact:
-    apollo_data_dir_path: "{{ '/home/ubuntu/{{ host_machine_simple_name }}/apollo_data' if target_environment == 'test' else '{{create_nfs_home_data_dir_path}}/{{create_nfs_apollo_data_dir_path}}' }}"
-    sourcedata_dir_path: "{{ '/home/ubuntu/{{ host_machine_simple_name }}/sourcedata' if target_environment == 'test' else '{{create_nfs_home_data_dir_path}}/{{create_nfs_apollo_data_dir_path}}' }}"
 
 - name: "debug apollo_data_dir_path and sourcedata_dir_path"
   debug:

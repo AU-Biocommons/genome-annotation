@@ -65,3 +65,13 @@ apollo-data.genome.edu.au
 [nfsservervms:vars]
 ansible_user=ubuntu
 admin_group=sudo
+
+[changeipvms]
+ubuntu20-test.genome.edu.au private_ip=192.168.0.88 hostname_for_ip=testhostname
+apollo-data.genome.edu.au private_ip=192.168.0.78 hostname_for_ip=ubuntu20-test
+
+[changeipvms:vars]
+ansible_user=ubuntu
+admin_group=sudo
+private_ip=192.168.0.78
+hostname_for_ip=ubuntu20-test

@@ -1,0 +1,9 @@
+---
+# Variables that can be used that are set as facts by role common-decode-extravars-setfacts
+# apollo_full_domain_name
+# apollo_short_machine_name 
+# apollo_padded_number 
+set_nfs_mount_dir_path: "/home/data/"
+set_nfs_mount_etc_fstab: "/etc/fstab"
+set_nfs_mount_server_private_ip: "192.168.0.68"
+set_nfs_mount_machine_name: "{{apollo_short_machine_name}}"

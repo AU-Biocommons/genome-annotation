@@ -1,0 +1,6 @@
+---
+# Variables that can be used that are set as facts by role common-decode-extravars-setfacts
+# apollo_full_domain_name
+# apollo_short_machine_name 
+# apollo_padded_number 
+user_setquota_home_data_dir_path: "/home/data"

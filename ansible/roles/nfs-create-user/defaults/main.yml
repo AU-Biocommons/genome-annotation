@@ -1,0 +1,11 @@
+---
+# Variables that can be used that are set as facts by role common-decode-extravars-setfacts
+# apollo_full_domain_name
+# apollo_short_machine_name 
+# apollo_padded_number 
+create_user_padded_number: "{{apollo_padded_number}}"
+create_user_id: "16{{create_user_padded_number}}"
+create_user_name: "apollo{{create_user_padded_number}}_user"
+create_user_home_data_dir_path: "/home/data"
+create_user_apollo_data_dir_path: "apollo-{{create_user_padded_number}}/apollo_data"
+create_user_sourcedata_dir_path: "apollo-{{create_user_padded_number}}/sourcedata"

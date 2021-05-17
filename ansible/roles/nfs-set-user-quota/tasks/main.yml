@@ -1,0 +1,7 @@
+---
+- name: "Print user name and user id to be created"
+  debug: 
+    msg: "User Name = {{create_user_name}}" #from role nfs-create-user
+
+- name: "Set user quota"
+  command: "setquota -u {{create_user_name}} 1024G 2048G 3350000 6700000 {{user_setquota_home_data_dir_path}}"

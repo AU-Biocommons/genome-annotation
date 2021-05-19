@@ -1,0 +1,7 @@
+#! /bin/bash
+DAY=$(date +"%Y%m%d")
+BACKUP_DIR="/mnt/backup00/mt-sandpit"
+ARCHIVE_DIR="/mnt/backup00/mt-sandpit_archive"
+
+/usr/bin/rsync -e ssh -avrL --numeric-ids --rsync-path="sudo rsync" backup_user@146.118.69.224:/home/ $BACKUP_DIR
+tar czf $ARCHIVE_DIR/mt_sandpit_$DAY.tgz $BACKUP_DIR

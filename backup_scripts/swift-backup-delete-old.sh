@@ -8,7 +8,7 @@ BACKUP_BIN=$BACKUP_ROOT/scripts
 APOLLO_ARCHIVE_COUNT=$(ls -ld $BACKUP_ROOT/apollo-???_archive | wc -l)
 
 SWIFT_CRED_FILE=$HOME/app-cred-swift-openrc.sh
-SWIFT_PATH=$HOME/.local
+SWIFT_PATH=$HOME/.local/bin
 EXPIRE=37
 KEEP=$APOLLO_ARCHIVE_COUNT
 CONTAINER="Apollo_SQL_Archive"

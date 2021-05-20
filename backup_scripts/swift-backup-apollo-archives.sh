@@ -8,7 +8,7 @@ BACKUP_ROOT=/mnt/backup00
 BACKUP_BIN=$BACKUP_ROOT/scripts
 
 SWIFT_CRED_FILE=$HOME/app-cred-swift-openrc.sh
-SWIFT_PATH=$HOME/.local
+SWIFT_PATH=$HOME/.local/bin
 MTIME=1 # modified in last day
 CONTAINER="Apollo_SQL_Archive"
 

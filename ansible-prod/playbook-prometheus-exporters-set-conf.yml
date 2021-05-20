@@ -7,5 +7,5 @@
 
   # The role to be run by this playbook requires the postgres password
   # to be passed through the command line, as follows
-  #     --extra-vars="prometheus_postgres_exporter_set_conf_password=jae:Doegahw0"
+  #     --extra-vars="prometheus_postgres_exporter_set_conf_password=<postgres_password>"
 

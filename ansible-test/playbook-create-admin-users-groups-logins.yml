@@ -1,14 +1,11 @@
 ---
-- hosts: 
-   - ubuntutestvms
-   - apollovms
-   - newapollovms
-   - otherubuntuvms
+- hosts: all
   remote_user: "{{ansible_user}}"
   become: yes
   become_method: sudo
   connection: "ssh"
-      
+  
+  # This playbook requires to use --limit option 
   tasks:
     - import_role:
         name: "create-admin-users-groups-logins"

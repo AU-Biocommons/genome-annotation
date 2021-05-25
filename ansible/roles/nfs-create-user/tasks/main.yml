@@ -3,22 +3,12 @@
   debug: 
     msg: "User Name = {{create_user_name}} - User Id = {{create_user_id}}"
 
-- name: "Create user group in NFS server"
-  group:
-    name: "{{create_user_name}}"
-    state: "present"
-
 # Creating the user without password and without ssh keys is equivalent to option --disabled-login
 - name: "Create user account in NFS server"
   user:
     name: "{{create_user_name}}"
-    shell: "/bin/false"
-    create_home: no
     uid: "{{create_user_id}}"
+    shell: "/bin/false"
+    create_home: "no"
     state: "present"
 
-- name: "Adding user to group"
-  user:
-    name: "{{create_user_name}}"
-    groups: "{{create_user_name}}"
-    append: yes

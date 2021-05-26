@@ -98,13 +98,19 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
         `-extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>"`
     3.  Requires the apollo postgres user password passed in on the command line , with
         `--extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>"`
+    4.  Requires the apollo instance number to be passed in on the command line as N (1-999), with
+        `--extra-vars="apollo_instance_number=<N>"`
+    5.  Requires the custom host name to be passed in on the command line, with
+        `--extra-vars="apollo_instance_number=<CUSTOM>"`
         
-    Please see example command below:
+    As an example, see the following:
     ```
     ansible-playbook playbook-apollo-ubuntu20-combined-1.yml \
     --extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>" \
     --extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>" \
     --extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>" \
+    --extra-vars="apollo_instance_number=10" \
+    --extra-vars="apollo_subdomain_name=starwars" \
     --limit newapollovms
     ```
 

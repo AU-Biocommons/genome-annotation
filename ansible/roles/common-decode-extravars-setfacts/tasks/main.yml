@@ -60,5 +60,5 @@
 - name: "set fact nginx_add_conf_domain_name if apollo_subdomain_name is set"
   set_fact:
     nginx_add_conf_domain_name: "{{apollo_subdomain_name}}"
-  when: apollo_subdomain_name != ''
+  when: apollo_subdomain_name is defined
 

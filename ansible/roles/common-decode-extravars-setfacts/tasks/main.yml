@@ -56,3 +56,9 @@
 - name: "Print full domain name"
   debug: 
     msg: "Full domain = {{apollo_full_domain_name}} - Machine name = {{apollo_short_machine_name}} - Instance number = {{apollo_padded_number}}"
+
+- name: "set fact nginx_add_conf_domain_name if apollo_subdomain_name is set"
+  set_fact:
+    nginx_add_conf_domain_name: "{{apollo_subdomain_name}}"
+  when: apollo_subdomain_name != ''
+

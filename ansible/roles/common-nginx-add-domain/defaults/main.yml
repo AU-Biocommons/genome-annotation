@@ -1,8 +1,10 @@
 ---
+# Variables that can be used that are set as fact by role common-decode-extravars-setfacts
+# apollo_full_domain_name
+# apollo_short_machine_name 
+# apollo_padded_number 
 nginx_conf_domain_name: "{{apollo_full_domain_name}}"
-# use  --extra-vars="nginx_add_conf_domain_name=<new_domain_name_here>"
-nginx_add_conf_domain_name: "enter_in_command_line"
-nginx_add_conf_full_domain_name: "{{nginx_add_conf_domain_name}}.genome.edu.au"
+nginx_add_conf_full_domain_name: "{{apollo_subdomain_name}}.genome.edu.au"
 nginx_add_conf_config_file_path: "/etc/nginx/sites-available/{{nginx_add_conf_full_domain_name}}.conf"
 nginx_add_conf_slink_file_path: "/etc/nginx/sites-enabled/{{nginx_add_conf_full_domain_name}}.conf"
 nginx_current_config_file_path: "/etc/nginx/sites-available/{{nginx_conf_domain_name}}.conf"

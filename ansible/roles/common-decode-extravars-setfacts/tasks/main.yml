@@ -46,7 +46,7 @@
     apollo_number_only: "{{apollo_instance_number}}"
   when: two_decimals is not defined and one_decimals is not defined
 
-# Override full domain name fact to ubuntu20-test.genome.edu.au if environment is test 
+# Override full domain name fact to what is defined in the playbook if environment is also set to test in the playbook 
 - name: "set fact apollo_full_domain_name overried if apollo_evironment is test"
   set_fact:
     apollo_full_domain_name: "{{ target_dev_domain if target_environment == 'test' else apollo_full_domain_name_temp }}"
@@ -57,8 +57,4 @@
   debug: 
     msg: "Full domain = {{apollo_full_domain_name}} - Machine name = {{apollo_short_machine_name}} - Instance number = {{apollo_padded_number}}"
 
-- name: "set fact nginx_add_conf_domain_name if apollo_subdomain_name is set"
-  set_fact:
-    nginx_add_conf_domain_name: "{{apollo_subdomain_name}}"
-  when: apollo_subdomain_name is defined
 

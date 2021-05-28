@@ -24,6 +24,8 @@
       vars:
         target_environment: "test"
         target_dev_domain: "ubuntu20-test.genome.edu.au"
+        target_dev_short_machine_name: "ubuntu20-test"
+        target_dev_user_id: "999"
     - import_role:
         name: common-nginx-set-conf
     - import_role:

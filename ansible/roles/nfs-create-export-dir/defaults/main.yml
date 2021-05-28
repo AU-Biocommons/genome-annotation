@@ -3,12 +3,12 @@
 # apollo_full_domain_name
 # apollo_short_machine_name 
 # apollo_padded_number 
-create_nfs_machine_name: "{{apollo_short_machine_name}}"
-create_nfs_export_main_dir_path: "/home/data/{{create_nfs_machine_name}}"
-create_nfs_export_file_path: "/etc/exports"
+create_nfs_machine_name: "{{apollo_short_machine_name}}" # from role common-decode-extravars-setfacts
+create_nfs_padded_number: "{{apollo_padded_number}}" # from role common-decode-extravars-setfacts
 create_nfs_user_name: "{{create_user_name}}" #from role nfs-create-user
 create_nfs_home_data_dir_path: "{{user_setquota_home_data_dir_path}}" #from role nfs-set-user-quota 
-create_nfs_padded_number: "{{apollo_padded_number}}" # from role common-decode-extravars-setfacts
+create_nfs_export_main_dir_path: "{{create_nfs_home_data_dir_path}}/{{create_nfs_machine_name}}"
 create_nfs_apollo_data_dir_path: "apollo-{{create_nfs_padded_number}}/apollo_data"
 create_nfs_sourcedata_dir_path: "apollo-{{create_nfs_padded_number}}/sourcedata"
+create_nfs_export_file_path: "/etc/exports"
 

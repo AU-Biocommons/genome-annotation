@@ -5,11 +5,15 @@
     etc_exports_file_path: "{{ '{{target_dev_dir}}/exports' if target_environment == 'test' else create_nfs_export_file_path }}"
     home_data_hostname_dir_path: "{{ '{{target_dev_dir2}}/{{target_dev_short_machine_name}}' if target_environment == 'test' else create_nfs_export_main_dir_path }}"
     apollo_data_dir_path: "{{ '{{target_dev_dir2}}/{{ host_machine_simple_name }}/apollo_data' if target_environment == 'test' else '{{create_nfs_home_data_dir_path}}/{{create_nfs_apollo_data_dir_path}}' }}"
-    sourcedata_dir_path: "{{ '{{target_dev_dir2}}/{{ host_machine_simple_name }}/sourcedata' if target_environment == 'test' else '{{create_nfs_home_data_dir_path}}/{{create_nfs_apollo_data_dir_path}}' }}"
+    sourcedata_dir_path: "{{ '{{target_dev_dir2}}/{{ host_machine_simple_name }}/sourcedata' if target_environment == 'test' else '{{create_nfs_home_data_dir_path}}/{{create_nfs_sourcedata_dir_path}}' }}"
 
-- name: "debug host_machine_simple_name"
+- name: "debug facts - host_machine_simple_name - etc_exports_file_path"
   debug:
     msg: "Host/machine simple name = {{ host_machine_simple_name }} - dir path = {{etc_exports_file_path}}"
+
+- name: "debug facts apollo_data_dir_path - sourcedata_dir_path"
+  debug:
+    msg: "apollo data dir path = {{apollo_data_dir_path}} - sourcedata dir path = {{ sourcedata_dir_path }}"
 
 - name: "check that dir {{home_data_hostname_dir_path}} exists and register result"
   stat: "path={{home_data_hostname_dir_path}}"
@@ -69,7 +73,7 @@
   command: "exportfs -ra"
   when: "stat_result_after.stat.exists == true"
 
-- name: "debug apollo_data_dir_path and sourcedata_dir_path"
+- name: "debug facts apollo_data_dir_path and sourcedata_dir_path"
   debug:
     msg: "apollo data dir path = {{apollo_data_dir_path}} - sourcedata dir path = {{ sourcedata_dir_path }}"
 

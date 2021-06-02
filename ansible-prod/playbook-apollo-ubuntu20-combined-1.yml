@@ -65,6 +65,8 @@
     - import_role:
         name: apollo-docker-postgres
     - import_role:
+        name: apollo-set-tools-path
+    - import_role:
         name: common-nagios-nrpe
     - import_role:
         name: configure-ufw

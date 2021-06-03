@@ -57,4 +57,8 @@
   debug: 
     msg: "Full domain = {{apollo_full_domain_name}} - Machine name = {{apollo_short_machine_name}} - Instance number = {{apollo_padded_number}}"
 
+# export the tomcat memory settings for test (small VM) or production (large VM)
+- name: "set fact apollo_tomcat_memory_opts from target_tomcat_memory variable"
+  set_fact:
+    apollo_tomcat_memory_opts: "{{target_tomcat_memory}}"
 

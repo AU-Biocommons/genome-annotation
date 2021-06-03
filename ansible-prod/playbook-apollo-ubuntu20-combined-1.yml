@@ -27,6 +27,7 @@
         target_dev_domain: ""
         target_dev_short_machine_name: ""
         target_dev_user_id: ""
+        target_tomcat_memory: "-Xms8g -Xmx12g"
     - import_role:
         name: configure-host
     # This role is required to be run in Ubuntu 20

@@ -27,6 +27,7 @@
         target_dev_domain: "ubuntu20-test.genome.edu.au"
         target_dev_short_machine_name: "ubuntu20-test"
         target_dev_user_id: "999"
+        target_tomcat_memory: "-Xms512m -Xmx2g"
     - import_role:
         name: configure-host
     # This role is required to be run in Ubuntu 20

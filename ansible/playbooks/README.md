@@ -74,50 +74,34 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
 1. **playbook-set-etc-hosts-ip.yml** 
    1. Run playbbok to add/update entries in /etc/hosts file
    2. Modify `changeipvms` host list in invetory file as required
-   3.  Requires environment variable
-      `--extra-vars="target_environment=<prod or test>"`
-   4. Requires `--limit changeipvms or --limit changeiptestvms`
+   3. Requires `--limit changeipvms or --limit changeiptestvms`
+   4. Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
    
    Please see **`prod`** command example below:
     ```
-   ansible-playbook playbook-set-etc-hosts-ip.yml \
-   --extra-vars="target_environment=prod" \
-   --limit changeipvms
+   ansible-playbook playbook-set-etc-hosts-ip.yml --limit changeipvms
     ```
 
-   Please see **`test`** command example below **`Note that test command requires additional extra vars target_dev_dir`** so it can be tested in a file different to the real `/etc/hosts` file of the target host. It is recommended whenever changes are made to the playbook or roles that a copy of /etc/hosts file is placed in an `alternate path` and test changes in this copied file first:
+   Please see **`test`** command example below **`Note that some additional variables come from the inventory file like "target_environment", "target_dev_dir"`** so it can be tested in a file different to the real `/etc/hosts` file of the target host. It is recommended whenever changes are made to the playbook or roles that a copy of /etc/hosts file is placed in an `alternate path` and test changes in this copied file first:
     ```
-   ansible-playbook playbook-set-etc-hosts-ip.yml \
-   --extra-vars="target_environment=test" \
-   --extra-vars="target_dev_dir=/alternate/path" \
-   --limit changeipvms
+   ansible-playbook playbook-set-etc-hosts-ip.yml --limit changeiptestvms
     ```
 
 2. **playbook-apollo-ubuntu20-nfs-server.yml**
    1. Run NFS playbook to setup a new apollo VM in the NFS server
    2. Modify `nfsservervms` host list in invetory file if required (currently should have only one host which is `apollo-data.genome.edu.au`)
-   3. Requires apollo instance number to be passed in on the command line with where `N` is jut a number without padding with zeros 
-      `--extra-vars="apollo_instance_number=N"`
-   4.  Requires environment variable
-      `--extra-vars="target_environment=<prod or test>"`
-   5.  Requires use of `--limit` to select which host group defined in inventory file will be the target. **`Note that currently there is only one host/group defined in inventory file`** because there is only one NFS server therefore both prod and test will run on the same vm  
+   3.  Requires use of `--limit` to select which host group defined in inventory file will be the target. **`Note that currently there is only one host/group defined in inventory file`** because there is only one NFS server therefore both prod and test will run on the same vm  
+   4.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group 
+   5.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
    
    Please see **`prod`** command example below:
     ```
-   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml \
-   --extra-vars="apollo_instance_number=8" \
-   --extra-vars="target_environment=prod" \
-   --limit nfsservervms
+   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --limit nfsservervms
     ```
     
-   Please see **`test`** command example below **`Note that test command requires additional extra vars "target_dev_domain" and "target_dev_short_machine_name."`** These extra vars are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when passin in `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
+   Please see **`test`** command example below **`Note that some additional variables come from the inventory file like "target_environment", "target_dev_domain" and "target_dev_short_machine_name."`** These are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
     ```
-   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml \
-   --extra-vars="apollo_instance_number=999" \
-   --extra-vars="target_environment=test" \
-   --extra-vars="target_dev_domain=ubuntu20-test.genome.edu.au" \
-   --extra-vars="target_dev_short_machine_name=ubuntu20-test" \
-   --limit nfsservervms
+   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --limit nfsservervmstest
     ```
 
 3. **playbook-apollo-ubuntu20-combined-1.yml**
@@ -127,15 +111,10 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
         `-extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>"`
     3.  Requires the apollo postgres user password passed in on the command line , with
         `--extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>"`
-    4.  Requires the apollo instance number to be passed in on the command line as N (1-999), with
-        `--extra-vars="apollo_instance_number=<N>"`
-    5.  Requires the custom host name to be passed in on the command line, with
-        `--extra-vars="apollo_subdomain_name=<CUSTOM>"`
-    6.  Requires the memory setting for tomcat
-        `--extra-vars="target_tomcat_memory=<Xms and Xmx as required>"`
-    7.  Requires environment variable
-        `--extra-vars="target_environment=<prod or test>"`
-    8.  Requires use of `--limit` to select which host group defined in inventory file will be the target
+    4.  Requires use of `--limit` to select which host group defined in inventory file will be the target
+    5.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group 
+    6.  Requires the custom host name to `apollo_subdomain_name=<CUSTOM>` to be defined in the inventory file for the host group
+    7.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
         
    Please see **`prod`** command example below:
     ```
@@ -143,25 +122,15 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     --extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>" \
     --extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>" \
     --extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>" \
-    --extra-vars="apollo_instance_number=8" \
-    --extra-vars="apollo_subdomain_name=degnan" \
-    --extra-vars="target_tomcat_memory=-Xms8g -Xmx12g" \
-    --extra-vars="target_environment=prod" \
     --limit newapollovms
     ```
 
-   Please see **`test`** command example below **`Note that test command requires additional extra vars "target_dev_domain" and "target_dev_short_machine_name."`** These extra vars are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when passin in `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
+   Please see **`test`** command example below **`Note that some additional variables come from the inventory file like "target_dev_domain" and "target_dev_short_machine_name."`** These are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
     ```
     ansible-playbook playbook-apollo-ubuntu20-combined-1.yml \
     --extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>" \
     --extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>" \
     --extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>" \
-    --extra-vars="apollo_instance_number=999" \
-    --extra-vars="apollo_subdomain_name=starwars" \
-    --extra-vars="target_tomcat_memory=-Xms512m -Xmx2g" \
-    --extra-vars="target_environment=test" \
-    --extra-vars="target_dev_domain=ubuntu20-test.genome.edu.au" \
-    --extra-vars="target_dev_short_machine_name=ubuntu20-test" \
     --limit ubuntu20testvms
     ```
 
@@ -187,43 +156,22 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     ```
 
 5.  **playbook-apollo-ubuntu20-combined-2.yml**
-    1.  Requires number that will be used to construnct default `apollo-*` domain name to be passed in as a parameter
-        `--extra-vars="apollo_instance_number=<apollo instance number without leading zeros>"`
-    2.  Requires custom `subdomain name` (ie __not__ the default `apollo-*` name) as domain name
-        to be passed in as a parameter 
-        `--extra-vars="apollo_subdomain_name=<custom subdomain name without .genome.edu.au>"`
-    3.  Requires password of apollo admin user (ops@qfab.org) to passed in as a parameter,
-        and the password cannot contain special characters.
-        This will be used to protect the apollo application from being commandeered
-        between when apollo is created and when the admin account is registered via the UI
-        Note that the password can be changed to something more permanent on first login.
+    1.  Requires password of apollo admin user (ops@qfab.org) to passed in as a parameter, and the password cannot contain special characters.
+        This will be used to protect the apollo application from being commandeered between when apollo is created and when the admin account is registered via the UI Note that the password can be changed to something more permanent on first login.
         `--extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>"`
-    4.  Requires the use of `--limit` to make sure this runs for __only one__ server/host at a time
-        `--limit <APOLLO-FQDN>`
-    5.  Requires environment variable
-        `--extra-vars="target_environment=<prod or test>"`
-    6.  Requires use of `--limit` to select which host group defined in inventory file will be the target
+    2.  Requires use of `--limit` to select which host group defined in inventory file will be the target and to make sure this runs for __only one__ server/host at a time
+    3.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group 
+    4.  Requires the custom host name to `apollo_subdomain_name=<CUSTOM>` to be defined in the inventory file for the host group
+    5.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
 
    Please see **`prod`** command example below:
     ```
-    ansible-playbook playbook-apollo-ubuntu20-combined-2.yml \
-    --extra-vars="apollo_instance_number=8" \
-    --extra-vars="apollo_subdomain_name=degnan" \
-    --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" \
-    --extra-vars="target_environment=prod" \
-    --limit newapollovms
+    ansible-playbook playbook-apollo-ubuntu20-combined-2.yml --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" --limit newapollovms
     ```
 
-   Please see **`test`** command example below **`Note that test command requires additional extra vars "target_dev_domain" and "target_dev_short_machine_name."`** These extra vars are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when passin in `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
+   Please see **`test`** command example below **`Note that some additional variables come from the inventory file like "target_dev_domain" and "target_dev_short_machine_name."`** These are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
     ```
-    ansible-playbook playbook-apollo-ubuntu20-combined-2.yml \
-    --extra-vars="apollo_instance_number=999" \
-    --extra-vars="apollo_subdomain_name=startwars" \
-    --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" \
-    --extra-vars="target_environment=test" \
-    --extra-vars="target_dev_domain=ubuntu20-test.genome.edu.au" \
-    --extra-vars="target_dev_short_machine_name=ubuntu20-test" \
-    --limit ubuntu20testvms
+    ansible-playbook playbook-apollo-ubuntu20-combined-2.yml --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" --limit ubuntu20testvms
     ```
 
 # How to create/modify Ansible Roles

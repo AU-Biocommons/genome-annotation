@@ -33,12 +33,15 @@ admin_group=sudo
 allowed_groups="ubuntu apollo_admin backup_user"
 
 [newapollovms]
-#apollo-00X.genome.edu.au
+#apollo-00X.genome.edu.au 
 
 [newapollovms:vars]
 ansible_user=ubuntu
 admin_group=sudo
 allowed_groups="ubuntu apollo_admin backup_user"
+apollo_instance_number=X
+apollo_subdomain_name=subdomain
+target_environment=prod
 
 [otherubuntuvms]
 ansible-sandpit.genome.edu.au
@@ -66,6 +69,19 @@ apollo-data.genome.edu.au
 [nfsservervms:vars]
 ansible_user=ubuntu
 admin_group=sudo
+apollo_instance_number=X
+target_environment=prod
+
+[nfsservervmstest]
+apollo-data.genome.edu.au
+
+[nfsservervmstest:vars]
+ansible_user=ubuntu
+admin_group=sudo
+apollo_instance_number=999
+target_environment=test
+target_dev_domain=ubuntu20-test.genome.edu.au
+target_dev_short_machine_name=ubuntu20-test
 
 [changeipvms]
 ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo
@@ -76,6 +92,7 @@ apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 [changeipvms:vars]
 private_ip=192.168.0.176
 hostname_for_ip=apollo-012
+target_environment=prod
 
 [ubuntutestvms]
 ubuntu-test.genome.edu.au
@@ -92,13 +109,16 @@ ubuntu20-test.genome.edu.au
 ansible_user=ubuntu
 admin_group=sudo
 allowed_groups="ubuntu apollo_admin backup_user"
+apollo_instance_number=999
+apollo_subdomain_name=starwars
+target_environment=test
+target_dev_domain=ubuntu20-test.genome.edu.au
+target_dev_short_machine_name=ubuntu20-test
 
 [changeiptestvms]
-ubuntu20-test.genome.edu.au private_ip=192.168.0.88 hostname_for_ip=testhostname
-apollo-data.genome.edu.au private_ip=192.168.0.78 hostname_for_ip=ubuntu20-test
+ubuntu20-test.genome.edu.au private_ip=192.168.0.88 hostname_for_ip=testhostname target_dev_dir=/home/ubuntu
 
 [changeiptestvms:vars]
 ansible_user=ubuntu
 admin_group=sudo
-private_ip=192.168.0.78
-hostname_for_ip=ubuntu20-test
+target_environment=test

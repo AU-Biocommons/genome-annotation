@@ -60,5 +60,5 @@
 # export the tomcat memory settings for test (small VM) or production (large VM)
 - name: "set fact apollo_tomcat_memory_opts from target_tomcat_memory variable"
   set_fact:
-    apollo_tomcat_memory_opts: "{{target_tomcat_memory}}"
+    apollo_tomcat_memory_opts: "{{ '-Xms512m -Xmx2g' if target_environment == 'test' else '-Xms8g -Xmx12g' }}"
 

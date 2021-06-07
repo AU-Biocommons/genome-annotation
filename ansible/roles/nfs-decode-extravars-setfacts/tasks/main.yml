@@ -51,14 +51,9 @@
   set_fact:
     apollo_full_domain_name: "{{ target_dev_domain if target_environment == 'test' else apollo_full_domain_name_temp }}"
     apollo_short_machine_name: "{{ target_dev_short_machine_name if target_environment == 'test' else 'apollo-{{apollo_number_only}}' }}"
-    apollo_padded_number: "{{ target_dev_user_id if target_environment == 'test' else apollo_number_only }}"
+    apollo_padded_number: "{{ apollo_number_only }}"
 
 - name: "Print full domain name"
   debug: 
     msg: "Full domain = {{apollo_full_domain_name}} - Machine name = {{apollo_short_machine_name}} - Instance number = {{apollo_padded_number}}"
-
-# export the tomcat memory settings for test (small VM) or production (large VM)
-- name: "set fact apollo_tomcat_memory_opts from target_tomcat_memory variable"
-  set_fact:
-    apollo_tomcat_memory_opts: "{{target_tomcat_memory}}"
 

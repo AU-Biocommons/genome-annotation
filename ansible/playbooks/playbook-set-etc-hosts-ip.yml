@@ -1,0 +1,14 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+
+  # The role to be run by this playbook requires to use --limit invetory_group_name
+  # to limit the target host list i.e. --limit changeipvms or --limit changeiptestvms
+  tasks:
+    - import_role:
+        name: common-set-etc-hosts-ip  
+    

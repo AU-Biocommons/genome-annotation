@@ -2,7 +2,7 @@
 The state of the prod servers is defined with Ansible
 
 # Prod Servers Hosts (Inventory) File
-The prod servers are defined in the hosts (inventory) file in this directory [ansible-prod/hosts](hosts)
+The prod servers are defined in the hosts (inventory) file in this directory [ansible/playbooks/hosts](hosts)
 
 # Before running Ansible Playbooks
 Before running any of the playbooks make sure of the following: 
@@ -13,7 +13,7 @@ Before running any of the playbooks make sure of the following:
     ~/.ssh/config
     ```
 
-3. Check/update hosts (inventory) file [ansible-prod/hosts](hosts) and if required use limit and/or check options as required:
+3. Check/update hosts (inventory) file [ansible/playbooks/hosts](hosts) and if required use limit and/or check options as required:
     ```
     ansible-playbook yourplaybook.yml --limit yourinventory_server_group_name --check
     ```
@@ -26,15 +26,15 @@ Before running any of the playbooks make sure of the following:
     ```
     ansible-playbook playbook-apollo.yml --limit ubuntutestvms 
     ```
-    Because this is the `ansible-prod` folder it's not recommended to run without the `--limit` option, therefore in order to apply changes to the target servers it would be something like below command:
+    Because this is the `ansible/playbooks` folder it's not recommended to run without the `--limit` option, therefore in order to apply changes to the target servers it would be something like below command:
     ```
     ansible-playbook playbook-apollo.yml --limit ubuntuprodvms
     ``` 
-    Note that in some cases one may not want to target all prod VMs, if that's the case then first create a new group in the [ansible-prod/hosts](hosts) file and use it to target a selection of servers or only one server
+    Note that in some cases one may not want to target all prod VMs, if that's the case then first create a new group in the [ansible/playbooks/hosts](hosts) file and use it to target a selection of servers or only one server
 
-4. Check andible.cfg file and make sure config is as required  in this folder [ansible-prod/ansible.cfg](ansible.cfg)
+4. Check andible.cfg file and make sure config is as required  in this folder [ansible/playbooks/ansible.cfg](ansible.cfg)
    
-5. Make sure your local genome-annotation repo is up to date and has the latest version of all ansible roles and playbooks in `ansible-prod` folder 
+5. Make sure your local genome-annotation repo is up to date and has the latest version of all ansible roles and playbooks in `ansible/playbooks` folder 
    
 6. Read comments in each one of the playbooks to see if any of these requires parameters to be passed in the command line in example playbook-postgres-set-password.yml requires to pass in password value in the command line:
     ```
@@ -45,7 +45,7 @@ Before running any of the playbooks make sure of the following:
 # Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 20.04 (Simplified)
 Please **`Note that the below playbooks will run in all of the test hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
 
-The usual approach for deployment is to add the hostname to the `newapollovms` group in the inventory file `ansible-prod/hosts`, and remove any previous members. For example:
+The usual approach for deployment is to add the hostname to the `newapollovms` group in the inventory file `ansible/playbooks/hosts`, and remove any previous members. For example:
 
 ```
 [newapollovms]
@@ -74,21 +74,50 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
 1. **playbook-set-etc-hosts-ip.yml** 
    1. Run playbbok to add/update entries in /etc/hosts file
    2. Modify `changeipvms` host list in invetory file as required
-   3. Requires `--limit changeipvms`
+   3.  Requires environment variable
+      `--extra-vars="target_environment=<prod or test>"`
+   4. Requires `--limit changeipvms or --limit changeiptestvms`
    
-   Please see command example below:
+   Please see **`prod`** command example below:
     ```
-   ansible-playbook playbook-set-etc-hosts-ip.yml --limit changeipvms
+   ansible-playbook playbook-set-etc-hosts-ip.yml \
+   --extra-vars="target_environment=prod" \
+   --limit changeipvms
+    ```
+
+   Please see **`test`** command example below **`Note that test command requires additional extra vars target_dev_dir`** so it can be tested in a file different to the real `/etc/hosts` file of the target host. It is recommended whenever changes are made to the playbook or roles that a copy of /etc/hosts file is placed in an `alternate path` and test changes in this copied file first:
+    ```
+   ansible-playbook playbook-set-etc-hosts-ip.yml \
+   --extra-vars="target_environment=test" \
+   --extra-vars="target_dev_dir=/alternate/path" \
+   --limit changeipvms
     ```
 
 2. **playbook-apollo-ubuntu20-nfs-server.yml**
    1. Run NFS playbook to setup a new apollo VM in the NFS server
    2. Modify `nfsservervms` host list in invetory file if required (currently should have only one host which is `apollo-data.genome.edu.au`)
-   3. Requires apollo instance number to be passed in on the command line with `--extra-vars="apollo_instance_number=N"` where `N` is jut a number without padding with zeros and also requires `--limit nfsservervms`
+   3. Requires apollo instance number to be passed in on the command line with where `N` is jut a number without padding with zeros 
+      `--extra-vars="apollo_instance_number=N"`
+   4.  Requires environment variable
+      `--extra-vars="target_environment=<prod or test>"`
+   5.  Requires use of `--limit` to select which host group defined in inventory file will be the target. **`Note that currently there is only one host/group defined in inventory file`** because there is only one NFS server therefore both prod and test will run on the same vm  
    
-   Please see command example below:
+   Please see **`prod`** command example below:
     ```
-   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --extra-vars="apollo_instance_number=8" --limit nfsservervms
+   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml \
+   --extra-vars="apollo_instance_number=8" \
+   --extra-vars="target_environment=prod" \
+   --limit nfsservervms
+    ```
+    
+   Please see **`test`** command example below **`Note that test command requires additional extra vars "target_dev_domain" and "target_dev_short_machine_name."`** These extra vars are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when passin in `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
+    ```
+   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml \
+   --extra-vars="apollo_instance_number=999" \
+   --extra-vars="target_environment=test" \
+   --extra-vars="target_dev_domain=ubuntu20-test.genome.edu.au" \
+   --extra-vars="target_dev_short_machine_name=ubuntu20-test" \
+   --limit nfsservervms
     ```
 
 3. **playbook-apollo-ubuntu20-combined-1.yml**
@@ -101,9 +130,27 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     4.  Requires the apollo instance number to be passed in on the command line as N (1-999), with
         `--extra-vars="apollo_instance_number=<N>"`
     5.  Requires the custom host name to be passed in on the command line, with
-        `--extra-vars="apollo_instance_number=<CUSTOM>"`
+        `--extra-vars="apollo_subdomain_name=<CUSTOM>"`
+    6.  Requires the memory setting for tomcat
+        `--extra-vars="target_tomcat_memory=<Xms and Xmx as required>"`
+    7.  Requires environment variable
+        `--extra-vars="target_environment=<prod or test>"`
+    8.  Requires use of `--limit` to select which host group defined in inventory file will be the target
         
-    As an example, see the following:
+   Please see **`prod`** command example below:
+    ```
+    ansible-playbook playbook-apollo-ubuntu20-combined-1.yml \
+    --extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>" \
+    --extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>" \
+    --extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>" \
+    --extra-vars="apollo_instance_number=8" \
+    --extra-vars="apollo_subdomain_name=degnan" \
+    --extra-vars="target_tomcat_memory=-Xms8g -Xmx12g" \
+    --extra-vars="target_environment=prod" \
+    --limit newapollovms
+    ```
+
+   Please see **`test`** command example below **`Note that test command requires additional extra vars "target_dev_domain" and "target_dev_short_machine_name."`** These extra vars are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when passin in `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
     ```
     ansible-playbook playbook-apollo-ubuntu20-combined-1.yml \
     --extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>" \
@@ -111,7 +158,11 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     --extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>" \
     --extra-vars="apollo_instance_number=999" \
     --extra-vars="apollo_subdomain_name=starwars" \
-    --limit newapollovms
+    --extra-vars="target_tomcat_memory=-Xms512m -Xmx2g" \
+    --extra-vars="target_environment=test" \
+    --extra-vars="target_dev_domain=ubuntu20-test.genome.edu.au" \
+    --extra-vars="target_dev_short_machine_name=ubuntu20-test" \
+    --limit ubuntu20testvms
     ```
 
 4. **`Before running playbook-apollo-ubuntu20-combined-2.yml certbot needs to be manually run using below commands`**
@@ -149,14 +200,30 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
         `--extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>"`
     4.  Requires the use of `--limit` to make sure this runs for __only one__ server/host at a time
         `--limit <APOLLO-FQDN>`
+    5.  Requires environment variable
+        `--extra-vars="target_environment=<prod or test>"`
+    6.  Requires use of `--limit` to select which host group defined in inventory file will be the target
 
-    Please see example command below:
+   Please see **`prod`** command example below:
+    ```
+    ansible-playbook playbook-apollo-ubuntu20-combined-2.yml \
+    --extra-vars="apollo_instance_number=8" \
+    --extra-vars="apollo_subdomain_name=degnan" \
+    --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" \
+    --extra-vars="target_environment=prod" \
+    --limit newapollovms
+    ```
+
+   Please see **`test`** command example below **`Note that test command requires additional extra vars "target_dev_domain" and "target_dev_short_machine_name."`** These extra vars are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when passin in `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
     ```
     ansible-playbook playbook-apollo-ubuntu20-combined-2.yml \
     --extra-vars="apollo_instance_number=999" \
-    --extra-vars="apollo_subdomain_name=degnan" \
+    --extra-vars="apollo_subdomain_name=startwars" \
     --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" \
-    --limit apollo-008.genome.edu.au
+    --extra-vars="target_environment=test" \
+    --extra-vars="target_dev_domain=ubuntu20-test.genome.edu.au" \
+    --extra-vars="target_dev_short_machine_name=ubuntu20-test" \
+    --limit ubuntu20testvms
     ```
 
 # How to create/modify Ansible Roles

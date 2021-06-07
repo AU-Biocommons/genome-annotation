@@ -20,12 +20,7 @@
   #
   tasks:
     - import_role:
-        name: common-decode-extravars-setfacts
-      vars:
-        target_environment: "prod"
-        target_dev_domain: ""
-        target_dev_short_machine_name: ""
-        target_dev_user_id: ""
+        name: apollo-decode-extravars-setfacts-combined-2
     - import_role:
         name: common-nginx-set-conf
     - import_role:

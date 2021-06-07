@@ -17,14 +17,7 @@
   #
   tasks:
     - import_role:
-        name: common-decode-extravars-setfacts
-      vars:
-        target_environment: "prod"
-        target_dev_domain: ""
-        target_dev_short_machine_name: ""
-        target_dev_user_id: ""
-        target_dev_dir: ""
-        target_dev_dir2: ""
+        name: nfs-decode-extravars-setfacts
     - import_role:
         name: nfs-create-user
     - import_role:

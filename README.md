@@ -11,30 +11,22 @@ Australian Biocommons Genome Annotation (Apollo). The purpose of this repo is to
 # Folder Structure of the Genome Annotation Repo
 The structure of this repo is as below: 
 
-1. The **ansible-test** folder is virtually identical to its counterpart **ansible-prod** folder. The difference is in the hosts (inventory) file and as its name suggests the hosts file has only test VMs. The main files in this folder are listed below:
-   
-   - `ansible.cfg`: Ansible configuration file
-   - `hosts`: Ansible inventory file with test VMs
-   - `playbook-*`: playbooks are `lightweight` and contain a list of roles to be executed for a `purpose`
-   - For more information see **`README`** files in [ansible-test/README.md](ansible-test/README.md)
-
-2. The **ansible-prod** folder has the below content:
+1. The **playbooks** folder inside the **ansible** folder. The **playbooks** folder has the below content:
    
    - `ansible.cfg`: Ansible configuration file
    - `hosts`: Ansible inventory file with **`ALL`** VMs, meaning prod VMs and test VMs
    - `playbook-*`: playbooks are `lightweight` and contain a list of roles to be executed for a `purpose`
-   - For more information see **`README`** files in [ansible-prod/README.md](ansible-prod/README.md) 
+   - For more information see **`README`** files in [ansible/playbooks/README.md](ansible/playbooks/README.md) 
 
-3. The **ansible** folder that contains the **roles** folder. The **roles** folder has all ansible roles that can be used by playbooks placed in either **ansible-test** and/or **ansible-prod** folders: 
+2. The **roles** folder inside the **ansible** folder. The **roles** folder has all ansible roles that can be used by playbooks placed in  **playbooks** folder: 
 
    - `Roles`: Ansible Roles contain a list of tasks to be executed in the target server. The roles are named by what they do. In example: **common-install-nginx** is a role that will install nginx package and the prefix `common` means it can be used by different playbooks.  The name of the folder is the name of the role and each role folder has to comply with required folder structure for ansible roles. See [Ansible Roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html) documentation for more details.
 
-4. The **local_dev** folder is optional to be used for "local development" as its name suggests. This folder has the below content:
+3. The **local_dev** folder is optional to be used for "local development" as its name suggests. This folder has the below content:
    - `ansible.cfg`: Ansible configuration file
    - `Vagrantfile`: Vagrant configuration file
    - `playbook-test-roles.yml`: Ansible playbook for testing ansible roles in local Vagrant development environment
    - For more information see **`README`** files in [local_dev/README.md](local_dev/README.md) 
-
 
 # How to Create/Modify Ansible Roles
 For more information see **`README`** file in [ansible/README.md](ansible/README.md)

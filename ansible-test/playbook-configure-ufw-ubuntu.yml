@@ -1,7 +1,0 @@
----
-- hosts: all
-  become: "yes"
-  tasks:
-    - import_role:
-        name: configure-ufw
-

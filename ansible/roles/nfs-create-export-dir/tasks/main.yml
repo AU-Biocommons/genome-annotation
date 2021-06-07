@@ -2,10 +2,10 @@
 - name: "set facts"
   set_fact:
     host_machine_simple_name: "{{ target_dev_short_machine_name if target_environment == 'test' else create_nfs_machine_name }}"
-    etc_exports_file_path: "{{ '{{target_dev_dir}}/exports' if target_environment == 'test' else create_nfs_export_file_path }}"
-    home_data_hostname_dir_path: "{{ '{{target_dev_dir2}}/{{target_dev_short_machine_name}}' if target_environment == 'test' else create_nfs_export_main_dir_path }}"
-    apollo_data_dir_path: "{{ '{{target_dev_dir2}}/{{ host_machine_simple_name }}/apollo_data' if target_environment == 'test' else '{{create_nfs_home_data_dir_path}}/{{create_nfs_apollo_data_dir_path}}' }}"
-    sourcedata_dir_path: "{{ '{{target_dev_dir2}}/{{ host_machine_simple_name }}/sourcedata' if target_environment == 'test' else '{{create_nfs_home_data_dir_path}}/{{create_nfs_sourcedata_dir_path}}' }}"
+    etc_exports_file_path: "{{create_nfs_export_file_path}}"
+    home_data_hostname_dir_path: "{{create_nfs_export_main_dir_path}}"
+    apollo_data_dir_path: "{{create_nfs_home_data_dir_path}}/{{create_nfs_apollo_data_dir_path}}"
+    sourcedata_dir_path: "{{create_nfs_home_data_dir_path}}/{{create_nfs_sourcedata_dir_path}}"
 
 - name: "debug facts - host_machine_simple_name - etc_exports_file_path"
   debug:

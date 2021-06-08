@@ -1,7 +1,12 @@
 ---
+# set test_etc_hosts_path first to avoid undefined test variable in next step when using prod environment
+- name: "set test_etc_hosts_path to supplied value (test) or default (prod)"
+  set_fact:
+    test_etc_hosts_path: "{{ '{{target_dev_dir}}/hosts' if target_dev_dir is defined else '/etc/hosts' }}"
+
 - name: "set fact"
   set_fact:
-    etc_hosts_dir_path: "{{ '{{target_dev_dir}}/hosts' if target_environment == 'test' else set_etc_hosts_dir_path }}"
+    etc_hosts_dir_path: "{{ '{{test_etc_hosts_path}}' if target_environment == 'test' else set_etc_hosts_dir_path }}"
     inventory_hostname_for_ip: "{{ hostname_for_ip }}"
     invetory_host_private_ip: "{{ private_ip }}"
 

@@ -46,11 +46,17 @@
     apollo_number_only: "{{apollo_instance_number}}"
   when: two_decimals is not defined and one_decimals is not defined
 
-# Override full domain name fact to what is defined in the playbook if environment is also set to test in the playbook 
-- name: "set fact apollo_full_domain_name overried if apollo_evironment is test"
+## Override full domain name fact to what is defined in the playbook if environment is also set to test in the playbook 
+#- name: "set fact apollo_full_domain_name overried if apollo_evironment is test"
+#  set_fact:
+#    apollo_full_domain_name: "{{ target_dev_domain if target_environment == 'test' else apollo_full_domain_name_temp }}"
+#    apollo_short_machine_name: "{{ target_dev_short_machine_name if target_environment == 'test' else 'apollo-{{apollo_number_only}}' }}"
+#    apollo_padded_number: "{{ apollo_number_only }}"
+
+- name: "set fact apollo_full_domain_name and apollo_short_machine_name"
   set_fact:
-    apollo_full_domain_name: "{{ target_dev_domain if target_environment == 'test' else apollo_full_domain_name_temp }}"
-    apollo_short_machine_name: "{{ target_dev_short_machine_name if target_environment == 'test' else 'apollo-{{apollo_number_only}}' }}"
+    apollo_full_domain_name: "{{ apollo_full_domain_name_temp }}"
+    apollo_short_machine_name: "apollo-{{apollo_number_only}}"
     apollo_padded_number: "{{ apollo_number_only }}"
 
 - name: "Print full domain name"

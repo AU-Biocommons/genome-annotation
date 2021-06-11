@@ -72,36 +72,59 @@ Also note that the `--check` option should be used first, and then if no errors 
 To install and configure an Apollo VM or VMs the following playbooks should be run in the specified order. These will need to be run from the ansible-sandpit host: 
 
 1. **playbook-set-etc-hosts-ip.yml** 
-   1. Run playbbok to add/update entries in /etc/hosts file
-   2. Modify `changeipvms` host list in invetory file as required
-   3. Requires `--limit changeipvms or --limit changeiptestvms`
+   1. Run playbook to add/update entries in /etc/hosts file
+   2. Modify `changeipvms` host list in inventory file as required
+   3. Requires `--limit changeipvms`
    4. Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
-   
-   Please see **`prod`** command example below:
+   5.  Requires the apollo short hostname `apollo-<XXX>` to be defined in the inventory file for the host group. This should be `apollo-999` if `target_environment=test`.
+   6.  Requires environment variable `private_ip=192.168.0.<N>` to be defined in the inventory file for the apollo VM
+
+   Please see example inventory configuration below:
+    ```
+    [changeipvms]
+    ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo
+    apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
+    apollo-monitor.genome.edu.au ansible_user=centos admin_group=wheel
+    apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
+
+    [changeipvms:vars]
+    target_environment=test
+    private_ip=192.168.0.78
+    hostname_for_ip=apollo-999
+    #target_environment=prod
+    #private_ip=192.168.0.N
+    #hostname_for_ip=apollo-XXX
+    ```
+
+   Please see command example below:
     ```
    ansible-playbook playbook-set-etc-hosts-ip.yml --limit changeipvms
     ```
 
-   Please see **`test`** command example below **`Note that some additional variables come from the inventory file like "target_environment", "target_dev_dir"`** so it can be tested in a file different to the real `/etc/hosts` file of the target host. It is recommended whenever changes are made to the playbook or roles that a copy of /etc/hosts file is placed in an `alternate path` and test changes in this copied file first:
-    ```
-   ansible-playbook playbook-set-etc-hosts-ip.yml --limit changeiptestvms
-    ```
-
 2. **playbook-apollo-ubuntu20-nfs-server.yml**
    1. Run NFS playbook to setup a new apollo VM in the NFS server
-   2. Modify `nfsservervms` host list in invetory file if required (currently should have only one host which is `apollo-data.genome.edu.au`)
+   2. Modify `nfsservervms` host list in inventory file if required (currently should have only one host which is `apollo-data.genome.edu.au`)
    3.  Requires use of `--limit` to select which host group defined in inventory file will be the target. **`Note that currently there is only one host/group defined in inventory file`** because there is only one NFS server therefore both prod and test will run on the same vm  
-   4.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group 
-   5.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
+   4.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
+   5.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group. This should be `999` if `target_environment=test`.
+
+   Please see example inventory configuration below:
+    ```
+    [nfsservervms]
+    apollo-data.genome.edu.au
+
+    [nfsservervms:vars]
+    ansible_user=ubuntu
+    admin_group=sudo
+    #target_environment=prod
+    #apollo_instance_number=X
+    target_environment=test
+    apollo_instance_number=999
+    ```
    
-   Please see **`prod`** command example below:
+   Please see command below:
     ```
-   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --limit nfsservervms
-    ```
-    
-   Please see **`test`** command example below **`Note that some additional variables come from the inventory file like "target_environment", "target_dev_domain" and "target_dev_short_machine_name."`** These are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
-    ```
-   ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --limit nfsservervmstest
+   ansible-playbook playbook-apollo-ubuntu20-monitor.yml --limit monitorservervms
     ```
 
 3. **playbook-apollo-ubuntu20-combined-1.yml**
@@ -112,26 +135,35 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     3.  Requires the apollo postgres user password passed in on the command line , with
         `--extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>"`
     4.  Requires use of `--limit` to select which host group defined in inventory file will be the target
-    5.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group 
-    6.  Requires the custom host name to `apollo_subdomain_name=<CUSTOM>` to be defined in the inventory file for the host group
-    7.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
-        
-   Please see **`prod`** command example below:
+    5.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
+    6.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group. This should be `999` if `target_environment=test`.
+    7.  Requires the custom host name to `apollo_subdomain_name=<CUSTOM>` to be defined in the inventory file for the host group
+
+   Please see example inventory configuration below:
+    ```
+    [newapollovms]
+    #apollo-00X.genome.edu.au
+    apollo-999.genome.edu.au
+
+    [newapollovms:vars]
+    ansible_user=ubuntu
+    admin_group=sudo
+    allowed_groups="ubuntu apollo_admin backup_user"
+    #target_environment=prod
+    #apollo_instance_number=X
+    #apollo_subdomain_name=subdomain
+    target_environment=test
+    apollo_instance_number=999
+    apollo_subdomain_name=starwars
+    ```
+
+   Please see command example below:
     ```
     ansible-playbook playbook-apollo-ubuntu20-combined-1.yml \
     --extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>" \
     --extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>" \
     --extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>" \
     --limit newapollovms
-    ```
-
-   Please see **`test`** command example below **`Note that some additional variables come from the inventory file like "target_dev_domain" and "target_dev_short_machine_name."`** These are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
-    ```
-    ansible-playbook playbook-apollo-ubuntu20-combined-1.yml \
-    --extra-vars="postgres_docker_root_password=<POSTGRES-ROOT-PASSWORD>" \
-    --extra-vars="postgresql_user_password=<POSTGRES-APOLLO-PASSWORD>" \
-    --extra-vars="prometheus_postgres_exporter_set_conf_password=<POSTGRES-APOLLO-PASSWORD>" \
-    --limit ubuntu20testvms
     ```
 
 4. **`Before running playbook-apollo-ubuntu20-combined-2.yml certbot needs to be manually run using below commands`**
@@ -160,18 +192,42 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
         This will be used to protect the apollo application from being commandeered between when apollo is created and when the admin account is registered via the UI Note that the password can be changed to something more permanent on first login.
         `--extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>"`
     2.  Requires use of `--limit` to select which host group defined in inventory file will be the target and to make sure this runs for __only one__ server/host at a time
-    3.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group 
-    4.  Requires the custom host name to `apollo_subdomain_name=<CUSTOM>` to be defined in the inventory file for the host group
-    5.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
+    4.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
+    5.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group. This should be `999` if `target_environment=test`.
+    6.  Requires the custom host name to `apollo_subdomain_name=<CUSTOM>` to be defined in the inventory file for the host group
 
-   Please see **`prod`** command example below:
+   Please see command example below:
     ```
     ansible-playbook playbook-apollo-ubuntu20-combined-2.yml --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" --limit newapollovms
     ```
 
-   Please see **`test`** command example below **`Note that some additional variables come from the inventory file like "target_dev_domain" and "target_dev_short_machine_name."`** These are required because test vm does not comply with naming convetion of production apollo vms and are used to override values that are derived in the playbook run. In example when `apollo_instance_number=999` then `apollo-999` would be the derived machine name and it's overriden to `ubuntu20test`:
+6. **playbook-apollo-ubuntu20-monitor.yml**
+   1. Run monitor playbook to add a new apollo VM to Nagios and Grafana monitoring
+   2. Modify `monitorservervms` host list in inventory file if required (currently should have only one host which is `apollo-monitor.genome.edu.au`)
+   3.  Requires use of `--limit` to select which host group defined in inventory file will be the target. **`Note that currently there is only one host/group defined in inventory file`** because there is only one monitoring server therefore both prod and test will run on the same vm  
+   4.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
+   5.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group. This should be `999` if `target_environment=test`.
+   6.  Requires environment variable `private_ip=192.168.0.<N>` to be defined in the inventory file for the apollo VM
+
+   Please see example inventory configuration below:
     ```
-    ansible-playbook playbook-apollo-ubuntu20-combined-2.yml --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>" --limit ubuntu20testvms
+    [monitorservervms]
+    apollo-monitor.genome.edu.au
+
+    [monitorservervms:vars]
+    ansible_user=centos
+    admin_group=wheel
+    #target_environment=prod
+    #private_ip=192.168.0.N
+    #apollo_instance_number=X
+    target_environment=test
+    private_ip=192.168.0.78
+    apollo_instance_number=999
+    ```
+   
+   Please see command below:
+    ```
+   ansible-playbook playbook-apollo-ubuntu20-monitor.yml --limit monitorservervms
     ```
 
 # How to create/modify Ansible Roles

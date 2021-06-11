@@ -1,0 +1,4 @@
+---
+# NOTE: this requires the monitor-decode-extravars-setfacts role to be run first
+grafana_conf_file_path: "{{ grafana_conf_path }}/prometheus.yml"
+

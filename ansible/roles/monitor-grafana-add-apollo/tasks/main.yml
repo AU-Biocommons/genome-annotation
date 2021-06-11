@@ -1,0 +1,46 @@
+---
+
+# test whether this apollo VM has already been added to the prometheus/grafana conf file
+- name: "check if apollo instance has already been added to {{ grafana_conf_file_path }}"
+  shell: "cat {{ grafana_conf_file_path }} | grep targets | grep {{ apollo_short_machine_name }}"
+  register: prometheus_yml
+  # There are two ways this can be done as per below SO question
+  # https://stackoverflow.com/questions/50440515/ansible-error-on-shell-command-returning-zero
+  # using "ignore_errors: true"
+  # or as below which I think it's a cleaner way
+  failed_when: prometheus_yml.rc != 1 and prometheus_yml.rc != 0
+
+# Note: this requires at least one entry to already exist
+- name: "append apollo VM to apollo servers in Prometheus for job_name apollo"
+  lineinfile:
+    path: "{{ grafana_conf_file_path }}"
+    backrefs: yes
+    regexp: '^((.*)- targets: (.*)apollo-\d\d\d:9100.).$'
+    line: \1, '{{apollo_short_machine_name}}:9100']
+    state: present
+  when: prometheus_yml.stdout == ""
+
+# Note: this requires at least one entry to already exist
+- name: "append apollo VM to apollo servers in Prometheus for job_name postgres"
+  lineinfile:
+    path: "{{ grafana_conf_file_path }}"
+    backrefs: yes
+    regexp: '^((.*)- targets: (.*)apollo-\d\d\d:9187.).$'
+    line: \1, '{{apollo_short_machine_name}}:9187']
+    state: present
+  when: prometheus_yml.stdout == ""
+
+# restart prometheus for it to take effect
+- name: "Restart prometheus service"
+  systemd:
+    state: "restarted"
+    name: "prometheus"
+  when: target_environment != 'test'
+
+# restart grafana for it to show in dropdown
+- name: "Restart grafana-server service"
+  systemd:
+    state: "restarted"
+    name: "grafana-server"
+  when: target_environment != 'test'
+

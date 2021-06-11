@@ -1,0 +1,39 @@
+---
+
+- name: "Place apollo-XXX.cfg template in {{ nagios_conf_file_path }} with IP {{current_host_ip_address.stdout}}"
+  template:
+    src: "apollo-XXX.cfg"
+    dest: "{{ nagios_conf_file_path }}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+# test whether this apollo VM has already been added to the web-apollo servers file
+- name: "check if apollo instance has already been added to {{ nagios_conf_apollo_servers }}"
+  shell: "cat {{ nagios_conf_apollo_servers }} | grep members | grep {{ apollo_short_machine_name }}"
+  register: apollo_servers_conf
+  # There are two ways this can be done as per below SO question
+  # https://stackoverflow.com/questions/50440515/ansible-error-on-shell-command-returning-zero
+  # using "ignore_errors: true"
+  # or as below which I think it's a cleaner way
+  failed_when: apollo_servers_conf.rc != 1 and apollo_servers_conf.rc != 0
+
+# Note: this requires at least one entry to already exist
+- name: append apollo FQDN to existing list of apollos in nagios web-apollo servers
+  lineinfile:
+    path: "{{ nagios_conf_apollo_servers }}"
+    backrefs: yes
+    regexp: '^([ \t]*members(.*)$)'
+    line: '\1,{{apollo_full_domain_name}}'
+    state: present
+  when: apollo_servers_conf.stdout == ""
+
+# restart nagios for changes to take effect
+- name: "Restart nagios service"
+  systemd:
+    state: "restarted"
+    name: "nagios"
+  when: target_environment != 'test'
+

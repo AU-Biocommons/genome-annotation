@@ -33,15 +33,19 @@ admin_group=sudo
 allowed_groups="ubuntu apollo_admin backup_user"
 
 [newapollovms]
-#apollo-00X.genome.edu.au 
+#apollo-00X.genome.edu.au
+apollo-999.genome.edu.au
 
 [newapollovms:vars]
 ansible_user=ubuntu
 admin_group=sudo
 allowed_groups="ubuntu apollo_admin backup_user"
-apollo_instance_number=X
-apollo_subdomain_name=subdomain
-target_environment=prod
+#target_environment=prod
+#apollo_instance_number=X
+#apollo_subdomain_name=subdomain
+target_environment=test
+apollo_instance_number=999
+apollo_subdomain_name=starwars
 
 [otherubuntuvms]
 ansible-sandpit.genome.edu.au
@@ -69,10 +73,23 @@ apollo-data.genome.edu.au
 [nfsservervms:vars]
 ansible_user=ubuntu
 admin_group=sudo
-apollo_instance_number=12
-target_environment=prod
-#target_environment=test
-#apollo_instance_number=999
+#target_environment=prod
+#apollo_instance_number=X
+target_environment=test
+apollo_instance_number=999
+
+[monitorservervms]
+apollo-monitor.genome.edu.au
+
+[monitorservervms:vars]
+ansible_user=centos
+admin_group=wheel
+#target_environment=prod
+#private_ip=192.168.0.N
+#apollo_instance_number=X
+target_environment=test
+private_ip=192.168.0.78
+apollo_instance_number=999
 
 [changeipvms]
 ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo
@@ -81,9 +98,12 @@ apollo-monitor.genome.edu.au ansible_user=centos admin_group=wheel
 apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]
-private_ip=192.168.0.143
-hostname_for_ip=apollo-012
-target_environment=prod
+target_environment=test
+private_ip=192.168.0.78
+hostname_for_ip=apollo-999
+#target_environment=prod
+#private_ip=192.168.0.N
+#hostname_for_ip=apollo-XXX
 
 [ubuntutestvms]
 ubuntu-test.genome.edu.au

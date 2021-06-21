@@ -3,11 +3,6 @@
   debug: 
     msg: "User Name = {{create_user_name}} - User Id = {{create_user_id}}"
 
-- name: "Create apollo user group"
-  group:
-    name: "{{create_user_name}}"
-    state: "present"
-
 - name: "Create apollo user account"
   user:
     name: "{{create_user_name}}"

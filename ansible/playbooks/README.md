@@ -138,6 +138,7 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     5.  Requires environment variable `target_environment=<prod or test>` to be defined in the inventory file for the host group
     6.  Requires the apollo instance number `apollo_instance_number=<N>` to be defined in the inventory file for the host group. This should be `999` if `target_environment=test`.
     7.  Requires the custom host name to `apollo_subdomain_name=<CUSTOM>` to be defined in the inventory file for the host group
+   8. Optionally environment variable `apollo_version=<VERSION>` can be defined in the inventory file to specify a more recent build (the default is `2.6.0`).
 
    Please see example inventory configuration below:
     ```
@@ -146,6 +147,7 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     apollo-999.genome.edu.au
 
     [newapollovms:vars]
+    apollo_version=2.6.5
     ansible_user=ubuntu
     admin_group=sudo
     allowed_groups="ubuntu apollo_admin backup_user"

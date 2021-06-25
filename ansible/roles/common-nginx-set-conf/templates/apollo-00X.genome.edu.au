@@ -21,12 +21,13 @@ server {
 		send_timeout                1800;
 	}
 
-#	location = / {
-#		return 301 https://$host/apollo;
-#	}
+	location = / {
+		return 301 https://$host/apollo;
+	}
 
-	root /var/www/{{template_nginx_domain}}/public_html;
-	index index.html index.htm;
+        # uncomment for a static root page (custom landing page)
+	#root /var/www/{{template_nginx_domain}}/public_html;
+	#index index.html index.htm;
 }
 
 server {

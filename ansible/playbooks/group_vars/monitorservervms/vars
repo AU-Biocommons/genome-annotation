@@ -1,0 +1,5 @@
+---
+ansible_user: centos
+admin_group: wheel
+target_environment: prod
+

@@ -1,0 +1,7 @@
+---
+apollo_version: 2.6.5
+ansible_user: ubuntu
+admin_group: sudo
+allowed_groups: "ubuntu apollo_admin backup_user"
+target_environment: prod
+

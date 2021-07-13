@@ -1,0 +1,5 @@
+---
+ansible_user: centos
+admin_group: wheel
+allowed_groups: "centos apollo_admin backup_user"
+

@@ -27,7 +27,7 @@ apollo-014.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user franken
 #   apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
 
 [newapollovms]
-apollo-999.genome.edu.au apollo_instance_number=999 apollo_subdomain_name=starwars
+apollo-011.genome.edu.au apollo_instance_number=11 apollo_subdomain_name=sandpit
 
 
 

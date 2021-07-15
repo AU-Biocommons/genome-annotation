@@ -8,5 +8,5 @@ target_environment: prod
 postgres_docker_root_password: "{{ vault_postgres_docker_root_password }}"
 postgresql_user_password: "{{ vault_postgresql_user_password }}"
 prometheus_postgres_exporter_set_conf_password: "{{ vault_prometheus_postgres_exporter_set_conf_password }}"
-default_apollo_admin_password: "{{ vault_default_apollo_admin_password }}"
+apollo_admin_password: "{{ vault_default_apollo_admin_password }}"
 

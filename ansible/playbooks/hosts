@@ -23,11 +23,11 @@ apollo-014.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user franken
 #   apollo-00X.genome.edu.au apollo_instance_number=X apollo_subdomain_name=customhostname
 # for example:
 #   apollo-011.genome.edu.au apollo_instance_number=11 apollo_subdomain_name=sandpit
-# for ansible development testing use:
+# for ansible development testing (note: required to run apollo on small memory node):
 #   apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
 
 [newapollovms]
-apollo-011.genome.edu.au apollo_instance_number=11 apollo_subdomain_name=sandpit
+apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
 
 
 
@@ -51,8 +51,8 @@ apollo-monitor.genome.edu.au ansible_user=centos admin_group=wheel
 apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]
-hostname_for_ip=apollo-011
-private_ip=192.168.0.92
+hostname_for_ip=apollo-999
+private_ip=192.168.0.151
 
 
 
@@ -69,7 +69,7 @@ private_ip=192.168.0.92
 apollo-data.genome.edu.au
 
 [nfsservervms:vars]
-apollo_instance_number=11
+apollo_instance_number=999
 
 
 

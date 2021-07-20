@@ -1,5 +1,5 @@
 #!/usr/bin/env python
 
 import os
-print os.environ['VAULT_PASSWORD']
+print(os.getenv('VAULT_PASSWORD') or '<SECRET_VAULT_PASSWORD>')
 

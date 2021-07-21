@@ -19,11 +19,11 @@ Before running any of the playbooks make sure of the following:
     In example, the below command will not apply any changes given it's using `--check` option and the target server(s) will be limited by the `--limit` option:
 
     ```
-    ansible-playbook playbook-apollo.yml --limit ubuntutestvms --check 
+    ansible-playbook playbook-apollo.yml --limit ubuntu20testvms --check 
     ```
     In example, to apply changes to the tests servers group remove the `--check` option as below:
     ```
-    ansible-playbook playbook-apollo.yml --limit ubuntutestvms 
+    ansible-playbook playbook-apollo.yml --limit ubuntu20testvms 
     ```
     Because this is the `ansible/playbooks` folder it's not recommended to run without the `--limit` option, therefore in order to apply changes to the target servers it would be something like below command:
     ```
@@ -65,14 +65,14 @@ apollo-999.genome.edu.au
 or
 
 ```
-[ubuntutestvms]
+[ubuntu20testvms]
 ubuntu20-test.genome.edu.au
 ```
 
 Then run the playbooks only on the VMs that belong to the group defined in the inventory file, for example to only run on the test VM:
 
 ```
-ansible-playbook playbook-configure-host.yml --limit ubuntutestvms
+ansible-playbook playbook-configure-host.yml --limit ubuntu20testvms
 ```
 
 Also note that the `--check` option should be used first, and then if no errors are encountered, then the playbook can be run on the new VM to instantiate the changes. There may be some errors encountered with check that are due to changes not actually being made to the playbook - these are expected and can safely be ignored.

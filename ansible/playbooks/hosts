@@ -118,34 +118,34 @@ apollo-backup.genome.edu.au
 
 
 
-################ the following have been used for ansible development testing - uncomment and modify as needed
+################ the following are used for ansible development testing - modify as needed
 
-#[ubuntutestvms]
-#ubuntu-test.genome.edu.au
-#
-#[ubuntutestvms:vars]
-#ansible_user=ubuntu
-#admin_group=sudo
-#allowed_groups="ubuntu apollo_admin backup_user"
+[ubuntu20testvms]
+ubuntu20-test.genome.edu.au
 
-#[centostestvms]
-#centos-test.genome.edu.au
-#
-#[centostestvms:vars]
-#ansible_user=centos
-#admin_group=wheel
-#allowed_groups="centos apollo_admin backup_user"
+[ubuntu20testvms:vars]
+ansible_user=ubuntu
+admin_group=sudo
+allowed_groups="ubuntu apollo_admin backup_user"
+apollo_instance_number=999
+apollo_subdomain_name=starwars
+target_environment=test
 
-#[ubuntu20testvms]
-#ubuntu20-test.genome.edu.au
-#
-#[ubuntu20testvms:vars]
-#ansible_user=ubuntu
-#admin_group=sudo
-#allowed_groups="ubuntu apollo_admin backup_user"
-#apollo_instance_number=999
-#apollo_subdomain_name=starwars
-#target_environment=test
+[ubuntu18testvms]
+ubuntu18-test.genome.edu.au
+
+[ubuntu18testvms:vars]
+ansible_user=ubuntu
+admin_group=sudo
+allowed_groups="ubuntu apollo_admin backup_user"
+
+[centostestvms]
+centos-test.genome.edu.au
+
+[centostestvms:vars]
+ansible_user=centos
+admin_group=wheel
+allowed_groups="centos apollo_admin backup_user"
 
 #[changeiptestvms]
 #ubuntu20-test.genome.edu.au private_ip=192.168.0.88 hostname_for_ip=testhostname target_dev_dir=/home/ubuntu

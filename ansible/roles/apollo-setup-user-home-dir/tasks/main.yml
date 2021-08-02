@@ -62,3 +62,14 @@
     state: link
     force: yes
   when: "str_sourcedata.stat.exists == true"
+
+- name: "Touch .hushlogin, but don't change access/mod times (makes the task idempotent)"
+  file:
+    path: "/home/{{create_user_name}}/.hushlogin"
+    state: touch
+    owner: "{{create_user_name}}"
+    group: "{{create_user_name}}"
+    mode: u=rw,g=r,o=r
+    modification_time: preserve
+    access_time: preserve
+

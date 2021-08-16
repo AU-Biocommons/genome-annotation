@@ -5,9 +5,6 @@ prometheus_exporters:
   - prometheus-pushgateway
   - prometheus-alertmanager
 
-prometheus_url_key: "https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.gpg"
-
-
-
-
+# deprecated
+#prometheus_url_key: "https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.gpg"
 

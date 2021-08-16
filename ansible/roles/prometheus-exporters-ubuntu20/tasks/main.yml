@@ -3,10 +3,11 @@
   include_vars:
     file: "prometheus_exporters.yml"
 
-- name: "Add key for prometheus packages"
-  apt_key:
-    url: "{{ prometheus_url_key }}"
-    state: present
+# deprecated
+#- name: "Add key for prometheus packages"
+#  apt_key:
+#    url: "{{ prometheus_url_key }}"
+#    state: present
 
 - name: "Install prometheus exporters"
   apt:

@@ -58,7 +58,7 @@ apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]
 hostname_for_ip=apollo-999
-private_ip=192.168.0.151
+private_ip=192.168.0.104
 
 
 
@@ -95,8 +95,8 @@ apollo_instance_number=999
 apollo-monitor.genome.edu.au
 
 [monitorservervms:vars]
-apollo_instance_number=11
-private_ip=192.168.0.92
+apollo_instance_number=999
+private_ip=192.168.0.104
 
 
 

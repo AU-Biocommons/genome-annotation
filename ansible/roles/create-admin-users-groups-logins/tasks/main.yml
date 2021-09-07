@@ -87,6 +87,20 @@
     regexp: "^%{{ admin_group }}"
     line: "%{{ admin_group }} ALL=(ALL) NOPASSWD: ALL"
 
+- name: "Allow backup user to sudo without an interactive shell"
+  lineinfile:
+    dest: "/etc/sudoers"
+    state: "present"
+    insertafter: '^Defaults\s.*'
+    line: "Defaults:backup_user        !requiretty"
+
+- name: "Allow backup user to use sudo rsync without password"
+  lineinfile:
+    dest: "/etc/sudoers"
+    state: "present"
+    insertafter: '^root\s.*'
+    line: "backup_user ALL=(ALL) NOPASSWD: /usr/bin/rsync"
+
 #- name: "adding existing users to specified groups"
 #  user:
 #    name: "{{ item.username }}"

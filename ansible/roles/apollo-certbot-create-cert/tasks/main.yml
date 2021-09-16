@@ -1,0 +1,5 @@
+---
+# non-interactively install Let's Encrypt SSL certificate for apollo-XXX.genome.edu.au
+- name: "install Let's Encrypt SSL certificate for {{apollo_domain_name}}"
+  command: "sudo certbot certonly --noninteractive --agree-tos --email {{apollo_admin_email}} --no-eff-email --nginx --domains {{apollo_domain_name}}"
+

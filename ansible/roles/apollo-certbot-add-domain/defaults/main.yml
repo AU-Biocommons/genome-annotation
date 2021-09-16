@@ -1,0 +1,5 @@
+---
+apollo_cert_name: "{{apollo_full_domain_name}}"
+apollo_domain_name: "{{apollo_full_domain_name}}"
+custom_domain_name: "{{apollo_subdomain_name}}.genome.edu.au"
+

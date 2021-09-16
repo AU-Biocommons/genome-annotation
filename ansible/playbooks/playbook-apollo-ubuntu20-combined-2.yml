@@ -22,6 +22,10 @@
     - import_role:
         name: apollo-decode-extravars-setfacts-combined-2
     - import_role:
+        name: apollo-certbot-create-cert
+    - import_role:
+        name: apollo-certbot-add-domain
+    - import_role:
         name: common-nginx-set-conf
     - import_role:
         name: common-nginx-add-domain

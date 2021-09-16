@@ -1,0 +1,4 @@
+---
+apollo_admin_email: "ops@qfab.org"
+apollo_domain_name: "{{apollo_full_domain_name}}"
+

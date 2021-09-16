@@ -1,0 +1,100 @@
+---
+# note that grep returns 0 if a line is selected, 1 if no lines were selected, and 2 if an error occurred.
+- name: "test for backup_user in docker postgres container"
+  shell:
+          cmd: "{{apollo_docker_bash_cmd}} {{bash_cmd_test_for_user}}"
+  register: "user_exists"
+  failed_when: "user_exists.rc not in [ 0, 1 ]"
+
+- name: "add backup_user to docker postgres container"
+  shell:
+          cmd: "{{apollo_docker_bash_cmd}} {{bash_cmd_create_user}}"
+  when: user_exists.stdout == "0"
+
+- name: "Print command executed from bash_cmd_create_user"
+  debug:
+    msg: "{{apollo_docker_bash_cmd}} {{bash_cmd_create_user}}"
+  when: user_exists.stdout == "0"
+
+- name: "create ~/backup_user/.pgpass with password"
+  shell:
+          cmd: "{{apollo_docker_bash_cmd}} {{bash_cmd_create_pgpass}}"
+
+- name: "Print command executed from bash_cmd_create_pgpass"
+  debug:
+    msg: "{{apollo_docker_bash_cmd}} {{bash_cmd_create_pgpass}}"
+
+# this is only valid/needed if there is a pre-existing listen_addresses that doesn't specify '*'
+#- name: "ensure listen_addresses = '*' in /var/lib/postgresql/data/postgresql.conf"
+#  shell:
+#          cmd: "{{apollo_docker_bash_cmd}} {{bash_cmd_listen_addresses}}"
+#
+#- name: "Print command executed from bash_cmd_listen_addresses"
+#  debug:
+#    msg: "{{apollo_docker_bash_cmd}} {{bash_cmd_listen_addresses}}"
+
+- name: "check trust apollo network in /var/lib/postgresql/data/pg_hba.conf"
+  shell:
+          cmd: "{{apollo_docker_bash_cmd}} {{bash_cmd_test_trust_exists}}"
+  register: "trust_exists"
+  failed_when: "trust_exists.rc not in [ 0, 1 ]"
+
+- name: "Print command executed from bash_cmd_test_trust_exists"
+  debug:
+    msg: "{{apollo_docker_bash_cmd}} {{bash_cmd_test_trust_exists}}"
+
+- name: "add trust apollo network in /var/lib/postgresql/data/pg_hba.conf"
+  shell:
+          cmd: "{{apollo_docker_bash_cmd}} {{bash_cmd_insert_trust}}"
+  when: trust_exists.stdout == "0"
+
+- name: "Print command executed from bash_cmd_insert_trust if trust_exists.stdout == 0"
+  debug:
+    msg: "{{apollo_docker_bash_cmd}} {{bash_cmd_insert_trust}}"
+  when: trust_exists.stdout == "0"
+
+- name: "check if backup_user exists in database"
+  command: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_test_user_exists}}"
+  register: "backup_user_exists"
+
+- name: "Print command executed from postgres_cmd_test_user_exists"
+  debug:
+    msg: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_test_user_exists}}"
+
+- name: "create backup_user user in postgres if user doesn't exist"
+  command: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_create_user}}"
+  when: backup_user_exists.stdout == "0"
+
+- name: "Print command executed from postgres_cmd_create_user if backup_user_exists.stdout == 0"
+  debug:
+    msg: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_create_user}}"
+  when: backup_user_exists.stdout == "0"
+
+- name: "postgres grant select on tables"
+  command: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_grant_tables}}"
+
+- name: "Print command executed from postgres_cmd_grant_tables"
+  debug:
+    msg: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_grant_tables}}"
+
+- name: "postgres grant select on sequences"
+  command: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_grant_sequences}}"
+
+- name: "Print command executed from postgres_cmd_grant_sequences"
+  debug:
+    msg: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_grant_sequences}}"
+
+- name: "postgres alter default privileges grant select on tables"
+  command: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_alter_grant_tables}}"
+
+- name: "Print command executed from postgres_cmd_alter_grant_tables"
+  debug:
+    msg: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_alter_grant_tables}}"
+
+- name: "postgres alter default privileges grant select on sequences"
+  command: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_alter_grant_sequences}}"
+
+- name: "Print command executed from postgres_cmd_alter_grant_sequences"
+  debug:
+    msg: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_alter_grant_sequences}}"
+

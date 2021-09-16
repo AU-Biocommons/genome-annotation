@@ -1,0 +1,14 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+
+  # The role to be run by this playbook requires --limit inventory_group_name
+  # to limit the target host list. i.e. --limit newapollovms or --limit ubuntu20testvms
+  tasks:
+    - import_role:
+        name: apollo-docker-configure-backup
+

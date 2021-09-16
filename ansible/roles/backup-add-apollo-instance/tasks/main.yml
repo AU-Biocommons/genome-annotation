@@ -1,0 +1,17 @@
+---
+- name: "Check if {{apollo_short_machine_name}} is already in list_of_apollo_instances.txt"
+  lineinfile:
+    state: absent
+    path: "/home/backup_user/list_of_apollo_instances.txt"
+    regexp: "^{{apollo_short_machine_name}}"
+  check_mode: true
+  changed_when: false # this makes things look prettier in the logs
+  register: check
+
+- name: "Add {{apollo_short_machine_name}} to list_of_apollo_instances.txt if not already there"
+  lineinfile:
+    state: present
+    path: "/home/backup_user/list_of_apollo_instances.txt"
+    line: "{{apollo_short_machine_name}}"
+  when: check.found == 0
+

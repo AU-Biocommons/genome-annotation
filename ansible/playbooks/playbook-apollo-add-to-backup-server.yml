@@ -1,0 +1,23 @@
+---
+- hosts: all
+  remote_user: centos
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+
+  # The role to be run by this playbook requires to enter domain name value through the command line
+  # using --extra-vars like in the example below:
+  #
+  # --extra-vars="apollo_instance_number=<enter_in_command_line>"
+  # --limit nfsservervms
+  # 
+  # i.e.
+  # enter_apollo_number_here = 00* or 0** or ***
+  #
+  tasks:
+    - import_role:
+        name: backup-decode-extravars-setfacts
+    - import_role:
+        name: backup-add-apollo-instance
+

@@ -34,8 +34,6 @@
           - username: "ubuntu"
             key: files/admin.pub
     - import_role:
-        name: create-admin-users-groups-logins
-    - import_role:
         name: "common-copy-exec-to-bin"
     - import_role:
         name: apollo-dependencies
@@ -79,6 +77,8 @@
         name: apollo-restart-tomcat
     - import_role:
         name: apollo-restart-nginx
+    - import_role:
+        name: create-admin-users-groups-logins
     - import_role:
         name: apollo-create-user
     - import_role:

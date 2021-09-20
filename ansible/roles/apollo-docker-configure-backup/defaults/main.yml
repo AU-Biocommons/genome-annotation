@@ -27,6 +27,8 @@ trust_apollo_network: "host    all             all             192.168.0.0/24   
 bash_cmd_test_trust_exists: "grep -cxF \'{{trust_apollo_network}}\' {{postgres_db_conf_file}}"
 bash_cmd_insert_trust: "sed -i \'/^host\\s*all.*127.0.0.1[/]32\\s*trust/a {{trust_apollo_network}}\' {{postgres_db_conf_file}}"
 
+postgres_cmd_reload_postgres_config: "\"SELECT pg_reload_conf();\""
+
 postgres_cmd_test_user_exists: "\"SELECT COUNT(1) FROM pg_roles WHERE rolname='{{apollo_backup_user_username}}';\""
 postgres_cmd_create_user: "\"CREATE USER {{apollo_backup_user_username}} WITH PASSWORD '{{apollo_backup_user_postgres_password}}';\""
 postgres_cmd_grant_tables: "\"GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{apollo_backup_user_username}};\""

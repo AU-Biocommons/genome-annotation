@@ -53,6 +53,17 @@
     msg: "{{apollo_docker_bash_cmd}} {{bash_cmd_insert_trust}}"
   when: trust_exists.stdout == "0"
 
+- name: "reload postgres config to instigate changes to config"
+  shell:
+          cmd: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_reload_postgres_config}}"
+  register: "pg_reload_conf"
+  #changed_when: "pg_reload_conf.rc == 0"
+  changed_when: pg_reload_conf.stdout == "t"
+
+- name: "Print command executed from postgres_cmd_reload_postgres_config"
+  debug:
+    msg: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_reload_postgres_config}}"
+
 - name: "check if backup_user exists in database"
   command: "{{apollo_docker_postgres_cmd}} {{postgres_cmd_test_user_exists}}"
   register: "backup_user_exists"

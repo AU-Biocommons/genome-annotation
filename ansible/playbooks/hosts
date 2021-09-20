@@ -36,6 +36,7 @@ apollo-017.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user pulsepa
 [newapollovms]
 apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
 #apollo-017.genome.edu.au apollo_instance_number=17 apollo_subdomain_name=pulsepathogens
+#apollo-015.genome.edu.au apollo_instance_number=15 apollo_subdomain_name=ozsorghum
 
 #[newapollovms:vars]
 #apollo_admin_password="<APOLLO-ADMIN-USER_PASSWORD>"
@@ -51,7 +52,7 @@ apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apol
 #   private_ip=192.168.0.92
 # for ansible development testing use apollo-999 and set test environment with:
 #   hostname_for_ip=apollo-999
-#   private_ip=192.168.0.151
+#   private_ip=192.168.0.132
 #   target_environment=test
 
 [changeipvms]
@@ -62,7 +63,7 @@ apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]
 hostname_for_ip=apollo-999
-private_ip=192.168.0.104
+private_ip=192.168.0.132
 #hostname_for_ip=apollo-017
 #private_ip=192.168.0.178
 
@@ -95,7 +96,7 @@ apollo_instance_number=999
 #   private_ip=192.168.0.92
 # for ansible development testing use apollo-999 and set test environment with:
 #   apollo_instance_number=999
-#   private_ip=192.168.0.151
+#   private_ip=192.168.0.132
 #   target_environment=test
 
 [monitorservervms]
@@ -103,7 +104,7 @@ apollo-monitor.genome.edu.au
 
 [monitorservervms:vars]
 apollo_instance_number=999
-private_ip=192.168.0.104
+private_ip=192.168.0.132
 #apollo_instance_number=17
 #private_ip=192.168.0.178
 
@@ -124,15 +125,16 @@ apollo-backup.genome.edu.au
 [backupservervms:vars]
 apollo_instance_number=999
 #apollo_instance_number=17
+#apollo_instance_number=15
 
 
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied
 
 [otherubuntuvms]
-ansible-sandpit.genome.edu.au
+apollo-data.genome.edu.au
 apollo-portal.genome.edu.au
 mt-sandpit.genome.edu.au
-apollo-data.genome.edu.au
+ansible-sandpit.genome.edu.au
 
 
 
@@ -174,7 +176,7 @@ admin_group=wheel
 allowed_groups="centos apollo_admin backup_user"
 
 #[changeiptestvms]
-#ubuntu20-test.genome.edu.au private_ip=192.168.0.88 hostname_for_ip=testhostname target_dev_dir=/home/ubuntu
+#ubuntu20-test.genome.edu.au private_ip=192.168.0.132 hostname_for_ip=testhostname target_dev_dir=/home/ubuntu
 #
 #[changeiptestvms:vars]
 #ansible_user=ubuntu

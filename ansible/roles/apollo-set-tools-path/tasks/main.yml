@@ -2,7 +2,7 @@
 - name: "add Apollo tools path to user environment"
   copy:
     dest: /etc/profile.d/apollo-tools-path.sh
-    force: no
+    force: yes
     content: 'PATH=$PATH:{{ apollo_tools_path }}'
     owner: root
     group: root

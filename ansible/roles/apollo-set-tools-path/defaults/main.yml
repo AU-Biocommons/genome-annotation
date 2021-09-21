@@ -1,3 +1,3 @@
 ---
-apollo_tools_path: "/opt/Apollo-{{apollo_build_version}}/extlib/bin"
+apollo_tools_path: "/opt/Apollo-{{apollo_build_version}}/extlib/bin:/opt/Apollo-{{apollo_build_version}}/jbrowse/bin"
 

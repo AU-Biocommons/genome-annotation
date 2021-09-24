@@ -97,7 +97,7 @@
     # add a delay here to ensure that tomcat (on restart) has finished
     # extracting apollo from war file and apollo grails app has built database schema
     # before inserting user
-    - import role:
+    - import_role:
         name: apollo-delay-for-grails-schema-completion
     - import_role:
         name: apollo-docker-postgres-create-admin

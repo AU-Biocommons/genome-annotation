@@ -1,0 +1,22 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  # The role to be run by this playbook requires to enter password value through the command line
+  # using --extra-vars like in the example below:
+  #
+  # --extra-vars="postgresql_user_password=<type_password_here>"
+  #
+  tasks:
+    - import_role:
+        name: apollo-decode-extravars-setfacts-combined
+    - import_role:
+        name: apollo-pre-build-messages
+    - import_role:
+        name: apollo-delay-for-grails-schema-completion
+    - import_role:
+        name: apollo-post-build-messages
+

@@ -21,7 +21,9 @@
   #
   tasks:
     - import_role:
-        name: apollo-decode-extravars-setfacts-combined-1
+        name: apollo-decode-extravars-setfacts-combined
+    - import_role:
+        name: apollo-pre-build-messages
     - import_role:
         name: configure-host
     # This role is required to be run in Ubuntu 20
@@ -80,7 +82,30 @@
     - import_role:
         name: create-admin-users-groups-logins
     - import_role:
-        name: apollo-create-user
+        name: apollo-create-cli-user
     - import_role:
         name: apollo-setup-user-home-dir
-    
+    # the following steps were from playbook-apollo-ubuntu20-combined-2.yml
+    - import_role:
+        name: apollo-certbot-create-cert
+    - import_role:
+        name: apollo-certbot-add-domain
+    - import_role:
+        name: common-nginx-set-conf
+    - import_role:
+        name: common-nginx-add-domain
+    # add a delay here to ensure that tomcat (on restart) has finished
+    # extracting apollo from war file and apollo grails app has built database schema
+    # before inserting user
+    - import role:
+        name: apollo-delay-for-grails-schema-completion
+    - import_role:
+        name: apollo-docker-postgres-create-admin
+    - import_role:
+        name: apollo-restart-services
+    - import_role:
+        name: update-base
+    - import_role:
+        name: apollo-post-build-messages
+
+ 

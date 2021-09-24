@@ -29,8 +29,8 @@
         name: common-nginx-set-conf
     - import_role:
         name: common-nginx-add-domain
-    - import_role:
-        name: apollo-create-user
+#    - import_role:
+#        name: apollo-create-user
     - import_role:
         name: apollo-docker-postgres-create-admin
     - import_role:

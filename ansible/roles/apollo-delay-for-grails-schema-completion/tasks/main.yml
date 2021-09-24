@@ -1,0 +1,6 @@
+---
+- name: Pause for {{ mins_delay_for_schema_build }} minutes to allow completion of Apollo grails schema build prior to adding admin user
+  pause:
+    minutes: "{{ mins_delay_for_schema_build }}"
+    prompt: Pausing for {{ mins_delay_for_schema_build }} minutes to ensure Apollo grails schema has finished building...
+

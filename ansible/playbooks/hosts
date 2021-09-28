@@ -18,6 +18,7 @@ apollo-014.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user franken
 apollo-015.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
 apollo-016.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ccdm-theme-c_user"
 apollo-017.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user pulsepathogens_user"
+apollo-018.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user dennislab-uq_user"
 
 
 
@@ -35,8 +36,7 @@ apollo-017.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user pulsepa
 
 [newapollovms]
 apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
-#apollo-017.genome.edu.au apollo_instance_number=17 apollo_subdomain_name=pulsepathogens
-#apollo-015.genome.edu.au apollo_instance_number=15 apollo_subdomain_name=ozsorghum
+#apollo-018.genome.edu.au apollo_instance_number=18 apollo_subdomain_name=dennislab-uq
 
 #[newapollovms:vars]
 #apollo_admin_password="<APOLLO-ADMIN-USER_PASSWORD>"
@@ -63,9 +63,9 @@ apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]
 hostname_for_ip=apollo-999
-private_ip=192.168.0.132
-#hostname_for_ip=apollo-017
-#private_ip=192.168.0.178
+private_ip=192.168.0.96
+#hostname_for_ip=apollo-018
+#private_ip=192.168.0.161
 
 
 
@@ -83,7 +83,7 @@ apollo-data.genome.edu.au
 
 [nfsservervms:vars]
 apollo_instance_number=999
-#apollo_instance_number=17
+#apollo_instance_number=18
 
 
 
@@ -104,9 +104,9 @@ apollo-monitor.genome.edu.au
 
 [monitorservervms:vars]
 apollo_instance_number=999
-private_ip=192.168.0.132
-#apollo_instance_number=17
-#private_ip=192.168.0.178
+private_ip=192.168.0.96
+#apollo_instance_number=18
+#private_ip=192.168.0.161
 
 
 
@@ -124,8 +124,7 @@ apollo-backup.genome.edu.au
 
 [backupservervms:vars]
 apollo_instance_number=999
-#apollo_instance_number=17
-#apollo_instance_number=15
+#apollo_instance_number=18
 
 
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied
@@ -134,7 +133,9 @@ apollo_instance_number=999
 apollo-data.genome.edu.au
 apollo-portal.genome.edu.au
 mt-sandpit.genome.edu.au
-ansible-sandpit.genome.edu.au
+# don't want ansible host rebooting in the middle of updates.
+# uncomment if needed for applying non-rebooting playbooks
+#ansible-sandpit.genome.edu.au
 
 
 

@@ -101,6 +101,12 @@
     insertafter: '^root\s.*'
     line: "backup_user ALL=(ALL) NOPASSWD: /usr/bin/rsync"
 
+- name: "adding backup_user to tomcat group"
+  user:
+    name: "backup_user"
+    groups: "tomcat" 
+    append: yes
+
 #- name: "adding existing users to specified groups"
 #  user:
 #    name: "{{ item.username }}"

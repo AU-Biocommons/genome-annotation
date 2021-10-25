@@ -5,6 +5,7 @@
 apollo-001.genome.edu.au
 apollo-002.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user scu_user"
 apollo-003.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user wheat-data"
+apollo-004.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user jbrowse-sandpit_user"
 apollo-005.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user training_user"
 apollo-006.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user tsi-data"
 apollo-007.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user moths_user"
@@ -18,7 +19,11 @@ apollo-014.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user franken
 apollo-015.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
 apollo-016.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ccdm-theme-c_user"
 apollo-017.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user pulsepathogens_user"
-apollo-018.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user dennislab-uq_user"
+apollo-018.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user dennislab_user"
+apollo-019.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ccdm_user"
+apollo-020.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user prorocentrum_user"
+apollo-021.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user crisplab_user"
+apollo-022.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user evogenomics_user"
 
 
 
@@ -35,8 +40,8 @@ apollo-018.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user dennisl
 #   export VAULT_PASSWORD="<SECRET_VAULT_PASSWORD>"
 
 [newapollovms]
-apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
-#apollo-018.genome.edu.au apollo_instance_number=18 apollo_subdomain_name=dennislab-uq
+#apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
+#apollo-022.genome.edu.au apollo_instance_number=22 apollo_subdomain_name=evogenomics
 
 #[newapollovms:vars]
 #apollo_admin_password="<APOLLO-ADMIN-USER_PASSWORD>"
@@ -62,10 +67,10 @@ apollo-monitor.genome.edu.au ansible_user=centos admin_group=wheel
 apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]
-hostname_for_ip=apollo-999
-private_ip=192.168.0.96
-#hostname_for_ip=apollo-018
-#private_ip=192.168.0.161
+#hostname_for_ip=apollo-999
+#private_ip=192.168.0.96
+hostname_for_ip=apollo-022
+private_ip=192.168.0.100
 
 
 
@@ -82,8 +87,8 @@ private_ip=192.168.0.96
 apollo-data.genome.edu.au
 
 [nfsservervms:vars]
-apollo_instance_number=999
-#apollo_instance_number=18
+#apollo_instance_number=999
+apollo_instance_number=22
 
 
 
@@ -103,10 +108,10 @@ apollo_instance_number=999
 apollo-monitor.genome.edu.au
 
 [monitorservervms:vars]
-apollo_instance_number=999
-private_ip=192.168.0.96
-#apollo_instance_number=18
-#private_ip=192.168.0.161
+#apollo_instance_number=999
+#private_ip=192.168.0.96
+apollo_instance_number=22
+private_ip=192.168.0.100
 
 
 
@@ -123,8 +128,8 @@ private_ip=192.168.0.96
 apollo-backup.genome.edu.au
 
 [backupservervms:vars]
-apollo_instance_number=999
-#apollo_instance_number=18
+#apollo_instance_number=999
+apollo_instance_number=22
 
 
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied
@@ -132,7 +137,7 @@ apollo_instance_number=999
 [otherubuntuvms]
 apollo-data.genome.edu.au
 apollo-portal.genome.edu.au
-mt-sandpit.genome.edu.au
+#mt-sandpit.genome.edu.au
 # don't want ansible host rebooting in the middle of updates.
 # uncomment if needed for applying non-rebooting playbooks
 #ansible-sandpit.genome.edu.au

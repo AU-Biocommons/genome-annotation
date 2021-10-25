@@ -62,8 +62,6 @@
     - import_role:
         name: apollo-docker-postgres
     - import_role:
-        name: apollo-docker-configure-backup
-    - import_role:
         name: apollo-set-tools-path
     - import_role:
         name: common-nagios-nrpe
@@ -101,6 +99,8 @@
         name: apollo-delay-for-grails-schema-completion
     - import_role:
         name: apollo-docker-postgres-create-admin
+    - import_role:
+        name: apollo-docker-configure-backup
     - import_role:
         name: apollo-restart-services
     - import_role:

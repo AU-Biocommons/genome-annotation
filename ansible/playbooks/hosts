@@ -27,165 +27,25 @@ apollo-022.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user evogeno
 
 
 
-# the newapollovms section is used for defining the new apollo instance to build
-# in the format:
-#   apollo-00X.genome.edu.au apollo_instance_number=X apollo_subdomain_name=customhostname
-# for example:
-#   apollo-011.genome.edu.au apollo_instance_number=11 apollo_subdomain_name=sandpit
-# for ansible development testing (note: required to run apollo on small memory node):
-#   apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
-# NOTE: the VAULT_PASSWORD environment variable needs to be set with this host group
-# as passwords are stored within the ansible vault group_vars/apollotest/vault
-# this is done with
-#   export VAULT_PASSWORD="<SECRET_VAULT_PASSWORD>"
-
-[newapollovms]
-#apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
-#apollo-022.genome.edu.au apollo_instance_number=22 apollo_subdomain_name=evogenomics
-
-#[newapollovms:vars]
-#apollo_admin_password="<APOLLO-ADMIN-USER_PASSWORD>"
-
-
-# the changeipvms:vars section should be modified to set the specified hostname's internal IP
-# in /etc/hosts on the changeipvms defined servers
-# specify with:
-#   hostname_for_ip=apollo-XXX
-#   private_ip=192.168.0.N
-# for example:
-#   hostname_for_ip=apollo-011
-#   private_ip=192.168.0.92
-# for ansible development testing use apollo-999 and set test environment with:
-#   hostname_for_ip=apollo-999
-#   private_ip=192.168.0.132
-#   target_environment=test
-
-[changeipvms]
-ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo
-apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
-apollo-monitor.genome.edu.au ansible_user=centos admin_group=wheel
-apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
-
-[changeipvms:vars]
-#hostname_for_ip=apollo-999
-#private_ip=192.168.0.96
-hostname_for_ip=apollo-022
-private_ip=192.168.0.100
-
-
-
-# the nfsservervms:vars section is used to add an apollo export on the NFS server
-# specify the apollo instance number with:
-#   apollo_instance_number=X
-# for example:
-#   apollo_instance_number=11
-# for ansible development testing use apollo-999 and set test environment with:
-#  apollo_instance_number=999
-#  target_environment=test
-
-[nfsservervms]
-apollo-data.genome.edu.au
-
-[nfsservervms:vars]
-#apollo_instance_number=999
-apollo_instance_number=22
-
-
-
-# the monitorservervms:vars section is used to add an apollo instance to Nagios and Grafana monitoring
-# specify the apollo instance number and internal IP address with:
-#   apollo_instance_number=X
-#   private_ip=192.168.0.N
-# for example:
-#   apollo_instance_number=11
-#   private_ip=192.168.0.92
-# for ansible development testing use apollo-999 and set test environment with:
-#   apollo_instance_number=999
-#   private_ip=192.168.0.132
-#   target_environment=test
-
-[monitorservervms]
-apollo-monitor.genome.edu.au
-
-[monitorservervms:vars]
-#apollo_instance_number=999
-#private_ip=192.168.0.96
-apollo_instance_number=22
-private_ip=192.168.0.100
-
-
-
-# the backupservervms:vars section is used to add an apollo VM to the list of apollo's to backup
-# specify the apollo instance number with:
-#   apollo_instance_number=X
-# for example:
-#   apollo_instance_number=11
-# for ansible development testing use apollo-999 and set test environment with:
-#  apollo_instance_number=999
-#  target_environment=test
-
-[backupservervms]
-apollo-backup.genome.edu.au
-
-[backupservervms:vars]
-#apollo_instance_number=999
-apollo_instance_number=22
-
-
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied
 
 [otherubuntuvms]
 apollo-data.genome.edu.au
 apollo-portal.genome.edu.au
-#mt-sandpit.genome.edu.au
+#mt-sandpit.genome.edu.au # VM has been retired
 # don't want ansible host rebooting in the middle of updates.
 # uncomment if needed for applying non-rebooting playbooks
 #ansible-sandpit.genome.edu.au
+ubuntu20-test.genome.edu.au
+ubuntu18-test.genome.edu.au
 
 
 
-# the centosvms section defines centos-based hosts
+# the centosvms section defines centos-based hosts that will have system updates applied
 
 [centosvms]
 apollo-monitor.genome.edu.au
 apollo-backup.genome.edu.au
-
-
-
-################ the following are used for ansible development testing - modify as needed
-
-[ubuntu20testvms]
-ubuntu20-test.genome.edu.au
-
-[ubuntu20testvms:vars]
-ansible_user=ubuntu
-admin_group=sudo
-allowed_groups="ubuntu apollo_admin backup_user"
-apollo_instance_number=999
-apollo_subdomain_name=starwars
-target_environment=test
-
-[ubuntu18testvms]
-ubuntu18-test.genome.edu.au
-
-[ubuntu18testvms:vars]
-ansible_user=ubuntu
-admin_group=sudo
-allowed_groups="ubuntu apollo_admin backup_user"
-
-[centostestvms]
 centos-test.genome.edu.au
 
-[centostestvms:vars]
-ansible_user=centos
-admin_group=wheel
-allowed_groups="centos apollo_admin backup_user"
-
-#[changeiptestvms]
-#ubuntu20-test.genome.edu.au private_ip=192.168.0.132 hostname_for_ip=testhostname target_dev_dir=/home/ubuntu
-#
-#[changeiptestvms:vars]
-#ansible_user=ubuntu
-#admin_group=sudo
-#target_environment=test
 

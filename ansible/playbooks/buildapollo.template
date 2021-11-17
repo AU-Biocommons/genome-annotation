@@ -1,0 +1,32 @@
+[newapollovms]
+apollo-APOLLONUMBER.genome.edu.au target_environment=TESTORPROD apollo_instance_number=APOLLONUMBER apollo_subdomain_name=CUSTOMHOSTNAME
+
+[changeipvms]
+ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-monitor.genome.edu.au ansible_user=centos admin_group=wheel
+apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
+
+[changeipvms:vars]
+hostname_for_ip=apollo-APOLLONUMBER
+private_ip=PRIVATEIP
+
+[nfsservervms]
+apollo-data.genome.edu.au
+
+[nfsservervms:vars]
+apollo_instance_number=APOLLONUMBER
+
+[monitorservervms]
+apollo-monitor.genome.edu.au
+
+[monitorservervms:vars]
+apollo_instance_number=APOLLONUMBER
+private_ip=PRIVATEIP
+
+[backupservervms]
+apollo-backup.genome.edu.au
+
+[backupservervms:vars]
+apollo_instance_number=APOLLONUMBER
+

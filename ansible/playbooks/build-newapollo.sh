@@ -1,42 +1,121 @@
 #!/bin/bash
 
+usage_str="Usage: $(basename $0) [ -h ] [ -t ] [ -p admin_password ] inventory_file"
+admin_password=""
+check_str=""
+target_environment="prod"
+
+while getopts htp: opt; do
+    case "$opt" in
+        h) # help
+            echo >&2 "$usage_str"
+            exit 0
+            ;;
+        t) # ansible test mode using --check
+	    check_str="--check"
+            ;;
+        p) # admin password for apollo
+            admin_password="$OPTARG"
+	    ;;
+        \?) # unknown flag
+            echo >&2 "$usage_str"
+            exit 1
+            ;;
+    esac
+done
+
+# get rid of option params
+shift $((OPTIND-1))
+
+# the trailing parameter is the inventory file
+if [ $# -eq 1 ]; then
+    inventory_file=$1
+    if [ ! -f ${inventory_file} ]; then
+        echo >&2 "Error: inventory file \"${inventory_file}\" does not exist.. exiting!"
+	exit 1
+    fi
+    shift
+else
+    echo >&2 "$usage_str"
+    exit 1
+fi
+
+# determine whether we are deploying a production apollo or test apollo (apollo-999)
+# grep args: -q be quiet; -F pattern is a plain string
+# grep returns 0 if a line is selected, 1 if no lines were selected, and 2 if an error occurred
+grep -qF target_environment=prod $inventory_file || target_environment="test"
+
 echo "Please ensure the ansible vault password has been exported to the environment, i.e.:"
 echo "  $  export VAULT_PASSWORD=\"<SECRET_VAULT_PASSWORD>\""
 read -p "Press enter to continue (Ctrl-C to abort)"
 echo ""
 
 echo "propogate local IP address of apollo VM to /etc/hosts on servers"
-echo "ansible-playbook playbook-set-etc-hosts-ip.yml --inventory-file newapollo.inventory --limit changeipvms"
-ansible-playbook playbook-set-etc-hosts-ip.yml --inventory-file newapollo.inventory --limit changeipvms
+echo "ansible-playbook playbook-set-etc-hosts-ip.yml --inventory-file $inventory_file --limit changeipvms $check_str"
+ansible-playbook playbook-set-etc-hosts-ip.yml --inventory-file $inventory_file --limit changeipvms $check_str
+if [ $? -ne 0 ] && [ -z "$check_str" ]; then
+  echo >&2 "Error running playbook-set-etc-hosts-ip.yml... aborting!"
+  exit 1
+fi
 echo
 echo "Done."
 echo
 
 echo "set up NFS export for apollo VM"
-echo "ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --inventory-file newapollo.inventory --limit nfsservervms"
-ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --inventory-file newapollo.inventory --limit nfsservervms
+echo "ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --inventory-file $inventory_file --limit nfsservervms $check_str"
+ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --inventory-file $inventory_file --limit nfsservervms $check_str
+if [ $? -ne 0 ] && [ -z "$check_str" ]; then
+  echo >&2 "Error running playbook-apollo-ubuntu20-nfs-server.yml... aborting!"
+  exit 1
+fi
 echo
 echo "Done."
 echo 
 
 echo "run combined playbook to build apollo"
-echo "NOTE: requires 'apollo_admin_password' set in inventory file or will use default password"
-echo "ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file newapollo.inventory --limit newapollovms"
-ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file newapollo.inventory --limit newapollovms
+# if no admin password provided, ansible will use default from ansible vault
+if [ -z "$admin_password" ]; then
+    echo "INFO: using default apollo admin password from ansible vault"
+    echo "ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str"
+    ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str
+else
+    echo "ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file $inventory_file --limit newapollovms -extra-vars=\"apollo_admin_password=<SECRET>\" $check_str"
+    ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file $inventory_file --limit newapollovms --extra-vars="apollo_admin_password=$admin_password" $check_str
+fi
+if [ $? -ne 0 ] && [ -z "$check_str" ]; then
+  echo >&2 "Error running playbook-apollo-ubuntu20-combined.yml... aborting!"
+  echo >&2 "Note: a common cause of this is when unattended-upgrades is running on instance"
+  echo >&2 "      fix by killing unattended-upgrades process and re-running playbook"
+  exit 1
+fi
 echo
 echo "Done."
 echo 
 
+if [ "$target_environment" = "test" ]; then
+	echo "Apollo test VM build complete! Note: test apollo not added to monitoring or backups"
+	echo
+	exit 0
+fi
+
 echo "add apollo instance to monitoring"
-echo "ansible-playbook playbook-apollo-ubuntu20-monitor.yml --inventory-file newapollo.inventory --limit monitorservervms"
-ansible-playbook playbook-apollo-ubuntu20-monitor.yml --inventory-file newapollo.inventory --limit monitorservervms
+echo "ansible-playbook playbook-apollo-ubuntu20-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str"
+ansible-playbook playbook-apollo-ubuntu20-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str
+if [ $? -ne 0 ] && [ -z "$check_str" ]; then
+  echo >&2 "Error running playbook-apollo-ubuntu20-monitor.yml... aborting!"
+  exit 1
+fi
 echo
 echo "Done."
 echo 
 
 echo "add apollo instance to list of apollo's to backup"
-echo "ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file newapollo.inventory --limit backupservervms"
-ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file newapollo.inventory --limit backupservervms
+echo "ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file $inventory_file --limit backupservervms $check_str"
+ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file $inventory_file --limit backupservervms $check_str
+if [ $? -ne 0 ] && [ -z "$check_str" ]; then
+  echo >&2 "Error running playbook-apollo-add-to-backup-server.yml... aborting!"
+  exit 1
+fi
 echo
 echo "Done."
 echo 

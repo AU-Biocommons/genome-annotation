@@ -13,8 +13,11 @@
 
 [newapollovms]
 #apollo-999.genome.edu.au target_environment=test apollo_instance_number=999 apollo_subdomain_name=starwars
-#apollo-022.genome.edu.au apollo_instance_number=22 apollo_subdomain_name=evogenomics
+apollo-023.genome.edu.au apollo_instance_number=23 apollo_subdomain_name=workshop
 
+# NOTE: not working! this seems to be overridden by default password from vault
+#       need to use the following on the command line instead
+#         --extra-vars="apollo_admin_password=<APOLLO-ADMIN-USER_PASSWORD>"
 #[newapollovms:vars]
 #apollo_admin_password="<APOLLO-ADMIN-USER_PASSWORD>"
 
@@ -41,8 +44,8 @@ apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 [changeipvms:vars]
 #hostname_for_ip=apollo-999
 #private_ip=192.168.0.96
-hostname_for_ip=apollo-022
-private_ip=192.168.0.100
+hostname_for_ip=apollo-023
+private_ip=192.168.0.109
 
 
 
@@ -60,7 +63,7 @@ apollo-data.genome.edu.au
 
 [nfsservervms:vars]
 #apollo_instance_number=999
-apollo_instance_number=22
+apollo_instance_number=23
 
 
 
@@ -82,8 +85,8 @@ apollo-monitor.genome.edu.au
 [monitorservervms:vars]
 #apollo_instance_number=999
 #private_ip=192.168.0.96
-apollo_instance_number=22
-private_ip=192.168.0.100
+apollo_instance_number=23
+private_ip=192.168.0.109
 
 
 
@@ -101,7 +104,7 @@ apollo-backup.genome.edu.au
 
 [backupservervms:vars]
 #apollo_instance_number=999
-apollo_instance_number=22
+apollo_instance_number=23
 
 
 

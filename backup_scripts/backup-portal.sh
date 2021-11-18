@@ -1,6 +1,6 @@
 #! /bin/bash
 NAME="portal"
-ARCHIVE_DAY="Monday"
+ARCHIVE_DAY="Tuesday"
 REMOTE_HOST="portal"
 DAY=$(date +"%Y%m%d")
 DAY_OF_WEEK=$(date +%A)

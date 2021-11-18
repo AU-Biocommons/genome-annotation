@@ -47,7 +47,7 @@ fi
 shift
 
 # allow hyphen only within string
-if [[ $1 =~ ^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$ ]] || [ $1 =~ ^[a-zA-Z0-9] ]]; then
+if [[ $1 =~ ^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$ ]] || [[ $1 =~ ^[a-zA-Z0-9] ]]; then
     custom_hostname=$1
 fi
 if [ -z "$custom_hostname" ]; then

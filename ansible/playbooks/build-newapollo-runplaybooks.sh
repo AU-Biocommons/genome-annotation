@@ -1,11 +1,20 @@
 #!/bin/bash
 
-usage_str="Usage: $(basename $0) [ -h ] [ -t ] [ -p admin_password ] inventory_file"
+FS='' read -d '' -r usage_str <<EOF
+Usage: $(basename $0)  [ -h ] [ -d ] [ -p admin_password ] inventory_file
+Where:
+    -h provides this handy help
+    -d specifies dry-run (don't build apollo) - runs ansible with --check
+    -p admin_password = provide secret password for the apollo admin user (ops@qfab.org)
+                        (otherwise default password from ansible vault will be used)
+    inventory_file = ansible inventory file for building apollo instance
+EOF
+
 admin_password=""
 check_str=""
 target_environment="prod"
 
-while getopts htp: opt; do
+while getopts hdp: opt; do
     case "$opt" in
         h) # help
             echo >&2 "$usage_str"

@@ -13,7 +13,7 @@ Output:
 EOF
 
 template_file="buildapollo.template"
-apollo_number="000"
+apollo_instance_number="0"
 custom_hostname=""
 ip_address=""
 target_environment="prod"
@@ -35,13 +35,17 @@ if [ $# -ne 3 ]; then
 fi
 
 if [[ $1 =~ ^[0-9][0-9][0-9]$ ]]; then
-    apollo_number=$1
+    # bash treats numbers with leading 0's as octal - ansible appears to be doing the same
+    # so for apollo_instance_number in the inventory file to be treated as base 10 by ansible
+    # remove leading zeros - here by explicitly converting to base 10 with 10#
+    apollo_instance_number="$((10#$1))"
+    apollo_full_number=$1
 fi
 
-if [ $apollo_number = "000" ]; then
+if [ $apollo_instance_number = "0" ]; then
     echo >&2 "invalid apollo_number: $1"
     exit 1
-elif [ $apollo_number = "999" ]; then
+elif [ $apollo_instance_number = "999" ]; then
     target_environment="test"
 fi
 shift
@@ -66,9 +70,10 @@ if [ -z "$ip_address" ]; then
 fi
 shift
 
-inventory_file="buildapollo.${apollo_number}.inventory"
+inventory_file="buildapollo.${apollo_full_number}.inventory"
+apollo_name="apollo-${apollo_full_number}"
 
-sed "s/APOLLONUMBER/${apollo_number}/g; s/CUSTOMHOSTNAME/${custom_hostname}/g; s/PRIVATEIP/${ip_address}/g; s/TESTORPROD/${target_environment}/g" $template_file > $inventory_file
+sed "s/APOLLOINSTANCENUMBER/${apollo_instance_number}/g; s/APOLLONAME/${apollo_name}/g; s/CUSTOMHOSTNAME/${custom_hostname}/g; s/PRIVATEIP/${ip_address}/g; s/TESTORPROD/${target_environment}/g" $template_file > $inventory_file
 
 echo >&2 "ansible inventory file generated for apollo build: ${inventory_file}"
 

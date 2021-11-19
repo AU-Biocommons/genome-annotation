@@ -16,12 +16,15 @@ Where:
     private_ip_address = 192.168.X.Y
 EOF
 
+fullcommandargs="$0 $@"
+
 # get location of this script. assume called scripts are in same directory.
 pathtoscripts="$(dirname "$0")"
 PATH="$pathtoscripts:$PATH"
 
 dryrun_str=""
 admin_password_str=""
+secret_password_str=""
 apollo_hosts_file="hosts"
 apollo_number="000"
 custom_hostname=""
@@ -38,7 +41,8 @@ while getopts hdp:a: opt; do
             dryrun_str="-d"
             ;;
         p) # password for apollo admin
-            admin_password="$OPTARG"
+            admin_password_str="-p $OPTARG"
+            secret_password_str="-p <SECRET>"
             ;;
         a) # non-default apollo inventory file
             apollo_hosts_file="$OPTARG"
@@ -106,17 +110,22 @@ echo >&2 "build-newapollo-runplaybooks.sh $buildargs"
 build-newapollo-runplaybooks.sh $dryrun_str $admin_password_str $inventory_file
 if [ $? -ne 0 ]; then
     echo >&2 "Error occurred while running ansible scripts"
-    echo >&2 "Fix issue and then re-run playbooks with:"
-    echo >&2 "    build-newapollo-runplaybooks.sh $buildargs"
-    echo >&2 "Then manually add entry for apollo-$apollo_number to 'apollovms' section in the file ${apollo_hosts_file}:"
-    echo >&2 "    apollo-$apollo_number.genome.edu.au allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\""
+    echo >&2 "Fix issue and then re-run with:"
+    echo >&2 "    $fullcommandargs"
+    echo >&2 "Note: can also manually re-run playbooks with"
+    echo >&2 "          build-newapollo-runplaybooks.sh $buildargs"
+    echo >&2 "      which requires manually adding entry for apollo-$apollo_number to 'apollovms' section in the file ${apollo_hosts_file}:"
+    echo >&2 "          apollo-$apollo_number.genome.edu.au allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\""
     exit 1
 fi
 
-if [ -z "$dryrun_str" ]; then
-    # either add at first blank line after apollovms group is defined
-    printf '%s\n' '0/\[apollovms\]//^$/i' "apollo-$apollo_number.genome.edu.au allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\"" . x | ex hosts
-    # OR add after last apollo-XXX... allowed_groups entry
-    printf '%s\n' '0/apollovms/?apollo-....genome.edu.au allowed_groups?a' "apollo-$apollo_number.genome.edu.au allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\"" . x | ex hosts
+if [ -z "$dryrun_str" ] && [ $target_environment = "prod" ]; then
+    build-newapollo-groupadd-apollovms.sh $apollo_hosts_file $apollo_number
+    if [ $? -ne 0 ]; then
+        echo >&2 "Error occurred while updating $apollo_hosts_file"
+        echo >&2 "Fix issue and then re-run with:"
+        echo >&2 "    build-newapollo-groupadd-apollovms.sh $apollo_hosts_file $apollo_number"
+        exit 1
+    fi
 fi
 

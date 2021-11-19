@@ -94,7 +94,9 @@ fi
 if [ $? -ne 0 ] && [ -z "$check_str" ]; then
   echo >&2 "Error running playbook-apollo-ubuntu20-combined.yml... aborting!"
   echo >&2 "Note: a common cause of this is when unattended-upgrades is running on instance"
-  echo >&2 "      fix by killing unattended-upgrades process and re-running playbook"
+  echo >&2 "      fix by logging into the VM and killing the unattended-upgrades process with"
+  echo >&2 "          sudo kill -KILL \$(pgrep -u root -f unattended-upgrades)"
+  echo >&2 "      Then re-run playbook"
   exit 1
 fi
 echo

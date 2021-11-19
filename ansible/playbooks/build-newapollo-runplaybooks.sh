@@ -20,7 +20,7 @@ while getopts hdp: opt; do
             echo >&2 "$usage_str"
             exit 0
             ;;
-        t) # ansible test mode using --check
+        d) # dry run using ansible --check
 	    check_str="--check"
             ;;
         p) # admin password for apollo

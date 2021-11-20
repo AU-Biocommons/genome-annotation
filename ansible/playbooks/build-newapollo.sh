@@ -25,7 +25,7 @@ PATH="$pathtoscripts:$PATH"
 dryrun_str=""
 admin_password_str=""
 secret_password_str=""
-apollo_hosts_file="hosts"
+apollovms_hosts_file="hosts"
 apollo_number="000"
 custom_hostname=""
 ip_address=""
@@ -45,7 +45,7 @@ while getopts hdp:a: opt; do
             secret_password_str="-p <SECRET>"
             ;;
         a) # non-default apollo inventory file
-            apollo_hosts_file="$OPTARG"
+            apollovms_hosts_file="$OPTARG"
             ;;
         \?) # unknown flag
             echo >&2 "$usage_str"
@@ -114,17 +114,17 @@ if [ $? -ne 0 ]; then
     echo >&2 "    $fullcommandargs"
     echo >&2 "Note: can also manually re-run playbooks with"
     echo >&2 "          build-newapollo-runplaybooks.sh $buildargs"
-    echo >&2 "      which requires manually adding entry for apollo-$apollo_number to 'apollovms' section in the file ${apollo_hosts_file}:"
+    echo >&2 "      which requires manually adding entry for apollo-$apollo_number to 'apollovms' section in the file ${apollovms_hosts_file}:"
     echo >&2 "          apollo-$apollo_number.genome.edu.au allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\""
     exit 1
 fi
 
 if [ -z "$dryrun_str" ] && [ $target_environment = "prod" ]; then
-    build-newapollo-groupadd-apollovms.sh $apollo_hosts_file $apollo_number
+    build-newapollo-groupadd-apollovms.sh $apollovms_hosts_file $apollo_number
     if [ $? -ne 0 ]; then
-        echo >&2 "Error occurred while updating $apollo_hosts_file"
+        echo >&2 "Error occurred while updating $apollovms_hosts_file"
         echo >&2 "Fix issue and then re-run with:"
-        echo >&2 "    build-newapollo-groupadd-apollovms.sh $apollo_hosts_file $apollo_number"
+        echo >&2 "    build-newapollo-groupadd-apollovms.sh $apollovms_hosts_file $apollo_number $custom_hostname"
         exit 1
     fi
 fi

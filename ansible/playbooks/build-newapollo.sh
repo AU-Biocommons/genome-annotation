@@ -120,7 +120,7 @@ if [ $? -ne 0 ]; then
 fi
 
 if [ -z "$dryrun_str" ] && [ $target_environment = "prod" ]; then
-    build-newapollo-groupadd-apollovms.sh $apollovms_hosts_file $apollo_number
+    build-newapollo-groupadd-apollovms.sh $apollovms_hosts_file $apollo_number $custom_hostname
     if [ $? -ne 0 ]; then
         echo >&2 "Error occurred while updating $apollovms_hosts_file"
         echo >&2 "Fix issue and then re-run with:"

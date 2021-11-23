@@ -13,6 +13,12 @@ Clone the [https://github.com/AU-Biocommons/genome-annotation](git repository) c
 
 Ensure that you have the ssh keys configured for connecting to hosts and servers via the `ubuntu` (apollo VMs and some infrastructure servers) or `centos` user (some infrastructure servers). This can be done with a `$HOME/.ssh/config file` as for example (substitute `<private_key_associated_with_VMs>` with the actual key name and path):
 ```
+Host ansible-sandpit.genome.edu.au
+    User ubuntu
+    HostName %h
+    IdentityFile ~/.ssh/<private_key_associated_with_VMs>
+    IdentitiesOnly yes
+
 Host apollo-???.genome.edu.au
     User ubuntu
     HostName %h

@@ -3,6 +3,7 @@
 This folder contains the Ansible scripts, inventory files (containing lists of VMs) and build scripts (to simplify running the ansible scripts) for building Apollo instances and performing system updates. The sub-folder `group_vars` contains definitions for the various inventory groups, and an Ansible Vault in `group_vars/newapollovms/vault` that contains passwords required in the build of a new Apollo instance.
 
 # Quick Start
+
 ## Setup
 
 Clone the [https://github.com/AU-Biocommons/genome-annotation](git repository) containing this readme and the ansible playbooks, inventory files, build scripts, etc.
@@ -37,13 +38,15 @@ Host apollo-backup.genome.edu.au
     IdentitiesOnly yes
 ```
 
-## VM Creation Steps Prior to Build
+## VM Creation Steps Prior to Build (Cloud Ops)
+
+VM creation will need to be done by someone who has the appropriate Cloud admin rights for creating VMs (via Nimbus web interface and/or Openstack). Therefore, this step will not necessarily be run by the same person as the one who builds Apollo, by running the Apollo build scripts outlined in the following section (or manually runs the ansible playbooks). This step is included here for documentation purposes only.
 
 The following are the steps required in VM creation prior to the Apollo build with Ansible (via the scripts outlined in the next section). This section outlines the procedure in OpenStack, but the same process can be used to create a VM within the [https://nimbus.pawsey.org.au](Nimbus web interface).
 
 When using OpenStack first source the `openrc.sh` file obtained from Nimbus and enter your Nimbus password.
 
-Create a n3.8c32r flavor VM with Ubuntu 20.04 image, with a 40G volume-based root disk and an public floating IP address.
+Create a n3.8c32r flavor VM with Ubuntu 20.04 image, with a 40G volume-based root disk and a public floating IP address.
 ```
 openstack server create \
     --flavor c291f88d-6987-424b-bd6b-2b9128595c74 \
@@ -85,17 +88,23 @@ Check that the IP has been associated, and obtain the private (internal) IP addr
 openstack server show $apollo_name | grep addresses
 ```
 
+### Add A Record and CNAME Entries for New VM to DNS
+
 Once the VM has been built, create the DNS entries for this VM on Cloudflare, with an __A record__ for `apollo-XXX.genome.edu.au` with the floating IP address assigned above (note `Proxy status` should be set to `DNS only`), and a __CNAME__ with the custom host name (for example the lab or organism name of interest) that points to the A record just defined.
 
 The local and public (floating) IP addresses should be obtained and recorded in the "Genome Annotation VMs" along with the apollo number, build date, custom hostnamem etc.
 
 The apollo number, custom hostname and local IP address will all be needed for the ansible-based build outlined in the next section.
 
-An optional step, that can be done now or post-build, is to assign root a password. This is required for root login from the Nimbus console, which can be useful for troubleshooting when there are network issues, for example. To do this, first generate a passphrase with `xkcdpass` (Linux) or `diceware` (Apple) and save as a note in the `Shared-Apollo` folder on LastPass. Then log into the VM and set the password:
+### Assign Root Password for Web Console Access
+
+An optional step, that can be done now or post-build, is to assign root a password. This is required for root login from the Web Console on Nimbus, which can be useful for troubleshooting when there are network issues, for example. To do this, first generate a passphrase with `xkcdpass` (Linux) or `diceware` (Apple) and save as a note in the `Shared-Apollo` folder on LastPass. Then log into the VM and set the password:
 ```
 ssh -i <path_to_private_key> -o IdentitiesOnly=yes ubuntu@apollo-XXX.genome.edu.au
 sudo passwd root
 ```
+
+### Pre-Build Update When Delaying Apollo Build
 
 If the Apollo build is not to be immediately run after the VM is built, it is a good idea to run the system updates manually now, with:
 ```
@@ -104,7 +113,7 @@ sudo apt upgrade -y
 ```
 This will prevent errors during the build caused by the `unattended-upgrades` process holding the `dpkg` frontend lock.
 
-## Build a New Apollo
+## Build Apollo on New VM
 
 The simplest way to build an Apollo instance on an Ubuntu 20.04 instance is to utilise the `build-newapollo.sh` script, which will generate the inventory file for this apollo, run all the ansible playbooks in the correct order and then update the `apollovms` group in the hosts file on completion (for system updates.
 
@@ -147,53 +156,70 @@ Once the build is complete, verify the new apollo instance is working from
 + `https://custom_hostname.genome.edu.au/apollo`
 and that can log in as `ops@qfab.org` user
 
-## Post Build Steps
-
-
 
 ## Running System Maintenance
 
-- do manual system updates on centos infrastructure VMs apollo-monitor, apollo-backup
-  (ansible playbooks not yet written to do this)
-    $ sudo dnf update -y
-  then reboot if kernel has been updated
-    $ sudo shutdown -r now
+The following are the steps required for performing system updates on all the apollo instances and supporting infrastruture:
 
-- do manual system updates on ansible-sandpit and reboot if needed
-  (done separately so it doesn't get rebooted in the middle of updating 'otherubuntuvms')
-    $ sudo apt update
-    $ sudo apt upgrade -y
-    $ sudo shutdown -r now
+### Centos Infrastructure Updates
 
-- log back into ansible-sandpit and change to playbooks directory
-    $ cd ~/github-ansible/ansible/playbooks/
-- run updates on ubuntu infrastructure VMs
-  apollo-data, apollo-portal, mt-sandpit, ansible-sandpit (done above)
-    $ ansible-playbook playbook-system-updates-ubuntu.yml --limit otherubuntuvms
+Do manual system updates on centos infrastructure VMs `apollo-monitor` and `apollo-backup` (ansible playbooks not yet written to do this), by logging into these VMs and issuing the following commands:
+```
+sudo dnf update -y
+```
+and reboot if kernel has been updated
+```
+sudo shutdown -r now
+```
 
-- run system updates and reboot on apollo VMs (see note below)
-    $ ansible-playbook playbook-system-updates-ubuntu.yml --limit apollovms --check
-    $ ansible-playbook playbook-system-updates-ubuntu.yml --limit apollovms
+### Manual System Updates on Ansible VM
 
-- do updates on test VMs
-    $ ansible-playbook playbook-system-updates-ubuntu.yml --inventory-file testvms.inventory --limit ubuntu20testvms
-    $ ansible-playbook playbook-system-updates-ubuntu.yml --inventory-file testvms.inventory --limit ubuntu18testvms
+Do manual system updates on `ansible-sandpit` and reboot if needed. This is done separately so it doesn't get rebooted in the middle of updating `otherubuntuvms`. Log into the VM and issue the following commands, with `shutdown -r` only needed if kernel has been updated:
+```
+sudo apt update
+sudo apt upgrade -y
+sudo shutdown -r now
+```
 
-- check that all systems are up and apollo's are running from nagios
-    http://nagios.genome.edu.au/nagios/
+### Automated System Updates on Apollo Instances and Ubuntu Infrastructure
 
-- log in to apollo-portal
-    https://apollo-portal.genome.edu.au/user/login
-  check if there are any drupal security updates
-  (if there are, will also get alert email to ops@qfab.org)
-    https://apollo-portal.genome.edu.au/admin/reports/updates
+Log back into `ansible-sandpit` and change to playbooks directory
+```
+cd ~/github-ansible/ansible/playbooks/
+```
 
+First run system updates (includes reboot where required) on ubuntu infrastructure VMs `apollo-data`, `apollo-portal` and Ubuntu test VMs, with:
+```
+ansible-playbook playbook-system-updates-ubuntu.yml --limit otherubuntuvms
+```
+
+Then run system updates (includes reboot where required) on apollo VMs (see note below)
+```
+ansible-playbook playbook-system-updates-ubuntu.yml --limit apollovms
+```
+
+Once the updates have been completed, check that all systems are up and apollos are running from [Nagios monitoring](http://nagios.genome.edu.au/nagios/).
+
+### Automated System Updates on Test VMs
+
+The test VMs `ubuntu20-test.genome.edu.au` and `ubuntu18-test.genome.edu.au` are included in the `otherubuntuvms` host group defined in the default inventory file _hosts_, so these are updated by default above.
+
+Optionally, to do updates _only_ on the test VMs, the `testvms.inventory` inventory file can be specified with the test hosts groups. The system updates can be run with ansible as follows:
+```
+ansible-playbook playbook-system-updates-ubuntu.yml --inventory-file testvms.inventory --limit ubuntu20testvms
+ansible-playbook playbook-system-updates-ubuntu.yml --inventory-file testvms.inventory --limit ubuntu18testvms
+```
+
+### Check for Apollo Portal Drupal Updates
+
+To check for Drupal Security Updates for the Apollo-Portal website, first log in to [apollo-portal](https://apollo-portal.genome.edu.au/user/login), then check the reports pages for (updates)[https://apollo-portal.genome.edu.au/admin/reports/updates]. Note that if there are security updates available, `ops@qfab` should have received an alert email.
 
 # Ansible Inventory, Groups and Playbooks
+
 ## Prod Servers Hosts (Inventory) File
 The prod servers are defined in the hosts (inventory) file in this directory [ansible/playbooks/hosts](hosts)
 
-# Before running Ansible Playbooks
+## Before running Ansible Playbooks
 Before running any of the playbooks make sure of the following: 
 
 1. Make sure you can ssh into ansible sandpit with your user
@@ -240,8 +266,10 @@ or on the command line with:
     ansible-playbook playbook-apollo-ubuntu20-combined.yml --extra-vars="apollo_subdomain_name=starwars" --verbose --limit newapollovms
     ```
 
+## Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 20.04
 
-## Order of Running Ansible Playbooks to create an Apollo VM in Ubuntu 20.04 (Simplified)
+The following is for reference only and may be out of date. The best reference for the order of playbooks and the arguments to be supplied is the `build-newapollo-runplaybooks.sh` script within this directory.
+
 Please **`Note that the below playbooks will run in all of the test hosts`** defined in the hosts (inventory) file therefore be careful when running the below playbooks. To install and configure an Apollo VM or VMs the following playbooks have to be run in order and these have to be run from the ansible sandpit: 
 
 The usual approach for deployment is to add the hostname to the `newapollovms` group in the inventory file `ansible/playbooks/newapollovm.inventory`, and remove any previous members. For example:

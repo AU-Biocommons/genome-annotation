@@ -24,6 +24,7 @@ apollo-019.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ccdm_us
 apollo-020.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user prorocentrum_user"
 apollo-021.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user crisplab_user"
 apollo-022.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user evogenomics_user"
+apollo-023.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user workshop_user"
 
 
 

@@ -162,6 +162,17 @@ Once the build is complete, verify the new apollo instance is working from
 + `https://custom_hostname.genome.edu.au/apollo`
 and that can log in as `ops@qfab.org` user
 
+## Post-Build Steps
+
+Ensure that passwords for the new VM and Apollo have been added to LastPass in the `Shared-Apollo` folder.
+
+Synchronise the updated `hosts` inventory file with other Apollo infrastructure admins, for running system updates, by committing changes to this Git repo and pushing back to Github, This is done as follows:
+```
+git pull origin master
+git add hosts
+git commit -m "added apollo-XXX to apollovms group in hosts inventory file"
+git push origin master
+```
 
 ## Running System Maintenance
 

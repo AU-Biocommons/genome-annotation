@@ -174,6 +174,8 @@ git commit -m "added apollo-XXX to apollovms group in hosts inventory file"
 git push origin master
 ```
 
+Ensure that the details for the new apollo VM has been added to the Genome Annotation VMs spreadsheet.
+
 ## Running System Maintenance
 
 The following are the steps required for performing system updates on all the apollo instances and supporting infrastruture:

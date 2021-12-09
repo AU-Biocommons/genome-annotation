@@ -3,4 +3,6 @@
   authorized_key:
     user: "{{ item.username }}"
     key: "{{ lookup('file', item.key) }}"
+    state: "present"
+    exclusive: True
   with_items: "{{ users }}"

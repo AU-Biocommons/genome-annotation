@@ -141,5 +141,7 @@
   user:
     name: "{{ item }}"
     state: "absent"
+    remove: yes
+    force: yes
   with_items: "{{ remove_users }}"
 

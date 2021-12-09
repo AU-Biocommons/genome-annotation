@@ -1,0 +1,29 @@
+---
+- hosts: all
+  remote_user: "{{ ansible_user }}"
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  vars:
+    users:
+      - username: "a.bulgaris"
+        comment: "Alejandro Bulgaris"
+        uid: 34928
+        key: files/a.bulgaris.pub
+        groups: "sudo"
+
+  tasks:
+  - name: "Create user accounts and add users to groups"
+    user:
+      name: "{{ item.username }}"
+      groups: "{{ item.groups }}"
+      uid: "{{ item.uid }}"
+      state: "present"
+    with_items: "{{ users }}"
+  - name: "Add authorized key from file"
+    authorized_key:
+      user: "{{ item.username }}"
+      key: "{{ lookup('file', item.key) }}"
+    with_items: "{{ users }}"
+

@@ -1,0 +1,26 @@
+---
+- hosts: all
+  remote_user: "{{ ansible_user }}"
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  vars:
+    remove_users:
+      - "g.price"
+
+  tasks:
+  - name: "remove user accounts and home directories"
+    user:
+      name: "{{ item }}"
+      state: "absent"
+      remove: yes
+      force: yes
+    with_items: "{{ remove_users }}"
+
+  - name: "remove user's home directory if wasn't deleted above"
+    file:
+      state: "absent"
+      path: "/home/{{ item }}"
+    with_items: "{{ remove_users }}"
+

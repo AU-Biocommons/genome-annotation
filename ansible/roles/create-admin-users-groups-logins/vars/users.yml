@@ -20,6 +20,10 @@ users:
     comment: "Alejandro Bulgaris"
     uid: 34928
     key: files/a.bulgaris.pub
+  - username: "c.hyde"
+    comment: "Cameron Hyde"
+    uid: 5715
+    key: files/c.hyde.pub
 
 login_users:
   - username: "backup_user"
@@ -30,20 +34,23 @@ login_users:
     key: files/m.thang.pub
   - username: "j.lee"
     key: files/j.lee.pub
-  - username: "a.bulgaris"
-    key: files/a.bulgaris.pub
+    #- username: "a.bulgaris"
+    #key: files/a.bulgaris.pub
+    #- username: "c.hyde"
+    #key: files/c.hyde.pub
 
 admin_users:
   - "n.rhodes"
   - "m.thang"
   - "j.lee"
-  - "a.bulgaris"
 
 inactive_users:
-  - "g.price"
+  - "a.bulgaris"
+  - "c.hyde"
 
 remove_users:
   - "mr_hacker"
+  - "g.price"
 
 
 

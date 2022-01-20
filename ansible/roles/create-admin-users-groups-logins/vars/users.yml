@@ -24,6 +24,10 @@ users:
     comment: "Cameron Hyde"
     uid: 5715
     key: files/c.hyde.pub
+  - username: "s.williams"
+    comment: "Sarah Williams"
+    uid: 35938
+    key: files/s.williams.pub
 
 login_users:
   - username: "backup_user"
@@ -38,6 +42,8 @@ login_users:
     #key: files/a.bulgaris.pub
     #- username: "c.hyde"
     #key: files/c.hyde.pub
+    #- username: "s.williams"
+    #key: files/s.williams.pub
 
 admin_users:
   - "n.rhodes"
@@ -47,6 +53,7 @@ admin_users:
 inactive_users:
   - "a.bulgaris"
   - "c.hyde"
+  - "s.williams"
 
 remove_users:
   - "mr_hacker"

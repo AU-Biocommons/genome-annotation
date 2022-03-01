@@ -104,7 +104,7 @@
     - import_role:
         name: apollo-restart-services
     - import_role:
-        name: update-base
+        name: update-base-ubuntu
     - import_role:
         name: apollo-post-build-messages
 

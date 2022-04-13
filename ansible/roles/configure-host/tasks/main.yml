@@ -10,8 +10,13 @@
     line: "127.0.0.1 localhost {{ inventory_hostname }}"
     state: present
 
+- name: disable update_etc_hosts in cloud.cfg to prevent regeneration of /etc/hosts on reboot
+  lineinfile:
+    dest: /etc/cloud/cloud.cfg
+    regexp: 'update_etc_hosts'
+    line: '# - update_etc_hosts'
+
 - name: set timezone to Australia/Brisbane
   timezone:
     name: Australia/Brisbane
-
 

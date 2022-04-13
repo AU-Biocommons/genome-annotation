@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  # The roles to be run by this playbook will be applied to the specified hosts
+  # which in this case must be limited to the monitoring server, with, for example
+  #   --limit apollo-monitor.genome.edu.au
+  tasks:
+    - import_role:
+        name: configure-host
+    - import_role:
+        name: common-dns-resolv-conf
+    - import_role:
+        name: add-admin-keys
+      vars:
+        users:
+          - username: "ubuntu"
+            key: files/admin.pub
+

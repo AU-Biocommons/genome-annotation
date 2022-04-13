@@ -1,0 +1,13 @@
+[newservervms]
+apollo-monitor.genome.edu.au
+
+[changeipvms]
+ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
+#apollo-monitor.genome.edu.au ansible_user=centos admin_group=sudo
+apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
+
+[changeipvms:vars]
+hostname_for_ip=apollo-monitor
+private_ip=192.168.0.61
+

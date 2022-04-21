@@ -1,0 +1,27 @@
+
+users:
+  - username: "m.thang"
+    comment: "Mike Thang"
+    uid: 13486
+  - username: "s.williams"
+    comment: "Sarah Williams"
+    uid: 35938
+
+login_users:
+  - username: "m.thang"
+    key: files/m.thang.pub
+    #- username: "s.williams"
+    #key: files/s.williams.pub
+
+sudo_users:
+  - "m.thang"
+
+# note this list MUST have at least 1 entry or the associated task fails!!!
+# the inactive user will be created if not already defined (with the next available UID)
+# but can be deleted by adding to the remove_users list
+inactive_users:
+  - "s.williams"
+
+remove_users:
+  - "g.price"
+

@@ -1,0 +1,45 @@
+
+users:
+  - username: "backup_user"
+    comment: ""
+    uid: 9999
+  - username: "j.lee"
+    comment: "Justin Lee"
+    uid: 19529
+  - username: "n.rhodes"
+    comment: "Nick Rhodes"
+    uid: 12143
+  - username: "m.thang"
+    comment: "Mike Thang"
+    uid: 13486
+  - username: "a.bulgaris"
+    comment: "Alejandro Bulgaris"
+    uid: 34928
+
+login_users:
+  - username: "backup_user"
+    key: files/backup_user.pub
+  - username: "j.lee"
+    key: files/j.lee.pub
+  - username: "n.rhodes"
+    key: files/n.rhodes.pub
+#  - username: "m.thang"
+#    key: files/m.thang.pub
+#  - username: "a.bulgaris"
+#    key: files/a.bulgaris.pub
+
+sudo_users:
+  - "j.lee"
+  - "n.rhodes"
+
+# note this list MUST have at least 1 entry or the associated task fails!!!
+# the inactive user will be created if not already defined (with the next available UID)
+# but can be deleted by adding to the remove_users list
+inactive_users:
+  - "a.bulgaris"
+#  - "m.thang"
+
+remove_users:
+  - "a.bulgaris"
+  - "g.price"
+

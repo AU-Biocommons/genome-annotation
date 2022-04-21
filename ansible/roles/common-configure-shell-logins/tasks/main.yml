@@ -1,0 +1,85 @@
+---
+
+- name: "Ensure group apollo_admin is present"
+  group:
+    name: "apollo_admin"
+    state: present
+    gid: 1001
+
+# deprecated - use apollo_admin
+#- name: "Ensure group QFAB is present"
+#  group:
+#    name: "QFAB"
+#    state: present
+#    gid: 40018
+
+- name: "adding system user {{ ansible_user }} to group apollo_admin"
+  user:
+    name: "{{ ansible_user }}"
+    groups: 
+     - "apollo_admin"
+    append: yes
+  become: yes
+
+- name: "Ensure the system user's home directory is private"
+  file:
+    path: "/home/{{ ansible_user }}"
+    state: directory
+    mode: 0700
+
+- name: "Configure creation of user home directories to be private"
+  lineinfile:
+    dest: "/etc/adduser.conf"
+    regexp: "^DIR_MODE="
+    line: "DIR_MODE=0700"
+    state: present
+
+- name: "Disable root login via SSH"
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+  notify:
+    - Restart sshd
+
+- name: "in /etc/ssh/sshd_config comment out AllowUsers - as over-rides AllowGroups"
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^AllowUsers"
+    line: "#AllowUsers {{ ansible_user }}"
+
+- name: "Add groups to /etc/ssh/sshd_config AllowGroups: {{ allowed_groups }}"
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^AllowGroups"
+    line: "AllowGroups {{ allowed_groups }}"
+    state: present
+    #backup: yes
+  notify:
+    - Restart sshd
+
+#  - name: Print user defined variables
+#    debug:
+#      msg: "AllowGroups={{ allowed_groups }}"
+
+- name: "Allow members of OS-specific sudo group to sudo without a password"
+  lineinfile:
+    dest: "/etc/sudoers"
+    state: "present"
+    regexp: "^%{{ admin_group }}"
+    line: "%{{ admin_group }} ALL=(ALL) NOPASSWD: ALL"
+
+- name: "Allow backup user to sudo without an interactive shell"
+  lineinfile:
+    dest: "/etc/sudoers"
+    state: "present"
+    insertafter: '^Defaults\s.*'
+    line: "Defaults:backup_user        !requiretty"
+
+- name: "Allow backup user to use sudo rsync without password"
+  lineinfile:
+    dest: "/etc/sudoers"
+    state: "present"
+    insertafter: '^root\s.*'
+    line: "backup_user ALL=(ALL) NOPASSWD: /usr/bin/rsync"
+

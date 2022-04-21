@@ -8,4 +8,4 @@
   # This playbook requires to use --limit option 
   tasks:
     - import_role:
-        name: "create-admin-users-groups-logins"
+        name: "common-create-admin-users-groups-logins"

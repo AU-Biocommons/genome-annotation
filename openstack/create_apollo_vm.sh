@@ -36,12 +36,19 @@ if [ $? -ne 0 ]; then
   source apollo-openrc.sh
 fi
 
-apollo_name="JKL_apollo_${apollo_number}_$(date +%Y%m%d)"
+# apollo-999 is for testing only, allocate it n3.1c4r, all others get n3.8c32r
+if [ "$apollo_number" -eq "999" ]; then
+  flavor="649d7ca6-16be-4821-981f-c4f73eba1bff"
+  apollo_name="JKL_ubuntu20_test_$(date +%Y%m%d)"
+else
+  flavor="649d7ca6-16be-4821-981f-c4f73eba1bff"
+  apollo_name="JKL_apollo_${apollo_number}_$(date +%Y%m%d)"
+fi
 
 echo "creating apollo VM with name $apollo_name"
 
 openstack server create \
-      --flavor c291f88d-6987-424b-bd6b-2b9128595c74 \
+      --flavor "$flavor" \
       --image 578525b1-f1e3-495d-b673-3a3b9cd32b23 \
       --boot-from-volume 40 \
       --key-name ga-apollo-rsa \

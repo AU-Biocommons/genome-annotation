@@ -12,13 +12,13 @@ apollo_instance_number=999
 apollo_subdomain_name=starwars
 target_environment=test
 
-[ubuntu18testvms]
-ubuntu18-test.genome.edu.au
-
-[ubuntu18testvms:vars]
-ansible_user=ubuntu
-admin_group=sudo
-allowed_groups="ubuntu apollo_admin backup_user"
+#[ubuntu18testvms]
+#ubuntu18-test.genome.edu.au
+#
+#[ubuntu18testvms:vars]
+#ansible_user=ubuntu
+#admin_group=sudo
+#allowed_groups="ubuntu apollo_admin backup_user"
 
 [centostestvms]
 centos-test.genome.edu.au

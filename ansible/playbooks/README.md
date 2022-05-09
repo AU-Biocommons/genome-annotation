@@ -221,7 +221,7 @@ Once the updates have been completed, check that all systems are up and apollos 
 
 ### Automated System Updates on Test VMs
 
-The test VMs `ubuntu20-test.genome.edu.au` and `ubuntu18-test.genome.edu.au` are included in the `otherubuntuvms` host group defined in the default inventory file _hosts_, so these are updated by default above.
+Ubuntu test VMs are included in the `otherubuntuvms` host group defined in the default inventory file _hosts_, so these are updated by default above.
 
 Optionally, to do updates _only_ on the test VMs, the `testvms.inventory` inventory file can be specified with the test hosts groups. The system updates can be run with ansible as follows:
 ```

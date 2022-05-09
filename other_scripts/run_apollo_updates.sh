@@ -14,12 +14,12 @@ pwd
 echo
 
 echo "run system updates on centos infrastructure and test VMs (this may involve reboots)"
-echo "updating apollo-monitor, apollo-backup and centos-test..."
+echo "updating apollo-backup and centos-test..."
 echo "ansible-playbook playbook-system-updates-centos.yml --limit centosvms"
 ansible-playbook playbook-system-updates-centos.yml --limit centosvms
 
 echo "run system updates on ubuntu infrastructure and test VMs (this may involve reboots)"
-echo "updating apollo-data, apollo-portal, ubuntu18-test and ubuntu20-test..."
+echo "updating apollo-data, apollo-monitor, apollo-portal and ubuntu20-test..."
 echo "ansible-playbook playbook-system-updates-ubuntu.yml --limit otherubuntuvms"
 ansible-playbook playbook-system-updates-ubuntu.yml --limit otherubuntuvms
 

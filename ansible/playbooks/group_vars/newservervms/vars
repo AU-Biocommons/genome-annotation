@@ -2,4 +2,3 @@
 ansible_user: ubuntu
 admin_group: sudo
 target_environment: prod
-

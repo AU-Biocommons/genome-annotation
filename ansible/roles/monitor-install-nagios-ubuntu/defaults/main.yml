@@ -1,5 +1,5 @@
 ---
 nagios_apache_conf_path: "/etc/nagios4"
 nagios_username: "nagiosadmin"
-nagios_password: "secret_password_in_vault"
+nagios_password: "{{ vault_nagios_password }}"
 

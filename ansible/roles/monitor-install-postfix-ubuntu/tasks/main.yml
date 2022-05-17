@@ -1,0 +1,48 @@
+---
+- name: "Install postfix and mailutils"
+  apt:
+    pkg:
+      - mailutils
+      - postfix
+    state: "present"
+    update_cache: yes
+
+- name: "Configure postfix hostname to apollo-monitor"
+  lineinfile:
+    path: "/etc/postfix/main.cf"
+    regexp: 'myhostname ='
+    line: "myhostname = apollo-monitor.genome.edu.au"
+    state: present
+
+- name: "Configure postfix domain to genome.edu.au"
+  lineinfile:
+    path: "/etc/postfix/main.cf"
+    regexp: 'mydomain ='
+    line: "mydomain = genome.edu.au"
+    state: present
+
+- name: "Configure postfix destination"
+  lineinfile:
+    path: "/etc/postfix/main.cf"
+    regexp: 'mydestination ='
+    line: 'mydestination = $myhostname, apollo-monitor.genome.edu.au, nagios.genome.edu.au, localhost.genome.edu.au, localhost'
+    state: present
+
+- name: "Configure postfix interfaces"
+  lineinfile:
+    path: "/etc/postfix/main.cf"
+    regexp: 'inet_interfaces ='
+    line: "inet_interfaces = loopback-only"
+    state: present
+
+- name: "Restart postfix service"
+  systemd:
+    name: "postfix"
+    state: "restarted"
+
+- name: "Enable postfix service"
+  systemd:
+    name: "postfix"
+    state: "started"
+    enabled: yes
+

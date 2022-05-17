@@ -1,0 +1,71 @@
+---
+- name: "Install Ubuntu packages for the Nagios 4 monitoring server"
+  apt:
+    pkg:
+      - nagios4
+      - nagios-nrpe-plugin
+      - nagios-plugins-contrib
+    state: present
+    update_cache: yes
+
+- name: "Enable the Apache authz_groupfile and auth_digest modules"
+  command: "{{ item }}"
+  with_items:
+    - a2enmod authz_groupfile
+    - a2enmod auth_digest
+
+- name: "Create Nagios admin username and password for authentication"
+  htpasswd: 
+    path: /etc/nagios4/htdigest.users
+    name: "{{ nagios_username }}"
+    password: "{{ nagios_password }}"
+
+- name: "Place apache2.conf template in {{ nagios_apache_conf_path }} directory"
+  template:
+    src: "apache2.conf"
+    dest: "{{ nagios_apache_conf_path }}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+- name: "Configure Nagios to use authentication"
+  lineinfile:
+    path: "/etc/nagios4/cgi.cfg"
+    regexp: '^use_authentication'
+    line: "use_authentication=1"
+    state: present
+
+- name: "Create directory to store config files for each server"
+  file:
+    path: /etc/nagios4/servers
+    state: directory
+    mode: 0755
+
+- name: "Configure Nagios to process config files in /etc/nagios4/servers"
+  lineinfile:
+    path: "/etc/nagios4/nagios.cfg"
+    regexp: '^#cfg_dir=/etc/nagios4/servers'
+    line: "cfg_dir=/etc/nagios4/servers"
+    state: present
+
+- name: "Restart Nagios and Apache services"
+  service: name={{ item }} state=restarted
+  with_items:
+    - nagios4
+    - apache2
+
+- name: "Enable Nagios service"
+  systemd:
+    name: "nagios4"
+    state: "started"
+    enabled: yes
+
+#- name: "Create symbolic link of /etc/nagios to /etc/nagios4 for backwards compatibility with existing Apollo creation scripts"
+#  file:
+#    src: /etc/nagios4
+#    dest: /etc/nagios
+#    state: link
+#    force: yes
+

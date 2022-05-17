@@ -1,0 +1,13 @@
+---
+- name: "install apache using apt"
+  apt:
+    name: "apache2"
+    state: "latest"
+    update_cache: yes
+
+- name: "Enable Apache service at startup"
+  systemd:
+    name: "apache2"
+    state: "started"
+    enabled: yes
+

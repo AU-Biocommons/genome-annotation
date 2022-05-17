@@ -1,5 +1,6 @@
 ---
 - hosts: all
+  remote_user: ubuntu
   become: yes
   become_method: sudo
   connection: "ssh"
@@ -18,4 +19,19 @@
         users:
           - username: "ubuntu"
             key: files/admin.pub
+    - import_role:
+        name: common-configure-shell-logins
+    - import_role:
+        name: common-create-admin-users-logins
+    - import_role:
+        # Need to use snapd to install certbot in Ubuntu 20.04
+        name: common-certbot-snapd
+    - import_role:
+        name: common-install-apache
+    - import_role:
+        name: monitor-install-postfix-ubuntu
+    - import_role:
+        name: monitor-install-nagios-ubuntu
+    - import_role:
+        name: common-nagios-nrpe
 

@@ -4,7 +4,7 @@
 [apollovms]
 #apollo-001.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user"
 apollo-002.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user scu_user"
-apollo-003.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user wheat-data"
+apollo-003.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user bread-wheat-um_user"
 apollo-004.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user jbrowse-sandpit_user"
 apollo-005.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user training_user"
 apollo-006.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user tsi-data"
@@ -26,7 +26,8 @@ apollo-021.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user crispla
 apollo-022.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user evogenomics_user"
 apollo-023.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user workshop_user"
 apollo-024.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ethtec_user"
-
+apollo-025.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user zeinab_user"
+apollo-026.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user thompson-institute_user"
 
 
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied

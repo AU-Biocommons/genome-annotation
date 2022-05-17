@@ -64,6 +64,7 @@
 # when target_environment is test modify test nagios and grafana config files in ubuntu home directory
 - name: "set fact override config locations if apollo_evironment is test"
   set_fact:
-    nagios_conf_path: "{{ '/tmp' if target_environment == 'test' else '/etc/nagios/servers' }}"
+    #nagios_conf_path: "{{ '/tmp' if target_environment == 'test' else '/etc/nagios/servers' }}" # old centos nagios path
+    nagios_conf_path: "{{ '/tmp' if target_environment == 'test' else '/etc/nagios4/servers' }}"
     grafana_conf_path: "{{ '/tmp' if target_environment == 'test' else '/etc/prometheus' }}"
 

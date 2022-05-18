@@ -10,20 +10,6 @@
   #   --limit apollo-monitor.genome.edu.au
   tasks:
     - import_role:
-        name: configure-host
-    - import_role:
-        name: common-dns-resolv-conf
-    - import_role:
-        name: add-admin-keys
-      vars:
-        users:
-          - username: "ubuntu"
-            key: files/admin.pub
-    - import_role:
-        name: common-configure-shell-logins
-    - import_role:
-        name: common-create-admin-users-logins
-    - import_role:
         # Need to use snapd to install certbot in Ubuntu 20.04
         name: common-certbot-snapd
     - import_role:
@@ -32,6 +18,4 @@
         name: monitor-install-postfix-ubuntu
     - import_role:
         name: monitor-install-nagios-ubuntu
-    - import_role:
-        name: common-nagios-nrpe
 

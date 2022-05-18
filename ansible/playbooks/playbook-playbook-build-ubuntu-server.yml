@@ -1,0 +1,28 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  # The roles to be run by this playbook will be applied to the specified servers
+  # with, for example
+  #   --limit apollo-monitor.genome.edu.au
+  tasks:
+    - import_role:
+        name: configure-host
+    - import_role:
+        name: common-dns-resolv-conf
+    - import_role:
+        name: add-admin-keys
+      vars:
+        users:
+          - username: "ubuntu"
+            key: files/admin.pub
+    - import_role:
+        name: common-configure-shell-logins
+    - import_role:
+        name: common-create-admin-users-logins
+    - import_role:
+        name: common-nagios-nrpe
+

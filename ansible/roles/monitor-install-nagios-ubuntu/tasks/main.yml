@@ -8,17 +8,34 @@
     state: present
     update_cache: yes
 
+- name: "Install python-passlib for the htpasswd module"
+  apt:
+    name: "python-passlib"
+    state: present
+    update_cache: yes
+
 - name: "Enable the Apache authz_groupfile and auth_digest modules"
   command: "{{ item }}"
   with_items:
     - a2enmod authz_groupfile
     - a2enmod auth_digest
 
-- name: "Create Nagios admin username and password for authentication"
-  htpasswd: 
-    path: /etc/nagios4/htdigest.users
-    name: "{{ nagios_username }}"
-    password: "{{ nagios_password }}"
+## delete /etc/nagios4/htdigest.users
+#- name: "Remove htdigest file if it exists - to prevent issues with htpasswd file creation"
+#  file:
+#    path: /etc/nagios4/htdigest.users
+#    state: absent
+#
+## note htpasswd module doesn't support realm, and htdigest command doesn't support non-interactive use
+#- name: "Create htpasswd file with Nagios admin username and password for authentication"
+#  htpasswd: 
+#    path: /etc/nagios4/htdigest.users
+#    name: "{{ nagios_username }}"
+#    password: "{{ nagios_password }}"
+
+- name: "create new htdigest file with specified username and password"
+  shell: >
+    (echo -n "{{nagios_username}}:Nagios4:" && echo -n "{{nagios_username}}:Nagios4:{{nagios_password}}" | md5sum - | cut -d' ' -f1) > /etc/nagios4/htdigest.users
 
 - name: "Place apache2.conf template in {{ nagios_apache_conf_path }} directory"
   template:

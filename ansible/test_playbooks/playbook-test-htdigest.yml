@@ -1,0 +1,32 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  vars:
+    - nagios_username: "nagiosadmin"
+    - nagios_password: "testing"
+
+  tasks:
+#    - name: "Create htpasswd file with Nagios admin username and password for authentication"
+#      htpasswd:
+#        path: /etc/nagios4/htdigest.users
+#        name: "{{ nagios_username }}"
+#        password: "{{ nagios_password }}"
+
+#    - name: "change htpasswd format (user:passwd) to htdigest format (user:realm:passwd) in /etc/nagios4/htdigest.users as required by Apache "
+#      lineinfile:
+#        path: "/etc/nagios4/htdigest.users"
+#        backrefs: yes
+#        regexp: '^blah:(.*)$'
+#        line: 'blah:changed:\1'
+#        #regexp: '^nagiosadmin:(.*)$'
+#        #line: 'nagiosadmin:Nagios4:\1'
+#        state: present
+
+    - name: "create htdigest file using md5sum"
+      shell: >
+        (echo -n "{{nagios_username}}:Nagios4:" && echo -n "{{nagios_username}}:Nagios4:{{nagios_password}}" | md5sum - | cut -d' ' -f1) > /etc/nagios4/htdigest.users
+

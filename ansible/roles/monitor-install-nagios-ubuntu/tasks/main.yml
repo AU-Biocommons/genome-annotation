@@ -3,6 +3,7 @@
   apt:
     pkg:
       - nagios4
+      - nagios-nrpe-server
       - nagios-nrpe-plugin
       - nagios-plugins-contrib
     state: present

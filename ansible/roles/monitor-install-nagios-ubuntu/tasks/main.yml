@@ -55,25 +55,6 @@
     line: "use_authentication=1"
     state: present
 
-- name: "Create directory to store config files for each server"
-  file:
-    path: /etc/nagios4/servers
-    state: directory
-    mode: 0755
-
-- name: "Configure Nagios to process config files in /etc/nagios4/servers"
-  lineinfile:
-    path: "/etc/nagios4/nagios.cfg"
-    regexp: '^#cfg_dir=/etc/nagios4/servers'
-    line: "cfg_dir=/etc/nagios4/servers"
-    state: present
-
-- name: "add contact email to nagios contacts.cfg"
-  lineinfile:
-    dest: "/etc/nagios4/objects/contacts.cfg"
-    regexp: "[ \t]*email[ \t]*nagios@localhost"
-    line: "        email                           ops@qfab.org		;"
-
 - name: "Restart Nagios and Apache services"
   service: name={{ item }} state=restarted
   with_items:

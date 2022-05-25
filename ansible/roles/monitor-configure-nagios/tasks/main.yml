@@ -1,0 +1,74 @@
+---
+
+- name: "add contact email to nagios contacts.cfg"
+  lineinfile:
+    path: "{{ nagios_objects_conf_path }}/contacts.cfg"
+    regexp: "[ \t]*email[ \t]*nagios@localhost"
+    line: "        email                           ops@qfab.org		;"
+
+- name: "define check_nrpe and check_apollo_url commands in commands.cfg"
+  blockinfile:
+    path: "{{ nagios_objects_conf_path }}/commands.cfg"
+    insertafter: EOF
+    block: |
+      # check the apollo application's URL
+      define command {
+          command_name    check_apollo_url
+          command_line    $USER1$/check_http -I $HOSTADDRESS$ -u /apollo -S $ARG1$
+      }
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - apollo monitoring"
+
+- name: "use localhost.cfg template with swap section commented out"
+  template:
+    src: "localhost.cfg"
+    dest: "{{ nagios_objects_conf_path }}/localhost.cfg"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  
+- name: "Create directory to store config files for each server"
+  file:
+    path: "{{ nagios_servers_conf_path }}"
+    state: directory
+    mode: 0755
+
+- name: "Configure Nagios to process config files in {{ nagios_servers_conf_path }}"
+  lineinfile:
+    path: "/etc/nagios4/nagios.cfg"
+    regexp: '^#cfg_dir=/etc/nagios4/servers'
+    line: "cfg_dir={{ nagios_servers_conf_path }}"
+    state: present
+
+- name: "Place the server group definitions in {{ nagios_servers_conf_path }}"
+  template:
+    src: "{{ item }}"
+    dest: "{{ nagios_servers_conf_path }}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  loop:
+    - "linux.cfg"
+    - "infrastructure.cfg"
+    - "large-disk.cfg"
+    - "vda-root-disk.cfg"
+    - "web-apollo.cfg"
+    - "web-apollo-training.cfg"
+    - "web-server.cfg"
+
+- name: "copy host definitions from local dir {{ nagios_confs_src_path }}/servers/ to {{ nagios_servers_conf_path }}"
+  copy:
+    src: "{{ nagios_confs_src_path }}/servers/"
+    dest: "{{ nagios_servers_conf_path }}"
+
+- name: "check nagios configuration is ok"
+  command: /usr/sbin/nagios4 -v /etc/nagios4/nagios.cfg
+
+- name: "Restart Nagios service for changes to take effect"
+  systemd:
+    name: "nagios4"
+    state: "restarted"
+

@@ -18,4 +18,6 @@
         name: monitor-install-postfix-ubuntu
     - import_role:
         name: monitor-install-nagios-ubuntu
+    - import_role:
+        name: monitor-configure-nagios
 

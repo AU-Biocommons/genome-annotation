@@ -25,4 +25,6 @@
         name: common-create-admin-users-logins
     - import_role:
         name: common-nagios-nrpe
+    - import_role:
+        name: common-install-utils
 

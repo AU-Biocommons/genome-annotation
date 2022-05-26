@@ -1,0 +1,25 @@
+---
+util_packages:
+    - fail2ban
+    - ssl-cert
+    - lsb-release
+    - curl
+    - wget
+    - netcat
+    - git
+    - zip
+    - unzip
+    - build-essential
+    - gnupg2
+    - atop
+    - iotop
+    - net-tools
+    - nmap
+    - speedometer
+    - iperf3
+    - tree
+    - mlocate
+    - ack-grep
+    - ranger
+    - byobu
+

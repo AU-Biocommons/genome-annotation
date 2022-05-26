@@ -15,11 +15,12 @@
     state: present
     update_cache: yes
 
-- name: "Enable the Apache authz_groupfile and auth_digest modules"
+- name: "Enable the Apache authz_groupfile, auth_digest and rewrite modules"
   command: "{{ item }}"
   with_items:
     - a2enmod authz_groupfile
     - a2enmod auth_digest
+    - a2enmod rewrite
 
 ## delete /etc/nagios4/htdigest.users
 #- name: "Remove htdigest file if it exists - to prevent issues with htpasswd file creation"

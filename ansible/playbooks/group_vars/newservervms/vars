@@ -2,3 +2,4 @@
 ansible_user: ubuntu
 admin_group: sudo
 target_environment: prod
+allowed_groups: "ubuntu apollo_admin backup_user"

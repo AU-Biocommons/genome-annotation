@@ -6,7 +6,7 @@
     regexp: "[ \t]*email[ \t]*nagios@localhost"
     line: "        email                           ops@qfab.org		;"
 
-- name: "define check_nrpe and check_apollo_url commands in commands.cfg"
+- name: "define check_apollo_url and check_portal_url commands in commands.cfg"
   blockinfile:
     path: "{{ nagios_objects_conf_path }}/commands.cfg"
     insertafter: EOF
@@ -15,6 +15,11 @@
       define command {
           command_name    check_apollo_url
           command_line    $USER1$/check_http -I $HOSTADDRESS$ -u /apollo -S $ARG1$
+      }
+      # check the apollo portal's URL
+      define command {
+          command_name    check_portal_url
+          command_line    $USER1$/check_http -I $HOSTADDRESS$ -u / -S $ARG1$
       }
     marker: "# {mark} ANSIBLE MANAGED BLOCK - apollo monitoring"
 

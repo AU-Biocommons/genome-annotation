@@ -1,5 +1,6 @@
 [newservervms]
 apollo-monitor.genome.edu.au
+#ubuntu20-test.genome.edu.au
 
 [changeipvms]
 ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo

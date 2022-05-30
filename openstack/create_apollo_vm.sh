@@ -47,9 +47,18 @@ fi
 
 echo "creating apollo VM with name $apollo_name"
 
+# openstack image list | grep 'Pawsey - Ubuntu 20.04'
+# | 578525b1-f1e3-495d-b673-3a3b9cd32b23 | Pawsey - Ubuntu 20.04 - 2021-02                | active |
+# | 67bab16e-453b-46a8-a262-c0796fa35d85 | Pawsey - Ubuntu 20.04 - 2022-05                | active |
+#
+# note that old Ubuntu 20.04 - 2021-02 image uses /dev/vda
+#      --image 578525b1-f1e3-495d-b673-3a3b9cd32b23 \
+#           new Ubuntu 20.04 - 2022-05 image uses /dev/sda
+#      --image 67bab16e-453b-46a8-a262-c0796fa35d85 \
+
 openstack server create \
       --flavor "$flavor" \
-      --image 578525b1-f1e3-495d-b673-3a3b9cd32b23 \
+      --image 67bab16e-453b-46a8-a262-c0796fa35d85 \
       --boot-from-volume 40 \
       --key-name ga-apollo-rsa \
       --availability-zone nova \

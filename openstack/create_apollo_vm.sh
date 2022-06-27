@@ -1,22 +1,41 @@
-usage_str="Usage: $(basename $0) [ -f floating_ip ] apollo_number"
+usage_str="Usage: $(basename $0) [ -h ] [ -f floating_ip ] [ -c 1|2|4|8|16 ] apollo_number"
+
 floating_ip=""
+vcpus=""
+default_vcpus="4" 
 
-if [ $# -gt 1 ] && [ "$1" = "-f" ]; then
-    shift
-    if [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        floating_ip="$1"
-        shift
-    else
-        echo >&2 "invalid IP address: $1"
-        exit 1
-    fi
-fi
+while getopts "f:c:h" opt; do
+    case $opt in
+        h)
+            echo >&2 "$usage_str"
+            exit
+            ;;
+        f)
+            if [[ $OPTARG =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                floating_ip="$OPTARG"
+            else
+                echo >&2 "invalid IP address: $OPTARG"
+                exit 1
+            fi
+            ;;
+        c)
+            if [[ $OPTARG =~ ^(1|2|4|8|16) ]]; then
+                vcpus="$OPTARG"
+            else
+                echo >&2 "invalid number of vCPUs: $OPTARG"
+            fi
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+    esac
+done
 
-if [ $# -gt 0 ] && [ "${1:0:1}" = "-" ]; then
-    echo >&2 "$usage_str"
-    exit 1
-fi
+# get rid of option params
+shift $((OPTIND-1))
 
+# the apollo number must be specified
 if [ $# -ne 1 ]; then
     echo >&2 "$usage_str"
     exit 1
@@ -31,21 +50,46 @@ fi
 
 openstack server list > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-  echo >&2 "Sourcing the apollo openstack environment - enter password when prompted"
-  echo >&2 "source apollo-openrc.sh"
-  source apollo-openrc.sh
+    echo >&2 "Sourcing the apollo openstack environment - enter password when prompted"
+    echo >&2 "source apollo-openrc.sh"
+    source apollo-openrc.sh
 fi
 
-# apollo-999 is for testing only, allocate it n3.1c4r, all others get n3.8c32r
+# if not specified, set vcpus to 1 if apollo-999 (testing only), otherwise the default
+if [ -z "$vcpus" ]; then
+    if [ "$apollo_number" = "999" ]; then
+        vcpus="1"
+    else
+       	vcpus="$default_vcpus"
+    fi
+fi
+
+# set the openstack flavor based on vcpus
+case $vcpus in
+    1) fname="n3.1c4r"
+       flavor="649d7ca6-16be-4821-981f-c4f73eba1bff"
+       ;;
+    2) fname="n3.2c8r"
+       flavor="506876b7-b8a3-42af-9636-e7b797b51214"
+       ;;
+    4) fname="n3.4c16r"
+       flavor="5b51ce63-2f79-4def-af47-243a829ef9f5"
+       ;;
+    8) fname="n3.8c32r"
+       flavor="c291f88d-6987-424b-bd6b-2b9128595c74"
+       ;;
+    16) fname="n3.16c64r"
+       flavor="fe996a66-ecbe-4e14-9ec0-af177937acf3"
+       ;;
+esac
+
 if [ "$apollo_number" = "999" ]; then
-  flavor="649d7ca6-16be-4821-981f-c4f73eba1bff"
-  apollo_name="JKL_ubuntu20_test_$(date +%Y%m%d)"
+    apollo_name="JKL_ubuntu20_test_$(date +%Y%m%d)"
 else
-  flavor="c291f88d-6987-424b-bd6b-2b9128595c74"
-  apollo_name="JKL_apollo_${apollo_number}_$(date +%Y%m%d)"
+    apollo_name="JKL_apollo_${apollo_number}_$(date +%Y%m%d)"
 fi
 
-echo "creating apollo VM with name $apollo_name"
+echo "creating apollo VM as $fname with name $apollo_name"
 
 # openstack image list | grep 'Pawsey - Ubuntu 20.04'
 # | 578525b1-f1e3-495d-b673-3a3b9cd32b23 | Pawsey - Ubuntu 20.04 - 2021-02                | active |
@@ -74,29 +118,29 @@ openstack server create \
       "$apollo_name"
 
 if [ $? -ne 0 ]; then
-  echo >&2 "Error! Failed to create VM... aborting"
-  echo >&2 "Investigate error then rerun"
-  exit 1
+    echo >&2 "Error! Failed to create VM... aborting"
+    echo >&2 "Investigate error then rerun"
+    exit 1
 fi
 
 echo "created apollo VM $apollo_name:"
 openstack server list | grep -i "$apollo_name"
 
 if [ -z "$floating_ip" ]; then
-  echo "creating floating IP"
-  openstack floating ip create 'Public external'
-  #openstack floating ip list | grep None | cut -d'|' -f3 | tr -d "[:blank:]"
-  floating_ip="$(openstack floating ip list | grep None | awk '{ print $4 }')"
-  echo "created floating IP address: $floating_ip"
+    echo "creating floating IP"
+    openstack floating ip create 'Public external'
+    #openstack floating ip list | grep None | cut -d'|' -f3 | tr -d "[:blank:]"
+    floating_ip="$(openstack floating ip list | grep None | awk '{ print $4 }')"
+    echo "created floating IP address: $floating_ip"
 fi
 
 openstack server add floating ip $apollo_name $floating_ip
 
 if [ $? -ne 0 ]; then
-  echo >&2 "Error! Failed to attach floating IP... aborting"
-  echo >&2 "Investigate error, then manually run the following:"
-  echo >&2 "openstack server add floating ip $apollo_name $floating_ip"
-  exit 1
+    echo >&2 "Error! Failed to attach floating IP... aborting"
+    echo >&2 "Investigate error, then manually run the following:"
+    echo >&2 "openstack server add floating ip $apollo_name $floating_ip"
+    exit 1
 fi
 
 echo "attached floating ip $floating_ip to apollo VM $apollo_name:"

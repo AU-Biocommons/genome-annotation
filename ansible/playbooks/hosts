@@ -28,6 +28,8 @@ apollo-023.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user worksho
 apollo-024.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ethtec_user"
 apollo-025.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user zeinab_user"
 apollo-026.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user thompson-institute_user"
+apollo-027.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user beetle-research_user"
+apollo-028.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user gene30004-training_user"
 
 
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied

@@ -36,10 +36,10 @@ scrape_configs:
 # Apollo servers
   - job_name: 'apollo'
     static_configs:
-    - targets: ['apollo-002:9100', 'apollo-003:9100', 'apollo-005:9100', 'apollo-006:9100', 'apollo-007:9100', 'apollo-008:9100', 'apollo-009:9100', 'apollo-010:9100', 'apollo-011:9100', 'apollo-012:9100', 'apollo-013:9100', 'apollo-014:9100', 'apollo-015:9100', 'apollo-016:9100', 'apollo-017:9100', 'apollo-018:9100', 'apollo-019:9100', 'apollo-020:9100', 'apollo-004:9100', 'apollo-021:9100', 'apollo-022:9100', 'apollo-023:9100', 'apollo-024:9100']
+    - targets: ['apollo-002:9100', 'apollo-003:9100', 'apollo-005:9100', 'apollo-006:9100', 'apollo-007:9100', 'apollo-008:9100', 'apollo-009:9100', 'apollo-010:9100', 'apollo-011:9100', 'apollo-012:9100', 'apollo-013:9100', 'apollo-014:9100', 'apollo-015:9100', 'apollo-016:9100', 'apollo-017:9100', 'apollo-018:9100', 'apollo-019:9100', 'apollo-020:9100', 'apollo-004:9100', 'apollo-021:9100', 'apollo-022:9100', 'apollo-023:9100', 'apollo-024:9100', 'apollo-025:9100', 'apollo-026:9100', 'apollo-027:9100', 'apollo-028:9100']
 
 # Postgres
   - job_name: 'postgres'
     static_configs:
-    - targets: ['apollo-002:9187', 'apollo-003:9187', 'apollo-005:9187', 'apollo-006:9187', 'apollo-007:9187', 'apollo-008:9187','apollo-009:9187', 'apollo-010:9187', 'apollo-011:9187', 'apollo-012:9187', 'apollo-013:9187', 'apollo-014:9187', 'apollo-015:9187', 'apollo-016:9187', 'apollo-017:9187', 'apollo-018:9187', 'apollo-019:9187', 'apollo-020:9187', 'apollo-004:9187', 'apollo-021:9187', 'apollo-022:9187', 'apollo-023:9187', 'apollo-024:9187']
+    - targets: ['apollo-002:9187', 'apollo-003:9187', 'apollo-005:9187', 'apollo-006:9187', 'apollo-007:9187', 'apollo-008:9187','apollo-009:9187', 'apollo-010:9187', 'apollo-011:9187', 'apollo-012:9187', 'apollo-013:9187', 'apollo-014:9187', 'apollo-015:9187', 'apollo-016:9187', 'apollo-017:9187', 'apollo-018:9187', 'apollo-019:9187', 'apollo-020:9187', 'apollo-004:9187', 'apollo-021:9187', 'apollo-022:9187', 'apollo-023:9187', 'apollo-024:9187', 'apollo-025:9187', 'apollo-026:9187', 'apollo-027:9187', 'apollo-028:9187']
 

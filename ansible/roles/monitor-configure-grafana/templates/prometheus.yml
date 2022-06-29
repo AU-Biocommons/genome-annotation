@@ -1,0 +1,45 @@
+# my global config
+global:
+  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['localhost:9090']
+
+# grab stats about the local machine by [node-exporter]
+  - job_name: 'local node'
+    static_configs:
+      - targets: ['localhost:9100']
+
+# Apollo servers
+  - job_name: 'apollo'
+    static_configs:
+    - targets: ['apollo-002:9100', 'apollo-003:9100', 'apollo-005:9100', 'apollo-006:9100', 'apollo-007:9100', 'apollo-008:9100', 'apollo-009:9100', 'apollo-010:9100', 'apollo-011:9100', 'apollo-012:9100', 'apollo-013:9100', 'apollo-014:9100', 'apollo-015:9100', 'apollo-016:9100', 'apollo-017:9100', 'apollo-018:9100', 'apollo-019:9100', 'apollo-020:9100', 'apollo-004:9100', 'apollo-021:9100', 'apollo-022:9100', 'apollo-023:9100', 'apollo-024:9100']
+
+# Postgres
+  - job_name: 'postgres'
+    static_configs:
+    - targets: ['apollo-002:9187', 'apollo-003:9187', 'apollo-005:9187', 'apollo-006:9187', 'apollo-007:9187', 'apollo-008:9187','apollo-009:9187', 'apollo-010:9187', 'apollo-011:9187', 'apollo-012:9187', 'apollo-013:9187', 'apollo-014:9187', 'apollo-015:9187', 'apollo-016:9187', 'apollo-017:9187', 'apollo-018:9187', 'apollo-019:9187', 'apollo-020:9187', 'apollo-004:9187', 'apollo-021:9187', 'apollo-022:9187', 'apollo-023:9187', 'apollo-024:9187']
+

@@ -1,0 +1,10 @@
+---
+grafana_url_key: "https://packages.grafana.com/gpg.key"
+grafana_deb_repo: "deb https://packages.grafana.com/oss/deb stable main"
+grafana_conf: "/etc/grafana/grafana.ini"
+grafana_username: "admin"
+grafana_password: "{{ vault_grafana_password }}"
+grafana_inet: "192.168.0.61"
+grafana_domain: "grafana.genome.edu.au"
+grafana_apache_conf_path: "/etc/apache2/conf-available"
+

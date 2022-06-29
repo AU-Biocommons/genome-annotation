@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  # The roles to be run by this playbook will be applied to the specified hosts
+  # which in this case must be limited to the monitoring server, with, for example
+  #   --limit apollo-monitor.genome.edu.au
+  tasks:
+    - import_role:
+        name: common-install-apache
+    - import_role:
+        name: monitor-install-grafana-ubuntu
+    - import_role:
+        name: monitor-configure-grafana
+

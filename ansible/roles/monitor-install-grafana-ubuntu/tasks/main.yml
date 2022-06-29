@@ -1,0 +1,88 @@
+---
+
+- name: "Install Ubuntu packages for Prometheus"
+  apt:
+    pkg:
+      - prometheus
+      - prometheus-node-exporter
+      - prometheus-pushgateway
+      - prometheus-alertmanager
+    state: present
+    update_cache: yes
+
+- name: "Add Grafana Ubuntu repository key"
+  apt_key:
+    url: "{{ grafana_url_key }}"
+    state: present
+
+- name: "add Grafana apt repository"
+  apt_repository: 
+    repo: "{{ grafana_deb_repo }}"
+    state: present 
+    filename: "grafana"
+    update_cache: yes
+
+- name: "Install the Grafana monitoring server"
+  apt: 
+    name: grafana
+    state: present
+    update_cache: yes
+
+- name: "Configure {{ grafana_conf }} to change the Grafana admin password"
+  lineinfile:
+    path: "{{ grafana_conf }}"
+    regexp: '^;admin_password ='
+    line: "admin_password = {{ grafana_password }}"
+    state: present
+
+# Grafana also needs to bind on 127.0.0.1 for Apache reverse proxy to work
+# So this is no longer needed or wanted
+#- name: "configure Grafana network interface"
+#  lineinfile:
+#    path: "{{ grafana_conf }}"
+#    regexp: "^;http_addr ="
+#    line: "http_addr = {{ grafana_inet }}"
+
+- name: "configure Grafana domain name"
+  lineinfile:
+    path: "{{ grafana_conf }}"
+    regexp: "^;domain ="
+    line: "domain = {{ grafana_domain }}"
+
+- name: "Place grafana.conf template in {{ grafana_apache_conf_path }} directory"
+  template:
+    src: "grafana.conf"
+    dest: "{{ grafana_apache_conf_path }}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+- name: "Enable the Apache proxy and proxy_http modules required for ProxyPass, ProxyPassReverse directives"
+  command: "{{ item }}"
+  with_items:
+    - a2enmod proxy
+    - a2enmod proxy_http
+
+- name: "Enable Grafana conf via Apache"
+  command: "a2enconf grafana.conf"
+
+- name: "Enable Prometheus service"
+  systemd:
+    name: "prometheus"
+    state: "started"
+    enabled: yes
+
+- name: "Enable Grafana service"
+  systemd:
+    name: "grafana-server"
+    state: "started"
+    enabled: yes
+
+- name: "Restart Grafana and Apache services"
+  service: name={{ item }} state=restarted
+  with_items:
+    - grafana-server
+    - apache2
+

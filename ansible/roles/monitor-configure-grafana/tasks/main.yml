@@ -10,6 +10,34 @@
     group: root
     mode: "u=rw,g=r,o=r"
 
+- name: "configure Grafana for Prometheus data source"
+  template:
+    src: "datasource.yml"
+    dest: "{{ grafana_datasources }}"
+    force: yes
+    backup: no
+    owner: root
+    group: grafana
+    mode: "u=rw,g=r,o=r"
+
+- name: "download Grafana dashboard 'Node Exporter Full'"
+  get_url:
+    url: "https://grafana.com/api/dashboards/1860/revisions/27/download"
+    dest: "{{ grafana_dashboards }}/1860.json"
+    owner: root
+    group: grafana
+    mode: "u=rw,g=r,o=r"
+
+- name: "provision Grafana dashboard"
+  template:
+    src: "dashboard.yml"
+    dest: "{{ grafana_dashboards }}"
+    force: yes
+    backup: no
+    owner: root
+    group: grafana
+    mode: "u=rw,g=r,o=r"
+
 - name: "Restart Prometheus and Grafana services"
   service: name={{ item }} state=restarted
   with_items:

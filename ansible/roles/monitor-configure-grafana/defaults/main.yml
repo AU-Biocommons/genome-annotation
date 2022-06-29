@@ -1,2 +1,5 @@
 ---
 prometheus_conf: "/etc/prometheus/prometheus.yml"
+grafana_datasources: "/etc/grafana/provisioning/datasources"
+grafana_dashboards: "/etc/grafana/provisioning/dashboards"
+

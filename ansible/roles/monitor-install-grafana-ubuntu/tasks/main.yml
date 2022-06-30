@@ -10,12 +10,47 @@
     state: present
     update_cache: yes
 
+- name: "Stop Prometheus service prior to upgrade"
+  systemd:
+    name: "prometheus"
+    state: "stopped"
+
+- name: "Download Prometheus ver >= 2.22.0 to upgrade (needed for Ubuntu 20)"
+  unarchive:
+    src: "{{ prometheus_download_url }}"
+    dest: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64"
+    remote_src: yes
+
+- name: "Upgrade Prometheus to ver >= 2.22.0 due to errors in parsing queries in Ubuntu 20 version (2.15.2)"
+  copy:
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    owner: prometheus
+    group: prometheus
+    force: yes
+    remote_src: yes
+  with_items:
+    - prometheus
+    - promtool
+
+- name: "Configure {{ prometheus_defaults_path }} to set miniumum required args to prometheus service"
+  lineinfile:
+    path: "{{ prometheus_defaults_path }}"
+    regexp: '^ARGS='
+    line: "ARGS=\"--config.file /etc/prometheus/prometheus.yml --storage.tsdb.path /var/lib/prometheus/\""
+    state: present
+
+- name: "Restart Prometheus service after upgrade"
+  systemd:
+    name: "prometheus"
+    state: "started"
+
 - name: "Add Grafana Ubuntu repository key"
   apt_key:
     url: "{{ grafana_url_key }}"
     state: present
 
-- name: "add Grafana apt repository"
+- name: "Add Grafana apt repository"
   apt_repository: 
     repo: "{{ grafana_deb_repo }}"
     state: present 
@@ -43,7 +78,7 @@
 #    regexp: "^;http_addr ="
 #    line: "http_addr = {{ grafana_inet }}"
 
-- name: "configure Grafana domain name"
+- name: "Configure Grafana domain name"
   lineinfile:
     path: "{{ grafana_conf }}"
     regexp: "^;domain ="

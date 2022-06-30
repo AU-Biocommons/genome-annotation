@@ -1,4 +1,7 @@
 ---
+prometheus_version: "2.36.2"
+prometheus_download_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+prometheus_defaults_path: "/etc/default/prometheus"
 grafana_url_key: "https://packages.grafana.com/gpg.key"
 grafana_deb_repo: "deb https://packages.grafana.com/oss/deb stable main"
 grafana_conf: "/etc/grafana/grafana.ini"

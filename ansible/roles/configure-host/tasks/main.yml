@@ -20,3 +20,39 @@
   timezone:
     name: Australia/Brisbane
 
+# grep args: -c count number of matches; -F pattern is a plain string
+# grep returns 0 if a line is selected, 1 if no lines were selected, and 2 if an error occurred
+- name: "Check if any Apollos have been defined in /etc/hosts skipping host's name"
+  shell:
+    cmd: "cat /etc/hosts | grep -v 127.0.0.1 | grep -cF apollo- /etc/hosts"
+  register: var_etc_hosts
+  failed_when: "var_etc_hosts.rc not in [ 0, 1 ]"
+
+- name: "Print how many apollo entries defined in /etc/hosts" 
+  debug:
+    msg: "var_etc_hosts.stdout={{ var_etc_hosts.stdout }}"
+
+- name: "copy hosts file with apollo local IPs from ansible server to host"
+  copy:
+    src: "/etc/hosts"
+    dest: "/tmp/etc_hosts"
+    force: yes
+  when: var_etc_hosts.stdout == "0"
+
+- name: "Backup original /etc/hosts file"
+  copy:
+    src: "/etc/hosts"
+    dest: "/etc/hosts.orig"
+    remote_src: yes
+  when: var_etc_hosts.stdout == "0"
+
+- name: "Append entries for Apollo hosts at the end of the /etc/hosts file"
+  shell:
+    cmd: "cat /tmp/etc_hosts | grep -v 127.0.0.1 | grep -F apollo- >> /etc/hosts"
+  when: var_etc_hosts.stdout == "0"
+
+- name: "Cleanup temp file copied from ansible server"
+  file:
+    path: /tmp/etc_hosts
+    state: absent
+

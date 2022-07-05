@@ -1,0 +1,14 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  # The roles to be run by this playbook will be applied to the specified servers
+  # with, for example
+  #   --limit apollo-monitor.genome.edu.au
+  tasks:
+    - import_role:
+        name: common-prometheus-node-exporter-ubuntu20
+

@@ -33,6 +33,11 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9100']
 
+# Apollo infrastructure
+  - job_name: 'infrastructure'
+    static_configs:
+    - targets: ['apollo-data:9100', 'apollo-portal:9100']
+
 # Apollo servers
   - job_name: 'apollo'
     static_configs:

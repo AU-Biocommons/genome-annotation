@@ -1,0 +1,36 @@
+---
+
+- name: "Install Ubuntu packages for Prometheus Exporters"
+  apt:
+    pkg:
+      - prometheus-node-exporter
+      - prometheus-pushgateway
+      - prometheus-alertmanager
+    state: present
+    update_cache: yes
+
+- name: "Place prometheus node exporter configuration in /etc/default directory"
+  template:
+    src: "prometheus-node-exporter"
+    dest: "/etc/default/prometheus-node-exporter"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+- name: "Restart Prometheus Node Exporter service after configuration"
+  systemd:
+    name: "prometheus-node-exporter"
+    state: "restarted"
+
+- name: "Allow connections to prometheus exporters from grafana server"
+  ufw:
+    rule: allow
+    proto: tcp
+    port: '{{ item }}'
+    src: '{{ grafana_server }}'
+  with_items:
+    - '9100'
+#    - '9187'
+

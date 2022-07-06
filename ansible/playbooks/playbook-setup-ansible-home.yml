@@ -1,0 +1,35 @@
+---
+- hosts: all
+  connection: "ssh"
+  # note: connection is as current user
+
+  # The roles to be run by this playbook will be applied to the specified servers
+  # with, for example
+  #   --limit ubuntu22-test.genome.edu.au
+
+  tasks:
+  # configure git prior to cloning genome-annotation repo
+  - name: "Copy ~/.gitconfig ~/.ssh/config to destination home directory"
+    copy:
+      src: "~/.gitconfig"
+      dest: "~/.gitconfig"
+
+  - name: "Clone git repo into directory"
+    git:
+      repo: "https://github.com/AU-Biocommons/genome-annotation"
+      dest: "~/github-ansible"
+
+  # set up ssh key and config for connections to remote hosts
+  # .ssh/config specifies connection details
+  # .ssh/ga_apollo_rsa key is needed to connect as system user ubuntu/centos/rocky
+  - name: "Copy ssh key and config to destination home directory"
+    copy:
+      src: "~/{{ item.src }}"
+      dest: "~/{{ item.src }}"
+      mode: "{{ item.mode }}"
+    with_items:
+      - src: ".ssh/ga_apollo_rsa"
+        mode: '0600'
+      - src: ".ssh/config"
+        mode: '0644'
+

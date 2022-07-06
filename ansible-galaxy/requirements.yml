@@ -1,0 +1,10 @@
+# Install the following roles from the Ansible Galaxy hub at galaxy.ansible.com
+# Install roles with:
+#     ansible-galaxy install -r requirements.yml
+
+# install ansible install role
+- src: geerlingguy.ansible
+
+# install git install role
+- src: geerlingguy.git
+

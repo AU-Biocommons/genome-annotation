@@ -41,6 +41,7 @@ apollo-portal.genome.edu.au
 # don't want ansible host rebooting in the middle of updates.
 # uncomment if needed for applying non-rebooting playbooks
 #ansible-sandpit.genome.edu.au
+ubuntu22-test.genome.edu.au
 ubuntu20-test.genome.edu.au
 #ubuntu18-test.genome.edu.au
 

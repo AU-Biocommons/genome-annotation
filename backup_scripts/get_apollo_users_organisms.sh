@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ORGANISMS_COUNT="SELECT COUNT(1) FROM organism;"
-ORGANISMS_QUERY="SELECT common_name, genus, species FROM organism;"
+ORGANISMS_QUERY="SELECT common_name, genus, species, public_mode FROM organism;"
 USERS_COUNT="SELECT COUNT(1) FROM grails_user;"
 USERS_QUERY="SELECT grails_user.id, role.name AS role_name, inactive, first_name, last_name, username FROM grails_user JOIN grails_user_roles ON grails_user.id = grails_user_roles.user_id JOIN role ON grails_user_roles.role_id = role.id;"
 

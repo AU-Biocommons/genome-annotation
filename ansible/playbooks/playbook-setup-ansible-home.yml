@@ -1,35 +1,86 @@
 ---
 - hosts: all
   connection: "ssh"
-  # note: connection is as current user
+  become: yes
 
   # The roles to be run by this playbook will be applied to the specified servers
   # with, for example
   #   --limit ubuntu22-test.genome.edu.au
 
   tasks:
-  # configure git prior to cloning genome-annotation repo
-  - name: "Copy ~/.gitconfig ~/.ssh/config to destination home directory"
-    copy:
-      src: "~/.gitconfig"
-      dest: "~/.gitconfig"
 
-  - name: "Clone git repo into directory"
-    git:
-      repo: "https://github.com/AU-Biocommons/genome-annotation"
-      dest: "~/github-ansible"
+    # note: local action as current user (running playbook)
+    - name: "get current user's primary group"
+      local_action: command id -gn
+      become: no
+      register: gid
 
-  # set up ssh key and config for connections to remote hosts
-  # .ssh/config specifies connection details
-  # .ssh/ga_apollo_rsa key is needed to connect as system user ubuntu/centos/rocky
-  - name: "Copy ssh key and config to destination home directory"
-    copy:
-      src: "~/{{ item.src }}"
-      dest: "~/{{ item.src }}"
-      mode: "{{ item.mode }}"
-    with_items:
-      - src: ".ssh/ga_apollo_rsa"
-        mode: '0600'
-      - src: ".ssh/config"
-        mode: '0644'
+    # when connect to remote host to set up user's home directory
+    # the remote user will be the same user as the one running this playbook
+    - name: "set username and primary group (GID) of user running the playbook"
+      set_fact:
+        current_user: "{{ lookup('env','USER') }}" 
+        user_group: "{{ gid.stdout }}"
+
+    - name: "Debug: obtained local username and primary group"
+      debug:
+        msg: "User: {{ current_user }}; Group: {{ user_group }}"
+
+    # set up ssh key and config for connections to remote hosts
+    # .ssh/config specifies connection details
+    # .ssh/ga_apollo_rsa key is needed to connect as ansible_user ubuntu/centos/rocky
+    - name: "Copy ssh key and config to destination home directory"
+      copy:
+        src: "~/{{ item.src }}"
+        dest: "~{{ current_user }}/{{ item.src }}"
+        mode: "{{ item.mode }}"
+        owner: "{{ current_user }}"
+        group: "{{ user_group }}"
+      with_items:
+        - src: ".ssh/ga_apollo_rsa"
+          mode: '0600'
+        - src: ".ssh/config"
+          mode: '0644'
+
+    # configure user's git details for use with genome-annotation repo
+    - name: "Copy ~/.gitconfig ~/.ssh/config to destination home directory"
+      copy:
+        src: "~/.gitconfig"
+        dest: "~{{ current_user }}/.gitconfig"
+        owner: "{{ current_user }}"
+        group: "{{ user_group }}"
+
+    - name: "check if repo ~{{ current_user }}/github-ansible exists and register result"
+      stat: "path=~{{ current_user }}/github-ansible"
+      register: "repo_stat"
+
+    - name: "Clone git repo into ~{{ current_user }}'s home directory (with umask for g+rwx,o+rx)"
+      git:
+        repo: "https://github.com/AU-Biocommons/genome-annotation"
+        dest: "~{{ current_user }}/github-ansible"
+        umask: '0002'
+      when: "repo_stat.stat.exists == false"
+
+    - name: "Change ownership of repo to {{ current_user }}:{{ user_group }}"
+      file:
+        path: "~{{ current_user }}/github-ansible"
+        state: directory
+        recurse: yes
+        owner: "{{ current_user }}"
+        group: "{{ user_group }}"
+
+    # /home/data/apollo_files contains support files such as tomcat .war files for apollo, that aren't stored in github repo
+    # note that ansible_user (ubuntu) needs to own the directory so that attributes can be set on it by rsync
+    - name: "Create /home/data/apollo_files directory owned by group apollo_admin with permissions 2775"
+      file:
+        path: "/home/data/apollo_files"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "apollo_admin"
+        mode: '2775'
+
+    - name: "Rsync files from /home/data/apollo_files directory on current host into {{ inventory_hostname }}:/home/data/"
+      #local_action: command rsync -n -a -e "ssh -i ~{{ current_user }}/.ssh/ga_apollo_rsa -o IdentitiesOnly=yes" /home/data/apollo_files {{ ansible_user }}@{{ inventory_hostname }}:/home/data/
+      local_action: command rsync -a /home/data/apollo_files {{ ansible_user }}@{{ inventory_hostname }}:/home/data/
+      become: no
 

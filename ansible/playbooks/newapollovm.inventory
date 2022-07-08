@@ -38,7 +38,7 @@ apollo-023.genome.edu.au apollo_instance_number=23 apollo_subdomain_name=worksho
 [changeipvms]
 ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
-apollo-monitor.genome.edu.au ansible_user=centos admin_group=wheel
+apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]

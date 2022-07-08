@@ -5,7 +5,7 @@ apollo-monitor.genome.edu.au
 [changeipvms]
 ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo
 #apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
-#apollo-monitor.genome.edu.au ansible_user=centos admin_group=sudo
+#apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]

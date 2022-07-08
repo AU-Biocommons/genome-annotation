@@ -1,5 +1,6 @@
 ---
 util_packages:
+    - vim
     - fail2ban
     - ssl-cert
     - lsb-release
@@ -13,6 +14,7 @@ util_packages:
     - gnupg2
     - atop
     - iotop
+    - htop
     - net-tools
     - nmap
     - speedometer

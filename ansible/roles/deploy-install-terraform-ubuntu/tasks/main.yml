@@ -1,0 +1,29 @@
+---
+
+- name: "Add terraform Ubuntu repository key"
+  apt_key:
+    url: "{{ terraform_url_key }}"
+    state: present
+
+- name: "Create terraform repo entry"
+  shell:
+    cmd: "echo \"deb [arch=$(dpkg --print-architecture)] {{ terraform_url_apt_repo }} $(lsb_release -cs) main\""
+  register: repo_entry 
+
+- name: "set fact for terraform_deb_repo"
+  set_fact:
+    terraform_deb_repo: " {{ repo_entry.stdout }}"
+
+- name: "Add terraform apt repository"
+  apt_repository: 
+    repo: "{{ terraform_deb_repo }}"
+    state: present 
+    filename: "terraform"
+    update_cache: yes
+
+- name: "Install terraform"
+  apt: 
+    name: terraform
+    state: present
+    update_cache: yes
+

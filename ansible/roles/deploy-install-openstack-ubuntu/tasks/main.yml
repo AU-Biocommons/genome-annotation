@@ -1,0 +1,10 @@
+---
+
+- name: "Install Ubuntu packages for Openstack and Swift clients"
+  apt:
+    pkg:
+      - python3-openstackclient
+      - python3-swiftclient
+    state: present
+    update_cache: yes
+

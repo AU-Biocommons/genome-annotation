@@ -1,0 +1,16 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  # The roles to be run by this playbook will be applied to the specified servers
+  # with, for example
+  #   --limit ubuntu22-test.genome.edu.au
+  tasks:
+    - import_role:
+        name: deploy-install-openstack-ubuntu
+    - import_role:
+        name: deploy-install-terraform-ubuntu
+

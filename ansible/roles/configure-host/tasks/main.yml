@@ -24,7 +24,7 @@
 # grep returns 0 if a line is selected, 1 if no lines were selected, and 2 if an error occurred
 - name: "Check if any Apollos have been defined in /etc/hosts skipping host's name"
   shell:
-    cmd: "cat /etc/hosts | grep -v 127.0.0.1 | grep -cF apollo- /etc/hosts"
+    cmd: "cat /etc/hosts | grep -v ^127.0.* | grep -cF apollo-"
   register: var_etc_hosts
   failed_when: "var_etc_hosts.rc not in [ 0, 1 ]"
 

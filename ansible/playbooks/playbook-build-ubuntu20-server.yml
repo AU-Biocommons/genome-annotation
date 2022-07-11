@@ -26,7 +26,7 @@
     - import_role:
         name: common-nagios-nrpe
     - import_role:
-        name: common-prometheus-node-exporter-ubuntu22
+        name: common-prometheus-node-exporter-ubuntu20
     - import_role:
         name: common-install-utils
 

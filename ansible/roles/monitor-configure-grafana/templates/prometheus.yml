@@ -36,7 +36,7 @@ scrape_configs:
 # Apollo infrastructure
   - job_name: 'infrastructure'
     static_configs:
-    - targets: ['apollo-data:9100', 'apollo-portal:9100']
+    - targets: ['apollo-data:9100', 'apollo-portal:9100', 'apollo-deploy:9100' ]
 
 # Apollo servers
   - job_name: 'apollo'

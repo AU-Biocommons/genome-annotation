@@ -2,4 +2,3 @@
 nagios_objects_conf_path: "/etc/nagios4/objects"
 nagios_servers_conf_path: "/etc/nagios4/servers"
 nagios_plugins_path: "/usr/lib/nagios/plugins"
-nagios_confs_src_path: "/home/data/apollo_files/monitor/nagios"

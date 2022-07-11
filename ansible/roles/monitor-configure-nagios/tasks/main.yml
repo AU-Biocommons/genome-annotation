@@ -64,9 +64,9 @@
     - "web-apollo-training.cfg"
     - "web-server.cfg"
 
-- name: "copy host definitions from local dir {{ nagios_confs_src_path }}/servers/ to {{ nagios_servers_conf_path }}"
+- name: "copy host definitions from local files dir {{ role_path}}/files/ to {{ nagios_servers_conf_path }}"
   copy:
-    src: "{{ nagios_confs_src_path }}/servers/"
+    src: "{{ role_path }}/files/"
     dest: "{{ nagios_servers_conf_path }}"
 
 - name: "check nagios configuration is ok"

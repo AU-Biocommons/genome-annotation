@@ -5,3 +5,9 @@
     name: "nginx"
     state: "latest"
     update_cache: yes
+
+- name: "Allow HTTP(S) connections to Nginx"
+  ufw:
+    rule: allow
+    name: 'Nginx Full'
+

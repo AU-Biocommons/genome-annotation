@@ -11,6 +11,13 @@
     state: "present"
     update_cache: yes
 
+- name: "Allow NRPE from nagios server"
+  ufw:
+    rule: allow
+    proto: tcp 
+    port: '5666'
+    src: '{{ nagios_server }}'
+
 - name: "Get ip address in current host {{inventory_hostname}}"
   shell: "hostname -I | awk '{print $1}'"
   register: "current_host_ip_address"

@@ -35,6 +35,11 @@
     line: "inet_interfaces = loopback-only"
     state: present
 
+- name: "Allow Postfix connections"
+  ufw:
+    rule: allow
+    name: 'Postfix'
+
 - name: "Restart postfix service"
   systemd:
     name: "postfix"

@@ -1,0 +1,11 @@
+---
+- name: "Allow ssh connections"
+  ufw:
+    rule: allow
+    name: 'OpenSSH'
+
+- name: "AFTER allow rules configured - enable firewall with default policy deny"
+  ufw:
+    state: enabled
+    policy: deny
+

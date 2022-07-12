@@ -15,3 +15,13 @@
     state: present
     update_cache: yes
 
+- name: "Allow connections to prometheus exporters from grafana server"
+  ufw:
+    rule: allow
+    proto: tcp
+    port: '{{ item }}'
+    src: '{{ grafana_server }}'
+  with_items:
+    - '9100'
+    - '9187'
+

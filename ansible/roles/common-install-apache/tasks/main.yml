@@ -11,3 +11,8 @@
     state: "started"
     enabled: yes
 
+- name: "Allow Apache HTTP(S) connections"
+  ufw:
+    rule: allow
+    name: 'Apache Full'
+

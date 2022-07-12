@@ -1,5 +1,0 @@
----
-nagios_server: 192.168.0.61
-grafana_server: 192.168.0.61
-backup_server: 146.118.64.0/21
-

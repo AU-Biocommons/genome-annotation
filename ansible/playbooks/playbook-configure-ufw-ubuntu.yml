@@ -3,5 +3,5 @@
   become: "yes"
   tasks:
     - import_role:
-        name: configure-ufw
+        name: common-configure-ufw
 

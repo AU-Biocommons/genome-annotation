@@ -5,3 +5,10 @@ postgres_docker_container_port: "0.0.0.0:5432:5432"
 # This role to be run by a playbook requires to enter password value through the command line
 # use  --extra-vars="postgres_docker_root_password=<type_password_here>"
 postgres_docker_root_password: "enter_password_through_command_line"
+
+# NOTE: the following identifies the backup server via external network IP (146.118.70.141)
+#       if there are any changes to backup server's network configuration, this may break!
+# TODO: in future identify via internal network IP: 192.168.0.116
+#       backup_server: 192.168.0.0/24
+backup_server: 146.118.64.0/21
+

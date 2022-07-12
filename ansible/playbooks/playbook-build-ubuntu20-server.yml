@@ -24,6 +24,8 @@
     - import_role:
         name: common-create-admin-users-logins
     - import_role:
+        name: common-configure-ufw
+    - import_role:
         name: common-nagios-nrpe
     - import_role:
         name: common-prometheus-node-exporter-ubuntu20

@@ -1,7 +1,6 @@
 ---
 util_packages:
     - vim
-    - fail2ban
     - ssl-cert
     - lsb-release
     - curl

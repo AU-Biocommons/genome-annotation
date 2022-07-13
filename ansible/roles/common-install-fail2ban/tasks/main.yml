@@ -1,0 +1,13 @@
+---
+- name: "install fail2ban using apt"
+  apt:
+    name: "fail2ban"
+    state: "latest"
+    update_cache: yes
+
+- name: "Enable fail2ban service at startup"
+  systemd:
+    name: "fail2ban"
+    state: "started"
+    enabled: yes
+

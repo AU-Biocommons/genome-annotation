@@ -63,6 +63,12 @@
     state: present
     update_cache: yes
 
+- name: "Add UFW rule to allow connections to Grafana from anywhere"
+  ufw:
+    rule: allow
+    proto: tcp
+    port: '3000'
+
 - name: "Configure {{ grafana_conf }} to change the Grafana admin password"
   lineinfile:
     path: "{{ grafana_conf }}"

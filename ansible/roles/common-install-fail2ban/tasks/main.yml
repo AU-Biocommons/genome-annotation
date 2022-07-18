@@ -11,3 +11,18 @@
     state: "started"
     enabled: yes
 
+- name: "Place jail.local template in {{ fail2ban_conf_dir }}"
+  template:
+    src: "jail.local"
+    dest: "{{ fail2ban_conf_dir }}"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+- name: "restart fail2ban wth local config"
+  systemd:
+    name: "fail2ban"
+    state: "restarted"
+

@@ -23,10 +23,10 @@
   register: "current_host_ip_address"
   ignore_errors: true
 
-- name: "Place nrpe.cfg template in {{nagios_rpe_file_path}} directory IP {{current_host_ip_address.stdout}}"
+- name: "Place nrpe.cfg template in {{nagios_nrpe_file_path}} directory IP {{current_host_ip_address.stdout}}"
   template:
     src: "nrpe.cfg"
-    dest: "{{nagios_rpe_file_path}}"
+    dest: "{{nagios_nrpe_file_path}}"
     force: yes
     backup: no
     owner: root
@@ -36,10 +36,10 @@
     host_ip_address: "{{current_host_ip_address.stdout}}"
     allowed_hosts_ips: "{{nagios_allowed_hosts_ips}}"
 
-- name: "Place nrpe_local.cfg template in {{nagios_rpe_file_path}}"
+- name: "Place nrpe_local.cfg template in {{nagios_nrpe_file_path}}"
   template:
     src: "nrpe_local.cfg"
-    dest: "{{nagios_rpe_file_path}}"
+    dest: "{{nagios_nrpe_file_path}}"
     force: yes
     backup: no
     owner: root

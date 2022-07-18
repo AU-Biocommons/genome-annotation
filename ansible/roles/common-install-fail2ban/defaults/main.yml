@@ -1,0 +1,9 @@
+---
+fail2ban_conf_dir: /etc/fail2ban
+
+# NOTE: the following identifies the backup server via external network IP (146.118.70.141)
+#       if there are any changes to backup server's network configuration, this may break!
+# TODO: in future identify via internal network IP: 192.168.0.116
+#       backup_server: 192.168.0.0/24
+backup_server: 146.118.64.0/21
+

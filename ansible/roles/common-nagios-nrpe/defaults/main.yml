@@ -1,5 +1,5 @@
 ---
 nagios_server: "192.168.0.61"
-nagios_rpe_file_path: "/etc/nagios/"
+nagios_nrpe_file_path: "/etc/nagios/"
 nagios_allowed_hosts_ips: "127.0.0.1,::1,{{ nagios_server }}"
 

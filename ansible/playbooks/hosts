@@ -30,6 +30,7 @@ apollo-025.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user zeinab_
 apollo-026.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user thompson-institute_user"
 apollo-027.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user beetle-research_user"
 apollo-028.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user gene30004-training_user"
+apollo-029.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user frg_user"
 
 
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied
@@ -41,7 +42,7 @@ apollo-portal.genome.edu.au
 # don't want ansible host rebooting in the middle of updates.
 # uncomment if needed for applying non-rebooting playbooks
 #ansible-sandpit.genome.edu.au
-#apollo-deploy.genome.edu.au
+apollo-deploy.genome.edu.au
 ubuntu22-test.genome.edu.au
 ubuntu20-test.genome.edu.au
 #ubuntu18-test.genome.edu.au

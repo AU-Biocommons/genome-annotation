@@ -9,8 +9,8 @@ apollo_docker_bash_cmd: "docker exec -it {{apollo_docker_postgres_container}}"
 apollo_docker_postgres_cmd: "docker exec -it {{apollo_docker_postgres_container}} psql -U postgres {{apollo_dbname}} -tAc"
 
 bash_cmd_test_for_user: "grep -c backup_user /etc/passwd"
-bash_cmd_create_user: "adduser --uid 9999 --disabled-password --gecos ''Backup User'' backup_user"
-bash_cmd_create_pgpass: "/bin/bash -c \"echo ''localhost:5432:apollo-production:backup_user:{{apollo_backup_user_postgres_password}}'' > ~backup_user/.pgpass; chown backup_user:backup_user ~backup_user/.pgpass\""
+bash_cmd_create_user: "adduser --uid 9999 --disabled-password --gecos 'Backup User' backup_user"
+bash_cmd_create_pgpass: "/bin/bash -c \"echo 'localhost:5432:apollo-production:backup_user:{{apollo_backup_user_postgres_password}}' > ~backup_user/.pgpass; chown backup_user:backup_user ~backup_user/.pgpass\""
 
 postgresql_conf_file: "/var/lib/postgresql/data/postgresql.conf"
 # note to escape single quotes in sed
@@ -26,8 +26,8 @@ bash_cmd_listen_addresses: "sed -i ''s/^listen_addresses =.*/listen_addresses = 
 
 postgres_db_conf_file: "/var/lib/postgresql/data/pg_hba.conf"
 trust_apollo_network: "host    all             all             192.168.0.0/24          trust"
-bash_cmd_test_trust_exists: "grep -cxF ''{{trust_apollo_network}}'' {{postgres_db_conf_file}}"
-bash_cmd_insert_trust: "sed -i ''/^host\\s*all.*127.0.0.1[/]32\\s*trust/a {{trust_apollo_network}}'' {{postgres_db_conf_file}}"
+bash_cmd_test_trust_exists: "grep -cxF '{{trust_apollo_network}}' {{postgres_db_conf_file}}"
+bash_cmd_insert_trust: "sed -i '/^host\\s*all.*127.0.0.1[/]32\\s*trust/a {{trust_apollo_network}}' {{postgres_db_conf_file}}"
 
 postgres_cmd_reload_postgres_config: "\"SELECT pg_reload_conf();\""
 

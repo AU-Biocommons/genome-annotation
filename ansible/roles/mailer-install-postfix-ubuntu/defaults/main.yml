@@ -1,0 +1,5 @@
+---
+mailer_hostname: mailer
+mailer_domain: genome.edu.au
+mailer_FQDN: {{ mailer_hostname }}.{{ mailer_domain }}
+

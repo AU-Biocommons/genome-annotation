@@ -1,0 +1,58 @@
+---
+- name: "Install postfix and mailutils"
+  apt:
+    pkg:
+      - mailutils
+      - postfix
+    state: "present"
+    update_cache: yes
+
+- name: "Configure postfix hostname to {{ mailer_FQDN }}"
+  lineinfile:
+    path: "/etc/postfix/main.cf"
+    regexp: 'myhostname ='
+    line: "myhostname = {{ mailer_FQDN }}"
+    state: present
+
+- name: "Configure postfix domain to {{ mailer_domain }}"
+  lineinfile:
+    path: "/etc/postfix/main.cf"
+    regexp: 'mydomain ='
+    line: "mydomain = {{ mailer_domain }}"
+    state: present
+
+- name: "Configure postfix destination"
+  lineinfile:
+    path: "/etc/postfix/main.cf"
+    regexp: 'mydestination ='
+    line: 'mydestination = $myhostname, {{ mailer_FQDN }}, localhost.{{ mailer_domain }}, localhost'
+    state: present
+
+- name: "Configure postfix interfaces"
+  lineinfile:
+    path: "/etc/postfix/main.cf"
+    regexp: 'inet_interfaces ='
+    line: "inet_interfaces = loopback-only"
+    state: present
+
+# ports for allow rules: Postfix=25/tcp, Postfix SMTPS=465/tcp, Postfix Submission=587/tcp
+- name: "Allow Postfix connections on ports: Postfix=25/tcp, Postfix SMTPS=465/tcp, Postfix Submission=587/tcp"
+  ufw:
+    rule: allow
+    name: "{{ item }}"
+  with_items:
+    - 'Postfix'
+    - 'Postfix SMTPS'
+    - 'Postfix Submission'
+
+- name: "Restart postfix service"
+  systemd:
+    name: "postfix"
+    state: "restarted"
+
+- name: "Enable postfix service"
+  systemd:
+    name: "postfix"
+    state: "started"
+    enabled: yes
+

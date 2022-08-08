@@ -21,6 +21,7 @@ util_packages:
     - tree
     - mlocate
     - ack-grep
+    - fasd
     - ranger
     - byobu
 

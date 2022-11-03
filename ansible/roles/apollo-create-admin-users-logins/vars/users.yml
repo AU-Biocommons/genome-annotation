@@ -3,6 +3,9 @@ users:
   - username: "m.thang"
     comment: "Mike Thang"
     uid: 13486
+  - username: "g.graham"
+    comment: "Gavin Graham"
+    uid: 10024
   - username: "s.williams"
     comment: "Sarah Williams"
     uid: 35938
@@ -10,6 +13,8 @@ users:
 login_users:
   - username: "m.thang"
     key: files/m.thang.pub
+  - username: "g.graham"
+    key: files/g.graham.pub
     #- username: "s.williams"
     #key: files/s.williams.pub
 

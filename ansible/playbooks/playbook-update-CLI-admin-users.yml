@@ -1,0 +1,16 @@
+---
+- hosts: all
+  remote_user: "{{ansible_user}}"
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+  
+  # update the infrastructure and apollo VM CLI admin users when changes are made to admins
+  # be careful when running this without the --limit <host> option as some CLI admin users
+  # have only been temporarily added to a few VMs (typically for training or testing)
+  tasks:
+    - import_role:
+        name: "common-create-admin-users-logins"
+    - import_role:
+        name: "apollo-create-admin-users-logins"
+

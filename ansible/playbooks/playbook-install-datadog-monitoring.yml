@@ -1,0 +1,31 @@
+- hosts: all
+  roles:
+    - { role: datadog.datadog, become: yes }
+  vars:
+    datadog_api_key: "{{ vault_datadog_api_key }}"
+    datadog_site: "datadoghq.eu"
+    datadog_additional_groups: "adm"
+    datadog_config:
+      apm_config:
+        enabled: true
+      logs_enabled: true  # available with Agent v6 and v7
+    datadog_checks:
+      nginx:
+        init_config:
+        instances:
+            - nginx_status_url: http://localhost:81/nginx_status/
+              only_query_enabled_endpoints: true
+
+        #Log collection is available on Agent 6 and 7
+        logs:
+          - type: file
+            path: /var/log/nginx/access.log
+            service: "{{ inventory_hostname_short }}"
+            source: nginx
+            sourcecategory: http_web_access
+          - type: file
+            path: /var/log/nginx/error.log
+            service: "{{ inventory_hostname_short }}"
+            source: nginx
+            sourcecategory: http_web_access
+

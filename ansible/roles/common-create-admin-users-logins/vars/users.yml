@@ -15,6 +15,13 @@ users:
   - username: "a.bulgaris"
     comment: "Alejandro Bulgaris"
     uid: 34928
+  - username: "c.bromhead"
+    comment: "Catherine Bromhead"
+    uid: 37841
+  - username: "g.price"
+    comment: "Gareth Price"
+    uid: 27474
+
 
 login_users:
   - username: "backup_user"
@@ -23,6 +30,10 @@ login_users:
     key: files/j.lee.pub
   - username: "n.rhodes"
     key: files/n.rhodes.pub
+  - username: "c.bromhead"
+    key: files/c.bromhead.pub
+#  - username: "g.price"
+#    key: files/g.price.pub
 #  - username: "m.thang"
 #    key: files/m.thang.pub
 #  - username: "a.bulgaris"
@@ -31,6 +42,7 @@ login_users:
 sudo_users:
   - "j.lee"
   - "n.rhodes"
+  - "c.bromhead"
 
 # note this list MUST have at least 1 entry or the associated task fails!!!
 # the inactive user will be created if not already defined (with the next available UID)

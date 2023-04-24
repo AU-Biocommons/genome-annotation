@@ -24,4 +24,8 @@ util_packages:
     - fasd
     - ranger
     - byobu
+    - glances
+    - duf
+    - xkcdpass
+    - python3-passlib
 

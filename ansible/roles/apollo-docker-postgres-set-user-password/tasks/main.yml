@@ -1,0 +1,38 @@
+---
+
+# This role to be run by a playbook requires username and password values provided with
+# --extra-vars="apollo_username=<USERNAME>"
+# --extra-vars="apollo_password=<PASSWORD>"
+
+- name: "Connect to docker container and check if extension {{apollo_cmd_select_count_extension}} already exists in postgres database"
+  command: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_extension}}"
+  register: "extension_exists"
+
+- name: "Print command executed from the previous task 1"
+  debug:
+    msg: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_extension}}"
+
+- name: "Create extension {{apollo_extname}} extension_exists.stdout = {{extension_exists.stdout}}"
+  command: "{{apollo_cmd_section_1}} {{apollo_cmd_create_extension}}"
+  when: extension_exists.stdout == "0"
+
+- name: "Print command executed from the previous task 2"
+  debug:
+    msg: "{{apollo_cmd_section_1}} {{apollo_cmd_create_extension}}"
+
+- name: "Connect to docker container and check if user already exists in postgres database"
+  command: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_username}}"
+  register: "user_exists"
+
+- name: "Print command executed from the previous task 3"
+  debug:
+    msg: "{{apollo_cmd_section_1}} {{apollo_cmd_select_count_username}}"
+
+- name: "Update password for {{apollo_username}} in grails_user table in postgres database {{apollo_dbname}} user_exists.stdout = {{user_exists.stdout}}"
+  command: "{{apollo_cmd_section_1}} {{apollo_cmd_update_grails_user_1}} {{apollo_cmd_update_grails_user_2}} {{apollo_cmd_update_grails_user_3}}"
+  when: user_exists.stdout == "1"
+
+- name: "Print command executed from the previous task 4"
+  debug:
+    msg: "{{apollo_cmd_section_1}} {{apollo_cmd_update_grails_user_1}} {{apollo_cmd_update_grails_user_2}} {{apollo_cmd_update_grails_user_3}}"
+

@@ -1,0 +1,23 @@
+---
+
+# This role to be run by a playbook requires username and password values provided with
+# --extra-vars="apollo_username=<USERNAME>"
+# --extra-vars="apollo_password=<PASSWORD>"
+apollo_password: "enter_password_through_command_line"
+apollo_username: "ops@qfab.org"
+
+apollo_dbname: "apollo-production"
+apollo_docker_postgres_container: "postgres10container"
+apollo_extname: "pgcrypto"
+
+apollo_cmd_section_1: "docker exec -it {{apollo_docker_postgres_container}} psql -U postgres {{apollo_dbname}} -tAc"
+
+apollo_cmd_select_count_extension: "\"SELECT COUNT(1) FROM pg_extension WHERE extname = '{{apollo_extname}}';\"" 
+apollo_cmd_create_extension: "\"CREATE EXTENSION {{apollo_extname}};\""
+
+apollo_cmd_select_count_username: "\"SELECT COUNT(1) FROM grails_user WHERE grails_user.username = '{{apollo_username}}'\""
+
+apollo_cmd_update_grails_user_1: "\"UPDATE grails_user SET password_hash = "
+apollo_cmd_update_grails_user_2: "(SELECT encode(digest('{{apollo_password}}', 'sha256'), 'hex'))"
+apollo_cmd_update_grails_user_3: "WHERE username = '{{apollo_username}}';\""
+

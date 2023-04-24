@@ -17,7 +17,7 @@ apollo-012.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user cristin
 apollo-013.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user acrcp_user"
 apollo-014.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user frankenberg_user"
 apollo-015.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
-apollo-016.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ccdm-theme-c_user"
+#apollo-016.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ccdm-theme-c_user" # deleted
 apollo-017.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user pulsepathogens_user"
 apollo-018.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user dennislab_user"
 apollo-019.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ccdm_user"
@@ -44,9 +44,7 @@ apollo-034.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user ilrg-uq
 apollo-data.genome.edu.au
 apollo-monitor.genome.edu.au
 apollo-portal.genome.edu.au
-# don't want ansible host rebooting in the middle of updates.
-# uncomment if needed for applying non-rebooting playbooks
-#ansible-sandpit.genome.edu.au
+#apollo-portal-main.genome.edu.au # use this when apollo-portal redirects to apollo-portal-offline
 apollo-deploy.genome.edu.au
 ubuntu22-test.genome.edu.au
 ubuntu20-test.genome.edu.au

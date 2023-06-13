@@ -47,9 +47,9 @@ if [ $existsinfile -eq 0 ]; then
     echo >&2 "apollo-$apollo_number exists in inventory file '$apollovms_hosts_file' ... skipping"
 elif [ $existsinfile -eq 1 ]; then
     # add at first blank line after apollovms group is defined
-    printf '%s\n' '0/\[apollovms\]//^$/i' "apollo-$apollo_number.genome.edu.au allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\"" . x | ex $apollovms_hosts_file
+    printf '%s\n' '0/\[apollovms\]//^$/i' "apollo-$apollo_number.genome.edu.au ansible_host=apollo-$apollo_number allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\"" . x | ex $apollovms_hosts_file
     # the other approach is to add after last apollo-XXX... allowed_groups entry
-    #printf '%s\n' '0/apollovms/?apollo-....genome.edu.au allowed_groups?a' "apollo-$apollo_number.genome.edu.au allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\"" . x | ex $apollovms_hosts_file
+    #printf '%s\n' '0/apollovms/?apollo-....genome.edu.au ansible_host=apollo-... allowed_groups?a' "apollo-$apollo_number.genome.edu.au allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\"" . x | ex $apollovms_hosts_file
     echo >&2 "added apollo-$apollo_number to apollovms group in inventory file '$apollovms_hosts_file'"
 else
     echo >&2 "error scanning file $apollo_hosts_file"

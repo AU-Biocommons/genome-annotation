@@ -45,3 +45,9 @@
     owner: root
     group: root
     mode: "u=rw,g=r,o=r"
+
+- name: "Restart nagios nrpe service"
+  systemd:
+    state: "restarted"
+    name: "nagios-nrpe-server"
+

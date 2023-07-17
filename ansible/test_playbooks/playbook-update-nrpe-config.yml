@@ -1,0 +1,12 @@
+---
+- hosts: all
+  remote_user: "{{ansible_user}}"
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+  
+  # update the nrpe config on the specified hosts, can use --limit <host> option
+  tasks:
+    - import_role:
+        name: "common-nagios-nrpe"
+

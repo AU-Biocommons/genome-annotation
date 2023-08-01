@@ -34,3 +34,10 @@
     - import_role:
         name: common-install-utils
 
+    # uncomment the following 2 roles to install nginx and certbot for a web server
+    #- import_role:
+    #    name: common-certbot-snapd
+    #- import_role:
+    #    name: common-nginx
+
+

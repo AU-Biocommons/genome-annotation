@@ -45,7 +45,7 @@ login_users:
   - username: "n.rhodes"
     key: files/n.rhodes.pub
 #  - username: "c.hyde"
-#    key: files/c.hyde
+#    key: files/c.hyde.pub
 #  - username: "s.williams"
 #    key: files/s.williams.pub
 #  - username: "c.bromhead"

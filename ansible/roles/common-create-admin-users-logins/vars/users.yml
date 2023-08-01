@@ -1,4 +1,10 @@
 
+# WARNING: each list MUST have AT LEAST 1 entry or the associated task FAILS!!!
+
+# the following users will be created with a home directory
+# BUT to be able to login they must also be defined in the login_user's list
+# commented entries are for logins that may only be required on specific machines
+# these can be uncommented when running playbook for required machines
 users:
   - username: "backup_user"
     comment: ""
@@ -15,43 +21,59 @@ users:
   - username: "a.bulgaris"
     comment: "Alejandro Bulgaris"
     uid: 34928
-  - username: "c.bromhead"
-    comment: "Catherine Bromhead"
-    uid: 37841
-  - username: "g.price"
-    comment: "Gareth Price"
-    uid: 27474
+#  - username: "c.hyde"
+#    comment: "Cameron Hyde"
+#    uid: 26717
+#  - username: "s.williams"
+#    comment: "Sarah Williams"
+#    uid: 35938
+#  - username: "c.bromhead"
+#    comment: "Catherine Bromhead"
+#    uid: 37841
+#  - username: "g.price"
+#    comment: "Gareth Price"
+#    uid: 27474
 
-
+# these users can login using their public key. see above re allowing login for specific machines
 login_users:
   - username: "backup_user"
     key: files/backup_user.pub
   - username: "j.lee"
     key: files/j.lee.pub
+  - username: "m.thang"
+    key: files/m.thang.pub
   - username: "n.rhodes"
     key: files/n.rhodes.pub
-  - username: "c.bromhead"
-    key: files/c.bromhead.pub
-#  - username: "g.price"
-#    key: files/g.price.pub
-#  - username: "m.thang"
-#    key: files/m.thang.pub
+#  - username: "c.hyde"
+#    key: files/c.hyde
+#  - username: "s.williams"
+#    key: files/s.williams.pub
+#  - username: "c.bromhead"
+#    key: files/c.bromhead.pub
 #  - username: "a.bulgaris"
 #    key: files/a.bulgaris.pub
+#  - username: "g.price"
+#    key: files/g.price.pub
 
+# add sysadmins; or if configuring a sandpit for a user, add that user here (ie m.thang. c.hyde)
 sudo_users:
   - "j.lee"
-  - "n.rhodes"
-  - "c.bromhead"
+#  - "n.rhodes"
+#  - "m.thang"
+#  - "c.hyde"
 
-# note this list MUST have at least 1 entry or the associated task fails!!!
-# the inactive user will be created if not already defined (with the next available UID)
+# deactivate accounts - users previously added (to some/all machines) and no longer need access
+# the inactive user will be created if not already defined in users list (with next available UID)
 # but can be deleted by adding to the remove_users list
 inactive_users:
   - "a.bulgaris"
-#  - "m.thang"
+  - "n.rhodes"
+#  - "c.hyde"
+#  - "s.williams"
 
+# remove users no longer associated with the project
 remove_users:
   - "a.bulgaris"
   - "g.price"
+  - "g.graham"
 

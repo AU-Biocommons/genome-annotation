@@ -60,7 +60,7 @@ if [ -z "$vcpus" ]; then
     if [ "$apollo_number" = "999" ]; then
         vcpus="1"
     else
-       	vcpus="$default_vcpus"
+        vcpus="$default_vcpus"
     fi
 fi
 
@@ -89,11 +89,15 @@ else
     apollo_name="JKL_apollo_${apollo_number}_$(date +%Y%m%d)"
 fi
 
-echo "creating apollo VM as $fname with name $apollo_name"
+# the following will output the image ID and name for ONLY the FIRST matching image
+image_details="$(openstack image list | grep 'Pawsey - Ubuntu 20.04' | grep -v -E '(GPU|Bio)' | awk -F '|' '{ print $2, $3; exit }' | xargs)"
+image_id="$(echo $image_details | cut -f 1 -d ' ')"
+image_name="$(echo $image_details | cut -f 2- -d ' ')"
+echo "creating apollo VM as $fname with name $apollo_name using image $image_name"
 
-# openstack image list | grep 'Pawsey - Ubuntu 20.04'
-# | 578525b1-f1e3-495d-b673-3a3b9cd32b23 | Pawsey - Ubuntu 20.04 - 2021-02                | active |
-# | 67bab16e-453b-46a8-a262-c0796fa35d85 | Pawsey - Ubuntu 20.04 - 2022-05                | active |
+# 578525b1-f1e3-495d-b673-3a3b9cd32b23 | Pawsey - Ubuntu 20.04 - 2021-02
+# 67bab16e-453b-46a8-a262-c0796fa35d85 | Pawsey - Ubuntu 20.04 - 2022-05
+# 435b9e2b-8de0-4d20-9e18-2f7a69c6e889 | Pawsey - Ubuntu 20.04 - 2023-06
 #
 # note that old Ubuntu 20.04 - 2021-02 image uses /dev/vda
 #      --image 578525b1-f1e3-495d-b673-3a3b9cd32b23 \
@@ -102,7 +106,7 @@ echo "creating apollo VM as $fname with name $apollo_name"
 
 openstack server create \
       --flavor "$flavor" \
-      --image 67bab16e-453b-46a8-a262-c0796fa35d85 \
+      --image "$image_id" \
       --boot-from-volume 40 \
       --key-name ga-apollo-rsa \
       --availability-zone nova \

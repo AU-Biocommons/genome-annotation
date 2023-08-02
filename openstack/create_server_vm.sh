@@ -88,14 +88,17 @@ esac
 
 vm_name="JKL_${server_name}_$(date +%Y%m%d)"
 
-echo "creating VM as $fname with name $vm_name"
+# the following will output the image ID and name for ONLY the FIRST matching image
+image_details="$(openstack image list | grep 'Pawsey - Ubuntu 22.04' | grep -v -E '(GPU|Bio)' | awk -F '|' '{  print $2, $3; exit }' | xargs)"
+image_id="$(echo $image_details | cut -f 1 -d ' ')"
+image_name="$(echo $image_details | cut -f 2- -d ' ')"
+echo "creating VM as $fname with name $vm_name using image $image_name"
 
-# openstack image list | grep 'Pawsey - Ubuntu' | grep -v vGPU
-# | 97c4562f-1087-4f2c-abc6-a7b02fb9f9b9 | Pawsey - Ubuntu 18.04 - 2022-05                | active |
-# | 67bab16e-453b-46a8-a262-c0796fa35d85 | Pawsey - Ubuntu 20.04 - 2022-05                | active |
-# | 9c37814e-1e77-4b47-a14e-4368420408de | Pawsey - Ubuntu 22.04 - 2022-05                | active |
-
-image_id="9c37814e-1e77-4b47-a14e-4368420408de" # ubuntu 22.04
+# 97c4562f-1087-4f2c-abc6-a7b02fb9f9b9 | Pawsey - Ubuntu 18.04 - 2022-05
+# 67bab16e-453b-46a8-a262-c0796fa35d85 | Pawsey - Ubuntu 20.04 - 2022-05
+# 435b9e2b-8de0-4d20-9e18-2f7a69c6e889 | Pawsey - Ubuntu 20.04 - 2023-06
+# 9c37814e-1e77-4b47-a14e-4368420408de | Pawsey - Ubuntu 22.04 - 2022-05
+# a6dede08-16b8-4c47-b348-2d0cfaa9a09a | Pawsey - Ubuntu 22.04 - 2023-06
 
 openstack server create \
       --flavor "$flavor" \

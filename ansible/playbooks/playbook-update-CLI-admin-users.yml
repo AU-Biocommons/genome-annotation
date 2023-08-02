@@ -11,6 +11,10 @@
   tasks:
     - import_role:
         name: "common-create-admin-users-logins"
+    # uncomment to run on apollo VMs
     - import_role:
         name: "apollo-admin-users-groups"
+    # uncomment to run on web server VMs
+    #- import_role:
+    #    name: "web-admin-users-groups"
 

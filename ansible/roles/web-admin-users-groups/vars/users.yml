@@ -1,0 +1,13 @@
+
+# add to apollo_admin and www-data groups
+admin_users:
+  - "j.lee"
+  - "n.rhodes"
+  - "m.thang"
+#  - "c.hyde"
+
+# sudo rights on web servers ONLY
+sudo_users:
+  - "m.thang"
+#  - "c.hyde"
+

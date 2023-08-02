@@ -12,5 +12,5 @@
     - import_role:
         name: "common-create-admin-users-logins"
     - import_role:
-        name: "apollo-create-admin-users-logins"
+        name: "apollo-admin-users-groups"
 

@@ -84,7 +84,7 @@
     - import_role:
         name: apollo-restart-nginx
     - import_role:
-        name: apollo-create-admin-users-logins
+        name: apollo-admin-users-groups
     - import_role:
         name: apollo-create-cli-user
     - import_role:

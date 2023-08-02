@@ -33,6 +33,9 @@ users:
 #  - username: "g.price"
 #    comment: "Gareth Price"
 #    uid: 27474
+#  - username: "m.basetti"
+#    comment: "Madeline Basetti"
+#    uid: 28017
 
 # these users can login using their public key. see above re allowing login for specific machines
 login_users:
@@ -62,18 +65,19 @@ sudo_users:
 #  - "m.thang"
 #  - "c.hyde"
 
-# deactivate accounts - users previously added (to some/all machines) and no longer need access
+# deactivate accounts - prevents login on existing account by setting shell to /sbin/nologin
+# this is for users previously added (to some/all machines) and no longer need access
 # the inactive user will be created if not already defined in users list (with next available UID)
 # but can be deleted by adding to the remove_users list
 inactive_users:
   - "a.bulgaris"
   - "n.rhodes"
-#  - "c.hyde"
 #  - "s.williams"
 
 # remove users no longer associated with the project
 remove_users:
-  - "a.bulgaris"
   - "g.price"
+  - "a.bulgaris"
+  - "m.basetti"
   - "g.graham"
 

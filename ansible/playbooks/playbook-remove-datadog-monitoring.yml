@@ -1,0 +1,14 @@
+---
+- hosts: all
+  #remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  tasks:
+    - name: "Remove datadog packages"
+      apt:
+        name: "datadog-agent"
+        state: absent
+        purge: true
+

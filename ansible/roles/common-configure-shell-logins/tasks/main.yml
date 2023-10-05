@@ -47,6 +47,7 @@
     dest: "/etc/ssh/sshd_config"
     regexp: "^AllowUsers"
     line: "#AllowUsers {{ ansible_user }}"
+  when: allowed_groups is defined
 
 - name: "Add groups to /etc/ssh/sshd_config AllowGroups: {{ allowed_groups }}"
   lineinfile:
@@ -57,6 +58,7 @@
     #backup: yes
   notify:
     - Restart sshd
+  when: allowed_groups is defined
 
 #  - name: Print user defined variables
 #    debug:

@@ -21,9 +21,9 @@ users:
   - username: "a.bulgaris"
     comment: "Alejandro Bulgaris"
     uid: 34928
-#  - username: "c.hyde"
-#    comment: "Cameron Hyde"
-#    uid: 26717
+  - username: "c.hyde"
+    comment: "Cameron Hyde"
+    uid: 26717
 #  - username: "s.williams"
 #    comment: "Sarah Williams"
 #    uid: 35938
@@ -47,8 +47,8 @@ login_users:
     key: files/m.thang.pub
   - username: "n.rhodes"
     key: files/n.rhodes.pub
-#  - username: "c.hyde"
-#    key: files/c.hyde.pub
+  - username: "c.hyde"
+    key: files/c.hyde.pub
 #  - username: "s.williams"
 #    key: files/s.williams.pub
 #  - username: "c.bromhead"

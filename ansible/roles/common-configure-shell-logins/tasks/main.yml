@@ -42,6 +42,11 @@
   notify:
     - Restart sshd
 
+- name: "Raise error if allow_groups is not defined"
+  fail:
+    msg: "variable 'allow_groups' is not defined"
+  when: allowed_groups is not defined
+
 - name: "in /etc/ssh/sshd_config comment out AllowUsers - as over-rides AllowGroups"
   lineinfile:
     dest: "/etc/ssh/sshd_config"

@@ -4,10 +4,10 @@ admin_users:
   - "j.lee"
   - "n.rhodes"
   - "m.thang"
-#  - "c.hyde"
+  - "c.hyde"
 
 # sudo rights on web servers ONLY
 sudo_users:
   - "m.thang"
-#  - "c.hyde"
+  - "c.hyde"
 

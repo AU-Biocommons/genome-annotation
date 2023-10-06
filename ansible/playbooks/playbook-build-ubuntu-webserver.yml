@@ -7,7 +7,7 @@
 
   # The roles to be run by this playbook will be applied to the specified servers
   # with, for example
-  #   --limit apollo-monitor.genome.edu.au
+  #   --limit apollo-portal.genome.edu.au
   tasks:
     - import_role:
         name: configure-host
@@ -24,6 +24,8 @@
     - import_role:
         name: common-create-admin-users-logins
     - import_role:
+        name: web-admin-users-groups
+    - import_role:
         name: common-install-fail2ban
     - import_role:
         name: common-configure-ufw
@@ -33,4 +35,8 @@
         name: common-prometheus-node-exporter-ubuntu22
     - import_role:
         name: common-install-utils
+    - import_role:
+        name: common-certbot-snapd
+    - import_role:
+        name: common-nginx
 

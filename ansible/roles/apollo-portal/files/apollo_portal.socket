@@ -1,0 +1,6 @@
+[Unit]
+Description=Apollo portal website socket
+[Socket]
+ListenStream=/run/apollo_portal.sock
+[Install]
+WantedBy=sockets.target

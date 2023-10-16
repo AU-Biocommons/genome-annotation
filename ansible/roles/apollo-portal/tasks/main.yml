@@ -1,0 +1,120 @@
+---
+
+- name: print server directories
+  debug:
+    msg: |
+      project_root: {{ project_root }}
+      venv_root: {{ venv_root }}
+      setup_root: {{ setup_root }}
+      webserver_root: {{ webserver_root }}
+      django_root: {{ django_root }}
+      webserver_log_root: {{ webserver_log_root }}
+      webserver_media_root: {{ webserver_media_root }}
+      webserver_static_root: {{ webserver_static_root }}
+
+- name: create setup directory
+  file:
+    path: "{{ setup_root }}"
+    state: directory
+
+- name: create webserver parent directory
+  file:
+    path: "{{ webserver_root | dirname }}"
+    state: directory
+
+- name: install systems dependencies
+  ansible.builtin.package:
+    name:
+      - "python{{ python_version }}"
+      - python3-pip
+
+- name: clone git repository for apollo_portal
+  ansible.builtin.git:
+    repo: "{{ apollo_portal_git_url }}"
+    version: "{{ apollo_portal_git_branch }}"
+    dest: "{{ project_root }}"
+    clone: yes
+    force: yes
+
+- name: link apollo_portal to {{ django_root }}
+  ansible.builtin.file:
+    src: "{{ django_root }}"
+    dest: "{{ webserver_root }}"
+    state: link
+
+- name: create apollo_portal media directory
+  file:
+    path: "{{ webserver_root }}/apollo_portal/media"
+    state: directory
+
+- name: create apollo_portal logs directory
+  file:
+    path: "{{ webserver_root }}/apollo_portal/logs"
+    state: directory
+
+- name: template webserver configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop: "{{ apollo_portal.templates }}"
+
+- name: copy webserver configuration
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop: "{{ apollo_portal.files }}"
+
+- name: link to enable nginx virtualhost
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/{{ inventory_hostname }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ inventory_hostname }}"
+    state: link
+
+- name: Install Python virtualenv
+  pip:
+    name: virtualenv
+    executable: pip3
+
+- name: Install Python requirements into venv
+  pip:
+    requirements: "{{ project_root }}/requirements.txt"
+    virtualenv: "{{ venv_root }}"
+    virtualenv_python: "python{{ python_version }}"
+
+- name: run apollo_portal setup script
+  command: "bash {{ setup_root }}/setup.sh"
+
+- name: create and install SSL certificate with letsencrypt
+  command: |
+    certbot \
+    --nginx \
+    --noninteractive \
+    --agree-tos \
+    --redirect \
+    --email {{ certbot_renew_email }} \
+    -d {{ inventory_hostname }}
+  when: certbot_ssl
+
+- name: Ensure apollo_portal superuser login
+  shell: |
+    cd {{ webserver_root }} && \
+    . {{ venv_root }}/bin/activate && \
+    export DJANGO_SUPERUSER_PASSWORD={{ admin_user.password }} && \
+    python manage.py createsuperuser --noinput \
+      --email {{ admin_user.email }} \
+      --first_name {{ admin_user.first_name }} \
+      --last_name {{ admin_user.last_name }}
+  ignore_errors: yes
+  when: admin_user.email and not skip_database_migration
+
+- name: set ubuntu dir permissions
+  file: dest=/home/ubuntu mode=u=rwX,g=rX,o=rX
+
+- name: update media file ownership
+  file: dest={{ webserver_media_root }} owner=www-data group=www-data mode=u=rwX,g=rwX,o=rwX recurse=yes
+
+- name: update log file ownership
+  file: dest={{ webserver_log_root }} owner=www-data group=www-data mode=u=rwX,g=rwX,o=rwX recurse=yes
+
+- name: make update.sh executable
+  file: dest=/home/ubuntu/update.sh mode=a+x

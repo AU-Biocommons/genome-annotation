@@ -1,0 +1,45 @@
+---
+python_version: "3.10"
+apollo_portal_git_url: https://github.com/AU-Biocommons/django-portal.git
+apollo_portal_git_branch: master
+
+project_root: /home/ubuntu/apollo_portal
+django_root: "{{ project_root }}/apollo_portal"
+venv_root: "{{ project_root }}/.venv"
+setup_root: /home/ubuntu/server
+webserver_root: /srv/sites/apollo_portal
+webserver_log_root: "{{ django_root }}/apollo_portal/logs"
+webserver_media_root: "{{ django_root }}/apollo_portal/media"
+webserver_static_root: "{{ django_root }}/apollo_portal/static"
+
+apollo_portal:
+  templates:
+    - src: "{{ role_path }}/templates/gunicorn.py.j2"
+      dest: "{{ setup_root }}/gunicorn.py"
+    - src: "{{ role_path }}/templates/apollo_portal.service.j2"
+      dest: /etc/systemd/system/apollo_portal.service
+    - src: "{{ role_path }}/templates/setup.sh.j2"
+      dest: "{{ setup_root }}/setup.sh"
+    - src: "{{ role_path }}/templates/nginx.vhost.j2"
+      dest: "/etc/nginx/sites-available/{{ inventory_hostname }}.conf"
+    - src: "{{ role_path }}/templates/.env.j2"
+      dest: "{{ project_root }}/.env"
+    - src: "{{ role_path }}/templates/update.sh.j2"
+      dest: "/home/ubuntu/update.sh"
+
+  files:
+    - src: "{{ role_path }}/files/apollo_portal.socket"
+      dest: /etc/systemd/system/apollo_portal.socket
+
+certbot_ssl: true
+
+gunicorn:
+  web_workers: 4
+
+skip_database_migration: false
+
+admin_user:
+  - email: null
+  - first_name: null
+  - last_name: null
+  - password: null

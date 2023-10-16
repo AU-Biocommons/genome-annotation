@@ -47,11 +47,8 @@ apollo-monitor.genome.edu.au
 apollo-portal.genome.edu.au
 #apollo-portal-main.genome.edu.au # use this when apollo-portal redirects to apollo-portal-offline
 apollo-deploy.genome.edu.au
-ubuntu22-test.genome.edu.au
 ubuntu20-test.genome.edu.au
 #ubuntu18-test.genome.edu.au
-
-
 
 # the centosvms section defines centos-based hosts that will have system updates applied
 

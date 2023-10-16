@@ -33,4 +33,3 @@
         name: common-prometheus-node-exporter-ubuntu22
     - import_role:
         name: common-install-utils
-

@@ -8,6 +8,5 @@
 # install git install role
 - src: geerlingguy.git
 
-# install datadog install role
-- src: datadog.datadog
-
+# install postgresql install role
+- src: geerlingguy.postgresql

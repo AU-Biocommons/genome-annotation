@@ -1,0 +1,83 @@
+---
+
+# Read from vault:
+# admin_email:           <str>
+# admin_password:        <str>
+# user_support_email:    <str>
+# postgres_db_password:  <str>
+# django_secret_key:     <str>
+# smtp_password:         <str>
+# slack_error_api_key:   <str>
+# recaptcha_public_key:  <str>
+# recaptcha_private_key: <str>
+
+# If you don't want SSL certs, just flip this:
+certbot_ssl: true
+certbot_renew_email: "ops@qfab.org"
+
+# 4 web workers should be plenty - increase for machines with >2 CPUs
+# Allows occassional minor web thread blocking e.g. send email
+gunicorn:
+  web_workers: 4
+
+# Postgres database conf
+postgres_db_name: apollo_portal
+postgres_db_user: apollo_portal
+
+postgresql_locales:
+  - 'en_US.UTF-8'
+
+postgresql_databases:
+  - name: "{{ postgres_db_name }}"
+    port: 5432
+
+postgresql_users:
+  - name: "{{ postgres_db_user }}"
+    password: "{{ postgres_db_password }}"
+    db: "{{ postgres_db_name }}"
+
+postgres_users_no_log: false
+
+# Django site configuration
+# -----------------------------------------------------------------------------
+
+apollo_portal_git_url: https://github.com/AU-Biocommons/django-portal.git
+apollo_portal_git_branch: genome-cards
+
+# Will git clone apollo_portal to here
+project_root: /home/ubuntu/apollo_portal
+
+# This is where system config will be created
+setup_root: /home/ubuntu/setup
+
+# App will be served from here
+webserver_root: /srv/sites/apollo_portal
+
+# Virtual environment will be created here
+venv_root: "{{ project_root }}/venv"
+
+# Admin user login for the admin portal
+admin_user:
+  first_name: admin
+  last_name: admin
+  email: "{{ admin_email }}"
+  password: "{{ admin_password }}"
+
+smtp:
+  hostname: mail.usegalaxy.org.au
+  port: 2525
+  username: galaxy-australia/genome-edu-au
+  password: "{{ smtp_password }}"
+  from_address: apollo-support@genome.edu.au
+  to_address: "{{ user_support_email }}"  # secrets.yml
+  use_tls: true
+
+# Sometimes required to get the playbook to run:
+# skip_database_migration: true
+
+# For error notifications
+slack:
+  errors:
+    api_key: "{{ slack_error_api_key }}"  # secrets.yml
+    channel_id: C038ESFSXLN
+    mention_user_id: U024MUHM23W

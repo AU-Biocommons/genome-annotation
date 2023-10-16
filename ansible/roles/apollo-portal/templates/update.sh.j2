@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Make sure this isn't being run as root
+if [[ $EUID = 0 ]]; then
+    echo "Don't run this as root - ubuntu is fine!"
+    exit 0
+fi
+
+# Source virtual environment and git pull
+cd {{ project_root }}
+source '{{ venv_root }}/bin/activate'
+git pull
+cd {{ django_root }}
+
+# Collect any new static files for Nginx
+python manage.py collectstatic --noinput
+
+# Apply pending database migrations
+python manage.py migrate
+
+# Build the search index
+python manage.py build_index
+
+# Update file ownership to allow www-data to write logs + media files
+sudo chown -R ubuntu:www-data {{ webserver_log_root}}
+sudo find {{ webserver_log_root}} -type d -exec chmod 775 {} \;
+sudo find {{ webserver_log_root}} -type f -exec chmod 664 {} \;
+sudo chown -R ubuntu:www-data {{ webserver_media_root}}
+sudo find {{ webserver_media_root}} -type d -exec chmod 775 {} \;
+sudo find {{ webserver_media_root}} -type f -exec chmod 664 {} \;
+
+# Start application
+sudo systemctl restart apollo_portal.service
+
+echo ""
+echo "~~~ Restarted Apollo Portal ~~~"
+echo ""

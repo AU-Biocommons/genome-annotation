@@ -1,0 +1,49 @@
+# Server config for {{ inventory_hostname }} (Apollo portal)
+
+server {
+    # redirect www to non-www
+    server_name www.{{ inventory_hostname }};
+    return 301 $scheme://{{ inventory_hostname }}$request_uri;
+}
+
+
+server {
+
+    listen 80;
+    server_name  {{ inventory_hostname }};
+    access_log   /var/log/nginx/apollo_portal.access.log;
+    error_log    /var/log/nginx/apollo_portal.error.log;
+
+    if ( $host !~* ^({{ inventory_hostname }})$ ) {
+        # Reject requests with incorrect host header
+        return 444;
+    }
+
+    location = /biconcave {
+        return  404;
+    }
+
+    location = /favicon.ico {
+        alias  {{ webserver_static_root }}/favicon.ico;
+    }
+
+    location /static {
+        alias {{ webserver_static_root }};
+    }
+
+    location /media {
+        alias {{ webserver_media_root }};
+    }
+
+    location  / {
+        proxy_pass            http://unix:/run/apollo_portal.sock;
+        proxy_redirect        off;
+        proxy_set_header      Host                 $host;
+        proxy_set_header      X-Real-IP            $remote_addr;
+        proxy_set_header      X-Forwarded-For      $proxy_add_x_forwarded_for;
+        proxy_hide_header     X-Frame-Options;
+        proxy_read_timeout    600;  # seconds
+        client_max_body_size  1000m;
+    }
+
+}

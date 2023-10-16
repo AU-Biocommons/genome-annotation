@@ -2,3 +2,8 @@
 .vagrant
 # apollo build files
 buildapollo.???.inventory
+
+# Galaxy-ansible roles
+ansible/roles/geerlingguy.ansible/
+ansible/roles/geerlingguy.git/
+ansible/roles/geerlingguy.postgresql/

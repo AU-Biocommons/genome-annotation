@@ -1,0 +1,2 @@
+[newportalvms]
+ubuntu22-test.genome.edu.au  ansible_connection=ssh  ansible_user=ubuntu

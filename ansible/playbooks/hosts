@@ -51,12 +51,8 @@ ubuntu22-test.genome.edu.au
 ubuntu20-test.genome.edu.au
 #ubuntu18-test.genome.edu.au
 
-
-
 # the centosvms section defines centos-based hosts that will have system updates applied
 
 [centosvms]
 apollo-backup.genome.edu.au
 centos-test.genome.edu.au
-
-

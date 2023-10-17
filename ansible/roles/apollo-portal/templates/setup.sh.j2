@@ -1,0 +1,24 @@
+# Set up webapp and restart web services
+
+set -e
+
+# Set Django settings in venv
+echo "export DJANGO_SETTINGS_MODULE=apollo_portal.settings.prod" >> {{ venv_root }}/bin/activate
+
+source {{ venv_root }}/bin/activate
+cd {{ django_root }}
+
+{% if not skip_database_migration %}
+# Migrate database
+python manage.py migrate
+{% endif %}
+
+# Collect static files for Nginx
+python manage.py collectstatic --noinput
+
+# Restart services
+sudo systemctl daemon-reload
+sudo systemctl enable apollo_portal.service
+sudo systemctl enable apollo_portal.socket
+sudo service apollo_portal restart
+sudo service nginx restart

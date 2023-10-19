@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 
 if 'VAULT_PASSWORD' not in os.environ:
     if 'VAULT_PASS_ALLOW_NULL' in os.environ:
-        print("VAULT_PASS_ALLOW_NULL has been set: running without vault.")
+        sys.stderr.write("VAULT_PASS_ALLOW_NULL has been set: running without"
+                         " vault.")
+        print("NULL")
     else:
         raise EnvironmentError(
             'VAULT_PASSWORD environment variable must be set to access the'

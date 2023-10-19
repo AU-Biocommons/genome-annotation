@@ -3,5 +3,11 @@
 import os
 
 if 'VAULT_PASSWORD' not in os.environ:
-    raise EnvironmentError('VAULT_PASSWORD environment variable not set')
+    if 'VAULT_PASS_ALLOW_NULL' in os.environ:
+        print("VAULT_PASS_ALLOW_NULL has been set: running without vault.")
+    else:
+        raise EnvironmentError(
+            'VAULT_PASSWORD environment variable must be set to access the'
+            ' vault. If you want to run without using the vault, then set'
+            ' VAULT_PASS_ALLOW_NULL=1.')
 print(os.getenv('VAULT_PASSWORD'))

@@ -37,6 +37,7 @@ apollo-032.genome.edu.au ansible_host=apollo-032 allowed_groups="ubuntu apollo_a
 apollo-033.genome.edu.au ansible_host=apollo-033 allowed_groups="ubuntu apollo_admin backup_user tradis-vault_user"
 apollo-034.genome.edu.au ansible_host=apollo-034 allowed_groups="ubuntu apollo_admin backup_user ilrg-uq_user"
 apollo-035.genome.edu.au ansible_host=apollo-035 allowed_groups="ubuntu apollo_admin backup_user nbenth_user"
+apollo-036.genome.edu.au ansible_host=apollo-036 allowed_groups="ubuntu apollo_admin backup_user phage-therapy_user"
 
 
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied

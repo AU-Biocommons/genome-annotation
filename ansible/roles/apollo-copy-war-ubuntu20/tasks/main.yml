@@ -1,5 +1,5 @@
 ---
-- name: "check that war file is in my local machine"
+- name: "check that war file is on local machine"
   stat: "path={{apollo_copy_war_src_path}}"
   delegate_to: "localhost"
   register: "stat_result"

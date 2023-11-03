@@ -1,0 +1,38 @@
+---
+- hosts: all
+  #remote_user: "{{ansible_user}}" # requires inventory to define ansible_user=ubuntu
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+  
+  # update apollo deployment to latest version by removing existing /opt/Apollo-* and
+  # /var/lib/tomcat9/webapps/apollo* and re-deploying current version of apollo
+
+  pre_tasks:
+  # export the tomcat memory settings for test (small VM) or production (large VM)
+  - name: "set fact apollo_tomcat_memory_opts from target_tomcat_memory variable"
+    set_fact:
+      apollo_tomcat_memory_opts: "{{ '-Xms512m -Xmx2g' if target_environment == 'test' else '-Xms8g -Xmx12g' }}"
+  # define the apollo build version from apollo_version=<VERSION> in inventory file
+  # or --extra-vars "apollo_version=2.7.0", otherwise use the default
+  - name: "set apollo_build_version to supplied apollo_version value (eg 2.6.5) or default (2.7.0)"
+    set_fact:
+      apollo_build_version: "{{ '{{ apollo_version }}' if apollo_version is defined else '2.7.0' }}"
+
+  tasks:
+    - import_role:
+        name: apollo-cleanup-old-deploy
+    # the following is needed to update PERL5LIB to match location of Perl libraries in new apollo_version
+    - import_role:
+        name: common-tomcat-ubuntu20
+    - import_role:
+        name: apollo-copy-war-ubuntu20
+    - import_role:
+        name: apollo-deploy-war
+    # the following will update the postgres password for access from apollo web app (currently assumes latest password)
+    - import_role:
+        name: apollo-docker-postgres
+    - import_role:
+        name: apollo-restart-tomcat
+

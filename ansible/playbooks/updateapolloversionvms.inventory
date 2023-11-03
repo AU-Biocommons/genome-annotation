@@ -1,0 +1,38 @@
+# this provides access to postgresql_user_password in group_vars/newapollovms
+# as required to update postgres password for latest Apollo build
+# inventory is used with playbook-apollo-update-deployment.yml as follows (eg apollo-022):
+#   ansible-playbook playbook-apollo-update-deployment.yml \
+#                   -i updateapolloversionvms.inventory --limit apollo-022
+
+[newapollovms]
+apollo-002
+apollo-003
+apollo-004
+apollo-005
+apollo-006
+apollo-007
+apollo-008
+apollo-009
+apollo-010
+apollo-012
+apollo-013
+apollo-014
+apollo-015
+apollo-017
+apollo-018
+apollo-019
+apollo-020
+apollo-021
+apollo-022
+apollo-023
+apollo-024
+apollo-025
+apollo-026
+apollo-027
+apollo-029
+apollo-030
+apollo-031
+apollo-032
+apollo-033
+apollo-034
+

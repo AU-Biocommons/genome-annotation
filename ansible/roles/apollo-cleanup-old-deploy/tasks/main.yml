@@ -1,0 +1,59 @@
+---
+- name: "Stop tomcat9 service prior to removing Apollo from tomcat webapps"
+  systemd:
+    state: "stopped"
+    name: "tomcat9"
+
+- name: "Remove Apollo war file from tomcat"
+  file:
+    path: "{{ apollo_deploy_war_dest_path }}"
+    state: absent
+    force: yes
+
+- name: "Remove Apollo webapp from tomcat"
+  file:
+    path: "{{ apollo_deploy_webapp_path }}"
+    state: absent
+    force: yes
+
+# Note the use of find for deleting matching files and/or directories using wildards
+# Ref: https://gist.github.com/vpnwall-services/5e5cc8c11384d6e42e1760b73471c620
+
+- name: "Find /opt/Apollo-<version>-deploy* tarballs"
+  find:
+    paths: /opt
+    patterns: "Apollo-.*-deploy.*.tar.gz"
+    use_regex: true
+    file_type: file
+  register: tarballs_to_delete
+
+#- name: "Found apollo tarballs..."
+#  debug:
+#    var: tarballs_to_delete
+
+- name: "Remove /opt/Apollo-<version>-deploy* tarballs"
+  file:
+    path: "{{ item.path }}"
+    state: absent
+    force: yes
+  with_items: "{{ tarballs_to_delete.files }}"
+
+- name: "Find existing /opt/Apollo-<version> directories"
+  find:
+    paths: /opt/
+    patterns: "Apollo-[0-9].[0-9.]*[0-9]"
+    use_regex: true
+    file_type: directory
+  register: dirs_to_delete
+
+#- name: "Found apollo directories..."
+#  debug:
+#    var: dirs_to_delete
+
+- name: "Remove any existing /opt/Apollo-<version> directories"
+  file:
+    path: "{{ item.path }}"
+    state: absent
+    force: yes
+  with_items: "{{ dirs_to_delete.files }}"
+

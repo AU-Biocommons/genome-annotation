@@ -132,9 +132,9 @@ openstack server list | grep -i "$apollo_name"
 
 if [ -z "$floating_ip" ]; then
     echo "creating floating IP"
-    openstack floating ip create 'Public external'
+    floating_ip="$(openstack floating ip create 'Public external' | grep floating_ip_address | awk -F '|' '{ print $3 }' | xargs)"
     #openstack floating ip list | grep None | cut -d'|' -f3 | tr -d "[:blank:]"
-    floating_ip="$(openstack floating ip list | grep None | awk '{ print $4 }')"
+    #floating_ip="$(openstack floating ip list | grep None | awk '{ print $4 }')"
     echo "created floating IP address: $floating_ip"
 fi
 

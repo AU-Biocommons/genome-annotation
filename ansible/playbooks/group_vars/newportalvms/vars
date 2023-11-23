@@ -70,7 +70,7 @@ smtp:
   password: "{{ smtp_password }}"
   from_address: apollo-support@genome.edu.au
   to_address: "{{ user_support_email }}"  # secrets.yml
-  use_tls: false
+  use_tls: true
 
 # Sometimes required to get the playbook to run:
 # skip_database_migration: true

@@ -42,7 +42,7 @@ postgres_users_no_log: false
 # -----------------------------------------------------------------------------
 
 apollo_portal_git_url: https://github.com/AU-Biocommons/django-portal.git
-apollo_portal_git_branch: genome-cards
+apollo_portal_git_branch: master
 
 # Will git clone apollo_portal to here
 project_root: /home/ubuntu/apollo_portal

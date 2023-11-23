@@ -110,6 +110,13 @@
 - name: set ubuntu dir permissions
   file: dest=/home/ubuntu mode=u=rwX,g=rX,o=rX
 
+- name: set project_root permissions
+  ansible.builtin.file:
+    dest: "{{ project_root }}"
+    owner: ubuntu
+    group: ubuntu
+    recurse: yes
+
 - name: update media file ownership
   file: dest={{ webserver_media_root }} owner=www-data group=www-data mode=u=rwX,g=rwX,o=rwX recurse=yes
 

@@ -42,7 +42,7 @@ postgres_users_no_log: false
 # -----------------------------------------------------------------------------
 
 apollo_portal_git_url: https://github.com/AU-Biocommons/django-portal.git
-apollo_portal_git_branch: genome-cards
+apollo_portal_git_branch: master
 
 # Will git clone apollo_portal to here
 project_root: /home/ubuntu/apollo_portal
@@ -70,7 +70,7 @@ smtp:
   password: "{{ smtp_password }}"
   from_address: apollo-support@genome.edu.au
   to_address: "{{ user_support_email }}"  # secrets.yml
-  use_tls: false
+  use_tls: true
 
 # Sometimes required to get the playbook to run:
 # skip_database_migration: true

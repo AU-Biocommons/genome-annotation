@@ -1,5 +1,7 @@
 [newservervms]
-django-portal.genome.edu.au
+# this will be apollo-portal when go live
+#django-portal.genome.edu.au
+apollo-portal.genome.edu.au
 
 [changeipvms]
 apollo-deploy.genome.edu.au ansible_user=ubuntu admin_group=sudo
@@ -8,7 +10,7 @@ apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]
-# this should be apollo-portal when go live
+# this will be apollo-portal when go live
 # hostname_for_ip=django-portal
 hostname_for_ip=apollo-portal
 private_ip=192.168.0.123

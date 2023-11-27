@@ -95,6 +95,18 @@
     -d {{ inventory_hostname }}
   when: certbot_ssl
 
+- name: "add extra domain {{ portal_extra_domain }} to letsencrypt certificate {{ inventory_hostname }}"
+  command: |
+    certbot certonly \
+    --cert-name {{ inventory_hostname }} \
+    --nginx \
+    --noninteractive \
+    --agree-tos \
+    --redirect \
+    --email {{ certbot_renew_email }} \
+    --domains {{ inventory_hostname }},{{ portal_extra_domain }}
+  when: certbot_ssl and portal_extra_domain is defined
+
 - name: Ensure apollo_portal superuser login
   shell: |
     cd {{ webserver_root }} && \

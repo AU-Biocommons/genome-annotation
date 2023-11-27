@@ -1,5 +1,13 @@
 # Server config for {{ inventory_hostname }} (Apollo portal)
 
+{% if portal_extra_domain is defined %}
+server {
+    # redirect all requests for {{ portal_extra_domain }} to {{ inventory_hostname }}
+    server_name {{ portal_extra_domain }}  www.{{ portal_extra_domain }};
+    return 301 $scheme://{{ inventory_hostname }}$request_uri;
+}
+{% endif %}
+
 server {
     # redirect www to non-www
     server_name www.{{ inventory_hostname }};

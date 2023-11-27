@@ -6,5 +6,4 @@ ubuntu22-test.genome.edu.au  ansible_connection=ssh  ansible_user=ubuntu
 apollo-portal-dev.genome.edu.au  ansible_connection=ssh  ansible_user=ubuntu
 
 # this is the production apollo-portal website
-# TODO: DO NOT USE until DNS is updated to point apollo-portal to the django-portal
-apollo-portal.genome.edu.au  ansible_connection=ssh  ansible_user=ubuntu
+apollo-portal.genome.edu.au  ansible_connection=ssh  ansible_user=ubuntu  portal_extra_domain=genome.edu.au

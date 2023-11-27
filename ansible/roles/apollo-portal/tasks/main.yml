@@ -129,11 +129,17 @@
     group: ubuntu
     recurse: yes
 
-- name: update media file ownership and setgid for directories
-  file: dest={{ webserver_media_root }} owner=www-data group=www-data mode=u=rwX,g=rwX,o=rX,g+s recurse=yes
+- name: update media file ownership and permissions
+  file: dest={{ webserver_media_root }} owner=www-data group=www-data mode=u=rwX,g=rwX,o=rX recurse=yes
 
-- name: update log file ownership and setgid for directories
-  file: dest={{ webserver_log_root }} owner=www-data group=www-data mode=u=rwX,g=rwX,o=rX,g+s recurse=yes
+- name: apply setgid to media directories
+  command: find {{ webserver_media_root }} -type d -exec chmod g+s {} \;
+
+- name: update log file ownership and permissions
+  file: dest={{ webserver_log_root }} owner=www-data group=www-data mode=u=rwX,g=rwX,o=rX recurse=yes
+
+- name: apply setgid to log directories
+  command: find {{ webserver_log_root }} -type d -exec chmod g+s {} \;
 
 - name: make update.sh executable
   file: dest=/home/ubuntu/update.sh mode=a+x

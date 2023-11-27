@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# This script was templated by Ansible.
+# Use this update script, not the one at ./apollo_portal/deployment/update.sh
+
 set -e
 
 # Make sure this isn't being run as root
@@ -14,6 +17,14 @@ source '{{ venv_root }}/bin/activate'
 git pull
 cd {{ django_root }}
 
+# Update file ownership to allow ubuntu+www-data to write logs + media files
+sudo chown -R ubuntu:www-data {{ webserver_log_root}}
+sudo find {{ webserver_log_root}} -type d -exec chmod 775 {} \;
+sudo find {{ webserver_log_root}} -type f -exec chmod 664 {} \;
+sudo chown -R ubuntu:www-data {{ webserver_media_root}}
+sudo find {{ webserver_media_root}} -type d -exec chmod 775 {} \;
+sudo find {{ webserver_media_root}} -type f -exec chmod 664 {} \;
+
 # Collect any new static files for Nginx
 python manage.py collectstatic --noinput
 
@@ -22,14 +33,6 @@ python manage.py migrate
 
 # Build the search index
 python manage.py build_index
-
-# Update file ownership to allow www-data to write logs + media files
-sudo chown -R ubuntu:www-data {{ webserver_log_root}}
-sudo find {{ webserver_log_root}} -type d -exec chmod 775 {} \;
-sudo find {{ webserver_log_root}} -type f -exec chmod 664 {} \;
-sudo chown -R ubuntu:www-data {{ webserver_media_root}}
-sudo find {{ webserver_media_root}} -type d -exec chmod 775 {} \;
-sudo find {{ webserver_media_root}} -type f -exec chmod 664 {} \;
 
 # Start application
 sudo systemctl restart apollo_portal.service

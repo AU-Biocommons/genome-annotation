@@ -28,6 +28,12 @@
       - "python{{ python_version }}"
       - python3-pip
 
+- name: add ubuntu user to www-data group"
+  user:
+    name: "ubuntu"
+    groups: "www-data" 
+    append: yes
+
 - name: clone git repository for apollo_portal
   ansible.builtin.git:
     repo: "{{ apollo_portal_git_url }}"
@@ -44,12 +50,18 @@
 
 - name: create apollo_portal media directory
   file:
-    path: "{{ webserver_root }}/apollo_portal/media"
+    path: "{{ webserver_media_root }}"
+    owner: ubuntu
+    group: www-data
+    mode: '2775'
     state: directory
 
 - name: create apollo_portal logs directory
   file:
-    path: "{{ webserver_root }}/apollo_portal/logs"
+    path: "{{ webserver_log_root }}"
+    owner: ubuntu
+    group: www-data
+    mode: '2775'
     state: directory
 
 - name: template webserver configuration
@@ -130,13 +142,13 @@
     recurse: yes
 
 - name: update media file ownership and permissions
-  file: dest={{ webserver_media_root }} owner=www-data group=www-data mode=u=rwX,g=rwX,o=rX recurse=yes
+  file: dest={{ webserver_media_root }} owner=ubuntu group=www-data mode=u=rwX,g=rwX,o=rX recurse=yes
 
 - name: apply setgid to media directories
   command: find {{ webserver_media_root }} -type d -exec chmod g+s {} \;
 
 - name: update log file ownership and permissions
-  file: dest={{ webserver_log_root }} owner=www-data group=www-data mode=u=rwX,g=rwX,o=rX recurse=yes
+  file: dest={{ webserver_log_root }} owner=ubuntu group=www-data mode=u=rwX,g=rwX,o=rX recurse=yes
 
 - name: apply setgid to log directories
   command: find {{ webserver_log_root }} -type d -exec chmod g+s {} \;

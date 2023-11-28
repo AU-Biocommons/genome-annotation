@@ -8,9 +8,9 @@ django_root: "{{ project_root }}/apollo_portal"
 venv_root: "{{ project_root }}/.venv"
 setup_root: /home/ubuntu/server
 webserver_root: /srv/sites/apollo_portal
-webserver_log_root: "{{ django_root }}/apollo_portal/logs"
-webserver_media_root: "{{ django_root }}/apollo_portal/media"
-webserver_static_root: "{{ django_root }}/apollo_portal/static"
+webserver_log_root: "{{ webserver_root }}/apollo_portal/logs"
+webserver_media_root: "{{ webserver_root }}/apollo_portal/media"
+webserver_static_root: "{{ webserver_root }}/apollo_portal/static"
 
 apollo_portal:
   templates:

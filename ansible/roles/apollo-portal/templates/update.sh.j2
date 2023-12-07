@@ -15,6 +15,9 @@ fi
 cd {{ project_root }}
 source '{{ venv_root }}/bin/activate'
 git pull
+
+# Ensure dependencies are installed
+pip install -r requirements.txt
 cd {{ django_root }}
 
 # Update file ownership to allow ubuntu+www-data to write logs + media files

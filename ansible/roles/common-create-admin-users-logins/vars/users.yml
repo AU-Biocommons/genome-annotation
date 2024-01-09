@@ -61,7 +61,7 @@ login_users:
 # add sysadmins; or if configuring a sandpit for a user, add that user here (ie m.thang. c.hyde)
 sudo_users:
   - "j.lee"
-#  - "n.rhodes"
+  - "n.rhodes"
 #  - "m.thang"
 #  - "c.hyde"
 
@@ -71,7 +71,6 @@ sudo_users:
 # but can be deleted by adding to the remove_users list
 inactive_users:
   - "a.bulgaris"
-  - "n.rhodes"
 #  - "s.williams"
 
 # remove users no longer associated with the project

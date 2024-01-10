@@ -1,6 +1,5 @@
 ---
 - hosts:
-  # - testportalvms
   - newportalvms
   remote_user: ubuntu
   become: yes

@@ -18,7 +18,7 @@ git pull
 
 # Ensure dependencies are installed
 pip install -r requirements.txt
-cd {{ django_root }}
+cd {{ webserver_root }}
 
 # Update file ownership to allow ubuntu+www-data to write logs + media files
 sudo chown -R ubuntu:www-data {{ webserver_log_root}}

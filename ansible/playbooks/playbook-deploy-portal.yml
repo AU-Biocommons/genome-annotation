@@ -1,9 +1,15 @@
 ---
-- hosts: newportalvms
+- hosts:
+  - testportalvms
+  # - newportalvms
   remote_user: ubuntu
   become: yes
   become_method: sudo
   connection: "ssh"
+
+  vars_files:
+    - group_vars/newportalvms/vars
+    - group_vars/newportalvms/vault
 
   roles:
     - role: geerlingguy.postgresql

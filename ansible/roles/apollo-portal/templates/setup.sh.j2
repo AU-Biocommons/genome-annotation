@@ -6,7 +6,7 @@ set -e
 echo "export DJANGO_SETTINGS_MODULE=apollo_portal.settings.prod" >> {{ venv_root }}/bin/activate
 
 source {{ venv_root }}/bin/activate
-cd {{ django_root }}
+cd {{ webserver_root }}
 
 {% if not skip_database_migration %}
 # Migrate database

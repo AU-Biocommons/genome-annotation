@@ -4,7 +4,20 @@ This folder contains the Ansible scripts, inventory files (containing lists of V
 
 # Quick Start
 
-## Setup
+```sh
+# Run a playbook
+# vars and vault will be read from group_vars/<inventory_groupname>/
+cd ansible
+ansible-playbook -i chosen.inventory playbook-of-choice.yml
+
+# Run specified hostname only
+ansible-playbook -i chosen.inventory --limit   playbook-of-choice.yml
+```
+
+
+# Complete guide
+
+## Setup repo
 
 Clone the [https://github.com/AU-Biocommons/genome-annotation](git repository) containing this readme and the ansible playbooks, inventory files, build scripts, etc.
     ```
@@ -53,7 +66,7 @@ The following are the steps required in VM creation prior to the Apollo build wi
 When using OpenStack first source the `openrc.sh` file obtained from Nimbus and enter your Nimbus password.
 
 Create a n3.8c32r flavor VM with Ubuntu 20.04 image, with a 40G volume-based root disk and a public floating IP address.
-```
+```sh
 openstack server create \
     --flavor c291f88d-6987-424b-bd6b-2b9128595c74 \
     --image 578525b1-f1e3-495d-b673-3a3b9cd32b23 \
@@ -78,19 +91,19 @@ Note to get ID's of flavor and image for use in VM creation:
 + `openstack image list` shows `Pawsey - Ubuntu 20.04 - 2021-02` has ID `578525b1-f1e3-495d-b673-3a3b9cd32b23`
 
 Once the VM has been created, a floating IP needs to be created from the `public external` pool. This is done with:
-```
+```sh
 openstack floating ip create 'Public external'
 ```
 Then find the generated floating IP address with (assuming we don't leave floating IP's hanging around):
-```
+```sh
 floating_ip="$(openstack floating ip list | grep None | awk '{ print $4 }')"
 ```
 and associate this with the new VM
-```
+```sh
 openstack server add floating ip $apollo_name $floating_ip
 ```
 Check that the IP has been associated, and obtain the private (internal) IP address with:
-```
+```sh
 openstack server show $apollo_name | grep addresses
 ```
 
@@ -105,7 +118,7 @@ The apollo number, custom hostname and local IP address will all be needed for t
 ### Assign Root Password for Web Console Access
 
 An optional step, that can be done now or post-build, is to assign root a password. This is required for root login from the Web Console on Nimbus, which can be useful for troubleshooting when there are network issues, for example. To do this, first generate a passphrase with `xkcdpass` (Linux) or `diceware` (Apple) and save as a note in the `Shared-Apollo` folder on LastPass. Then log into the VM and set the password:
-```
+```sh
 ssh -i <path_to_private_key> -o IdentitiesOnly=yes ubuntu@apollo-XXX.genome.edu.au
 sudo passwd root
 ```
@@ -113,7 +126,7 @@ sudo passwd root
 ### Pre-Build Update When Delaying Apollo Build
 
 If the Apollo build is not to be immediately run after the VM is built, it is a good idea to run the system updates manually now, with:
-```
+```sh
 sudo apt update
 sudo apt upgrade -y
 ```
@@ -126,11 +139,11 @@ The simplest way to build an Apollo instance on an Ubuntu 20.04 instance is to u
 To run this, first change into the directory containing the `build-newapollo*` scripts and this readme.
 
 Then set the ansible vault password for `newapollovms` - the vault contains several passwords required for setting up Apollo on the supplied VM.
-```
+```sh
 export VAULT_PASSWORD="<SECRET_VAULT_PASSWORD>"
 ```
 Note, to prevent the vault password from being stored in the bash history, precede the `export` command with a space, i.e.
-```
+```sh
  export VAULT_PASSWORD="<SECRET_VAULT_PASSWORD>"
 ```
 This requires `HISTCONTROL=ignoreboth` set in the `.bashrc` (don't put duplicate lines or lines starting with space in the history).
@@ -138,7 +151,7 @@ This requires `HISTCONTROL=ignoreboth` set in the `.bashrc` (don't put duplicate
 Use generate an _alphanumeric_ password in LastPass for the apollo admin user, and save password as apollo-XXX.genome.edu.au (with URL `https://apollo-XXX.genome.edu.au/apollo/annotator/index` and Username `ops@qfab.org`) in `Shared-Apollo` folder.
 
 Then run the Apollo build with:
-```
+```sh
 ./build-newapollo.sh -p admin_password apollo_number custom_hostname private_ip_address
 ```
 Where,
@@ -152,7 +165,7 @@ There is an additional two optional arguments:
 + `-a apollovms_hosts_file` - inventory file for existing apollo VMs (by default 'hosts') 
 
 Note that a common cause of build failure is caused by `unattended-upgrades` holding the dpkg frontend lock. If this occurs, log into the VM and issue the command:
-```
+```sh
 sudo kill -KILL $(pgrep -u root -f unattended-upgrades)
 ```
 Then re-run the `build-newapollo.sh` script to complete the build.
@@ -167,7 +180,7 @@ and that can log in as `ops@qfab.org` user
 Ensure that passwords for the new VM and Apollo have been added to LastPass in the `Shared-Apollo` folder.
 
 Synchronise the updated `hosts` inventory file with other Apollo infrastructure admins, for running system updates, by committing changes to this Git repo and pushing back to Github, This is done as follows:
-```
+```sh
 git pull origin master
 git add hosts
 git commit -m "added apollo-XXX to apollovms group in hosts inventory file"
@@ -183,18 +196,18 @@ The following are the steps required for performing system updates on all the ap
 ### Centos Infrastructure Updates
 
 Do manual system updates on centos infrastructure VMs `apollo-monitor` and `apollo-backup` (ansible playbooks not yet written to do this), by logging into these VMs and issuing the following commands:
-```
+```sh
 sudo dnf update -y
 ```
 and reboot if kernel has been updated
-```
+```sh
 sudo shutdown -r now
 ```
 
 ### Manual System Updates on Ansible VM
 
 Do manual system updates on `ansible-sandpit` and reboot if needed. This is done separately so it doesn't get rebooted in the middle of updating `otherubuntuvms`. Log into the VM and issue the following commands, with `shutdown -r` only needed if kernel has been updated:
-```
+```sh
 sudo apt update
 sudo apt upgrade -y
 sudo shutdown -r now
@@ -203,17 +216,17 @@ sudo shutdown -r now
 ### Automated System Updates on Apollo Instances and Ubuntu Infrastructure
 
 Log back into `ansible-sandpit` and change to playbooks directory
-```
+```sh
 cd ~/github-ansible/ansible/playbooks/
 ```
 
 First run system updates (includes reboot where required) on ubuntu infrastructure VMs `apollo-data`, `apollo-portal` and Ubuntu test VMs, with:
-```
+```sh
 ansible-playbook playbook-system-updates-ubuntu.yml --limit otherubuntuvms
 ```
 
 Then run system updates (includes reboot where required) on apollo VMs (see note below)
-```
+```sh
 ansible-playbook playbook-system-updates-ubuntu.yml --limit apollovms
 ```
 
@@ -224,7 +237,7 @@ Once the updates have been completed, check that all systems are up and apollos 
 Ubuntu test VMs are included in the `otherubuntuvms` host group defined in the default inventory file _hosts_, so these are updated by default above.
 
 Optionally, to do updates _only_ on the test VMs, the `testvms.inventory` inventory file can be specified with the test hosts groups. The system updates can be run with ansible as follows:
-```
+```sh
 ansible-playbook playbook-system-updates-ubuntu.yml --inventory-file testvms.inventory --limit ubuntu20testvms
 ansible-playbook playbook-system-updates-ubuntu.yml --inventory-file testvms.inventory --limit ubuntu18testvms
 ```
@@ -247,26 +260,26 @@ Before running any of the playbooks make sure of the following:
     ~/.ssh/config
     ```
 3. Check/update hosts (inventory) file [ansible/playbooks/hosts](hosts) and if required use limit to specify one of the defined host groups (eg `newapollovms`) and/or check options as required:
-    ```
+    ```sh
     ansible-playbook yourplaybook.yml --limit yourinventory_server_group_name --check
     ```
     In example, the below command will not apply any changes given it's using `--check` option and the target server(s) will be limited by the `--limit` option:
 
-    ```
+    ```sh
     ansible-playbook playbook-apollo.yml --limit ubuntu20testvms --check 
     ```
     In example, to apply changes to the tests servers group remove the `--check` option as below:
-    ```
+    ```sh
     ansible-playbook playbook-apollo.yml --limit ubuntu20testvms 
     ```
     Because this is the `ansible/playbooks` folder it's not recommended to run without the `--limit` option, therefore in order to apply changes to the target servers it would be something like below command:
-    ```
+    ```sh
     ansible-playbook playbook-apollo.yml --limit ubuntuprodvms
     ``` 
     Note that in some cases one may not want to target all prod VMs, if that's the case then first create a new group in the [ansible/playbooks/hosts](hosts) file and use it to target a selection of servers or only one server
 
 4. If the host group (defined in the inventory file) uses ansible-vault (eg `newapollovms`), then set the vault password in the environment with:
-    ```
+    ```sh
     export VAULT_PASSWORD="your_secret_vault_password"
     ```
   Host groups that use ansible-vault will have a `group_vars/<host_group_name>/vault` file, along with the `group_vars/<host_group_name>/vars` file that refers to it. There **should** be a note in the inventory file with the host group indicating the requirement for a vault password.
@@ -281,7 +294,7 @@ Before running any of the playbooks make sure of the following:
     apollo-999.genome.edu.au apollo_subdomain_name=starwars
     ```
 or on the command line with:
-    ```
+    ```sh
     ansible-playbook playbook-apollo-ubuntu20-combined.yml --extra-vars="apollo_subdomain_name=starwars" --verbose --limit newapollovms
     ```
 
@@ -307,7 +320,7 @@ ubuntu20-test.genome.edu.au
 
 Then run the playbooks only on the VMs that belong to the group defined in the inventory file, for example to only run on the test VM:
 
-```
+```sh
 ansible-playbook playbook-configure-host.yml --limit ubuntu20testvms
 ```
 
@@ -340,7 +353,7 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     ```
 
    The playbook is run as follows:
-    ```
+    ```sh
    ansible-playbook playbook-set-etc-hosts-ip.yml --limit changeipvms
     ```
 
@@ -362,13 +375,13 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     ```
    
    The playbook is run as follows:
-    ```
+    ```sh
    ansible-playbook playbook-apollo-ubuntu20-monitor.yml --limit monitorservervms
     ```
 
 3. **playbook-apollo-ubuntu20-combined.yml**
     1.  Requires ansible vault password configured in the environment, with
-        ```
+        ```sh
         export VAULT_PASSWORD="your_secret_vault_password"
     2.  Requires the `newapollovms` host group to be defined in the inventory file as the target apollo host, `apollo-XXX.genome.edu.au` where `XXX` is the 3 digit apollo number
     3.  Requires the command line option `--limit newapollovms` to be specified to select the target host group defined in the inventory file (above)
@@ -382,7 +395,6 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
         [newapollovms:vars]
         apollo_admin_password="<APOLLO-ADMIN-USER_PASSWORD>"
         ```
-    ```
     8. Optionally define `apollo_version=<VERSION>` in the inventory file to specify a more recent build (the default is `2.6.0`).
 
    Please see the following example inventory file configuration:
@@ -392,7 +404,7 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     ```
 
    The playbook is run as follows:
-    ```
+    ```sh
     ansible-playbook playbook-apollo-ubuntu20-combined.yml --limit newapollovms
     ```
 
@@ -416,7 +428,7 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     ```
 
    The playbook is run as follows:
-    ```
+    ```sh
    ansible-playbook playbook-apollo-ubuntu20-monitor.yml --limit monitorservervms
     ```
 
@@ -440,14 +452,10 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
     ```
 
    The playbook is run as follows:
-    ```
+    ```sh
    ansible-playbook playbook-apollo-add-to-backup-server.yml --limit backupservervms
     ```
 
 
 # How to create/modify Ansible Roles
 For more information see **`README`** file in [ansible/README.md](../ansible/README.md)
-
-
-
-

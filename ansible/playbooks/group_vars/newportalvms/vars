@@ -48,7 +48,7 @@ apollo_portal_git_branch: master
 project_root: /srv/sites/apollo_portal
 
 # This is where system config will be created
-setup_root: "{{ project_root }}/server"
+setup_root: "/opt/apollo_portal"
 
 # App will be served from here
 webserver_root: "{{ project_root }}/app"

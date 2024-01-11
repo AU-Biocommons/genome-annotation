@@ -11,11 +11,6 @@
       webserver_media_root: {{ webserver_media_root }}
       webserver_static_root: {{ webserver_static_root }}
 
-- name: create setup directory
-  file:
-    path: "{{ setup_root }}"
-    state: directory
-
 - name: install systems dependencies
   ansible.builtin.package:
     name:
@@ -35,6 +30,11 @@
     dest: "{{ project_root }}"
     clone: yes
     force: yes
+
+- name: create setup directory
+  file:
+    path: "{{ setup_root }}"
+    state: directory
 
 - name: create apollo_portal media directory
   file:

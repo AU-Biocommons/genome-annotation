@@ -51,7 +51,7 @@ project_root: /srv/sites/apollo_portal
 setup_root: "{{ project_root }}/server"
 
 # App will be served from here
-webserver_root: "{{ project_root }}/apollo_portal"
+webserver_root: "{{ project_root }}/app"
 
 # Virtual environment will be created here
 venv_root: "{{ project_root }}/venv"

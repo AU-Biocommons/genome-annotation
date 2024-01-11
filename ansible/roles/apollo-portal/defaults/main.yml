@@ -6,7 +6,7 @@ apollo_portal_git_branch: master
 project_root: /srv/sites/apollo_portal
 venv_root: "{{ project_root }}/venv"
 setup_root: "{{ project_root }}/server"
-webserver_root: "{{ project_root }}/apollo_portal"
+webserver_root: "{{ project_root }}/app"
 webserver_log_root: "{{ webserver_root }}/apollo_portal/logs"
 webserver_media_root: "{{ webserver_root }}/apollo_portal/media"
 webserver_static_root: "{{ webserver_root }}/apollo_portal/static"

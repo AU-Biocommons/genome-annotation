@@ -16,11 +16,6 @@
     path: "{{ setup_root }}"
     state: directory
 
-- name: create webserver parent directory
-  file:
-    path: "{{ webserver_root | dirname }}"
-    state: directory
-
 - name: install systems dependencies
   ansible.builtin.package:
     name:

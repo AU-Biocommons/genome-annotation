@@ -45,13 +45,13 @@ apollo_portal_git_url: https://github.com/AU-Biocommons/django-portal.git
 apollo_portal_git_branch: master
 
 # Will git clone apollo_portal to here
-project_root: /home/ubuntu/apollo_portal
+project_root: /srv/sites/apollo_portal
 
 # This is where system config will be created
-setup_root: /home/ubuntu/setup
+setup_root: "/opt/apollo_portal"
 
 # App will be served from here
-webserver_root: /srv/sites/apollo_portal
+webserver_root: "{{ project_root }}/app"
 
 # Virtual environment will be created here
 venv_root: "{{ project_root }}/venv"

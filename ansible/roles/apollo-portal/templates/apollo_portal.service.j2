@@ -8,7 +8,7 @@ PIDFile=/run/gunicorn/pid
 User = www-data
 Group = www-data
 RuntimeDirectory=gunicorn
-WorkingDirectory={{ django_root }}
+WorkingDirectory={{ webserver_root }}
 Environment="PATH={{ venv_root }}/.venv/bin:$PATH"
 ExecStart={{ venv_root }}/bin/gunicorn --pid /run/gunicorn/pid   \
           --bind unix:/run/apollo_portal.sock       \

@@ -7,20 +7,9 @@
       venv_root: {{ venv_root }}
       setup_root: {{ setup_root }}
       webserver_root: {{ webserver_root }}
-      django_root: {{ django_root }}
       webserver_log_root: {{ webserver_log_root }}
       webserver_media_root: {{ webserver_media_root }}
       webserver_static_root: {{ webserver_static_root }}
-
-- name: create setup directory
-  file:
-    path: "{{ setup_root }}"
-    state: directory
-
-- name: create webserver parent directory
-  file:
-    path: "{{ webserver_root | dirname }}"
-    state: directory
 
 - name: install systems dependencies
   ansible.builtin.package:
@@ -42,11 +31,10 @@
     clone: yes
     force: yes
 
-- name: link apollo_portal to {{ django_root }}
-  ansible.builtin.file:
-    src: "{{ django_root }}"
-    dest: "{{ webserver_root }}"
-    state: link
+- name: create setup directory
+  file:
+    path: "{{ setup_root }}"
+    state: directory
 
 - name: create apollo_portal media directory
   file:
@@ -130,9 +118,6 @@
       --last_name {{ admin_user.last_name }}
   ignore_errors: yes
   when: admin_user.email and not skip_database_migration
-
-- name: set ubuntu dir permissions
-  file: dest=/home/ubuntu mode=u=rwX,g=rX,o=rX
 
 - name: set project_root permissions
   ansible.builtin.file:

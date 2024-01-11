@@ -7,7 +7,7 @@ This folder contains the Ansible scripts, inventory files (containing lists of V
 ```sh
 # Run a playbook
 # vars and vault will be read from group_vars/<inventory_groupname>/
-cd ansible
+cd ansible/playbooks
 ansible-playbook -i chosen.inventory playbook-of-choice.yml
 
 # Run specified hostname only

@@ -64,9 +64,9 @@ admin_user:
   password: "{{ admin_password }}"
 
 smtp:
-  hostname: mail.usegalaxy.org.au
+  hostname: mail.smtp2go.com
   port: 2525
-  username: galaxy-australia/genome-edu-au
+  username: apolloaustralia
   password: "{{ smtp_password }}"
   from_address: apollo-support@genome.edu.au
   to_address: "{{ user_support_email }}"  # secrets.yml

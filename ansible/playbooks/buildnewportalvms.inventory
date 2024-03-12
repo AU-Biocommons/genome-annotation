@@ -2,7 +2,7 @@
 # ubuntu22-test is for testing deployment only
 ubuntu22-test.genome.edu.au  ansible_connection=ssh  ansible_user=ubuntu
 
-# this is the development portal - django-portal (in hosts)
+# this is the development portal - django-sandpit (in hosts)
 apollo-portal-dev.genome.edu.au  ansible_connection=ssh  ansible_user=ubuntu apollo_portal_git_branch=dev
 
 # this is the production apollo-portal website

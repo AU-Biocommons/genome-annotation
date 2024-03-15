@@ -9,3 +9,4 @@
     - role: geerlingguy.postgresql
       become: true
     - apollo-portal
+    - apollo-portal-configure-backup

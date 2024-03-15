@@ -1,0 +1,98 @@
+---
+# Note that this requires that common-create-admin-users-logins role has already been run
+# to create backup_user with associated login, group and sudo permissions
+- name: "create .pgpass for backup_user"
+  copy:
+    dest: "/home/backup_user/.pgpass"
+    content: "localhost:5432:{{ postgres_db_name}}:backup_user:{{ portal_backup_user_db_password }}"
+    mode: "0600"
+    group: "backup_user"
+    owner: "backup_user"
+
+# the following is taken from https://github.com/usegalaxy-au/infrastructure/blob/master/roles/move-postgresql-data-directory/tasks/main.yml
+- name: get postgresql version string
+  shell: pg_config --version
+  register: version_string
+- name: set postgresql version major
+  set_fact:
+  postgresql_version_major: "{{ version_string | regex_findall('PostgreSQL ([0-9]+).') | first }}"
+
+- name: set postgresql location for Ubuntu
+  set_fact:
+  postgres_conf_dir: "/etc/postgresql/{{ postgres_version_major }}/main"
+
+- name: "ensure listen_addresses = '*' in {{ postgres_conf_dir }}/postgresql.conf"
+  lineinfile:
+    dest: "{{ postgres_conf_dir }}/postgresql.conf"
+    regexp: "^#?listen_addresses ="
+    line: "listen_addresses = '*'                 # what IP address(es) to listen on;"
+    state: present
+
+- name: "trust backup_user connections to databases from apollo-backup via internal network by configuring in {{ postgres_conf_dir }}/pg_hba.conf"
+  lineinfile:
+    dest: "{{ postgres_conf_dir }}/pg_hba.conf"
+    line: "host    all             backup_user     192.168.0.116/32          trust"
+    state: present
+
+- name: "restart postgres to instigate changes to config"
+  systemd:
+    state: "restarted"
+    name: "postgresql@{{ postgres_version_major }}-main"
+
+# rather than restarting postgres service is it better to reload postgres config from psql?
+#- name: "reload postgres config to instigate changes to config"
+#  shell:
+#          cmd: "{{ bash_cmd_postgres }} {{ postgres_cmd_reload_postgres_config }}"
+#  register: "pg_reload_conf"
+#  #changed_when: "pg_reload_conf.rc == 0"
+#  changed_when: pg_reload_conf.stdout == "t"
+#
+#- name: "Print command executed from postgres_cmd_reload_postgres_config"
+#  debug:
+#    msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_reload_postgres_config }}"
+
+- name: "check if backup_user exists in database"
+  command: "{{ bash_cmd_postgres }} {{ postgres_cmd_test_user_exists }}"
+  register: "backup_user_exists"
+
+- name: "Print command executed from postgres_cmd_test_user_exists"
+  debug:
+    msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_test_user_exists }}"
+
+- name: "create backup_user user in postgres if user doesn't exist"
+  command: "{{ bash_cmd_postgres }} {{ postgres_cmd_create_user }}"
+  when: backup_user_exists.stdout == "0"
+
+- name: "Print command executed from postgres_cmd_create_user if backup_user_exists.stdout == 0"
+  debug:
+    msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_create_user }}"
+  when: backup_user_exists.stdout == "0"
+
+- name: "postgres grant select on tables"
+  command: "{{ bash_cmd_postgres }} {{ postgres_cmd_grant_tables }}"
+
+- name: "Print command executed from postgres_cmd_grant_tables"
+  debug:
+    msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_grant_tables }}"
+
+- name: "postgres grant select on sequences"
+  command: "{{ bash_cmd_postgres }} {{ postgres_cmd_grant_sequences }}"
+
+- name: "Print command executed from postgres_cmd_grant_sequences"
+  debug:
+    msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_grant_sequences }}"
+
+- name: "postgres alter default privileges grant select on tables"
+  command: "{{ bash_cmd_postgres }} {{ postgres_cmd_alter_grant_tables }}"
+
+- name: "Print command executed from postgres_cmd_alter_grant_tables"
+  debug:
+    msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_alter_grant_tables }}"
+
+- name: "postgres alter default privileges grant select on sequences"
+  command: "{{ bash_cmd_postgres }} {{ postgres_cmd_alter_grant_sequences }}"
+
+- name: "Print command executed from postgres_cmd_alter_grant_sequences"
+  debug:
+    msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_alter_grant_sequences }}"
+

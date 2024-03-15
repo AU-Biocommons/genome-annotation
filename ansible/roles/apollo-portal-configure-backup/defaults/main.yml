@@ -1,0 +1,15 @@
+---
+#postgres_db_name: "apollo_portal" # defined in group_vars/newportalvms/vars
+postgres_backup_user: "backup_user"
+postgres_backup_user_password: "{{ vault_backup_user_db_password }}" # defined in group_vars/newportalvms/vault
+
+bash_postgres_cmd: "psql -U postgres {{postgres_db_name}} -tAc"
+
+postgres_cmd_reload_postgres_config: "\"SELECT pg_reload_conf();\""
+postgres_cmd_test_user_exists: "\"SELECT COUNT(1) FROM pg_roles WHERE rolname='{{ postgres_backup_user }}';\""
+postgres_cmd_create_user: "\"CREATE USER {{ postgres_backup_user }} WITH PASSWORD '{{ postgres_backup_user_password }}';\""
+postgres_cmd_grant_tables: "\"GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{ postgres_backup_user }};\""
+postgres_cmd_grant_sequences: "\"GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO {{ postgres_backup_user }};\""
+postgres_cmd_alter_grant_tables: "\"ALTER DEFAULT PRIVILEGES GRANT SELECT ON TABLES TO {{ postgres_backup_user }};\""
+postgres_cmd_alter_grant_sequences: "\"ALTER DEFAULT PRIVILEGES GRANT SELECT ON SEQUENCES TO {{ postgres_backup_user }};\""
+

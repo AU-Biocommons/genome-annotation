@@ -52,8 +52,11 @@
 
 # rather than restarting postgres service is it better to reload postgres config from psql?
 #- name: "reload postgres config to instigate changes to config"
-#  shell:
-#          cmd: "{{ bash_cmd_postgres }} {{ postgres_cmd_reload_postgres_config }}"
+#  become: true
+#  become_user: postgres
+#  command: "{{ bash_cmd_postgres }} {{ postgres_cmd_reload_postgres_config }}"
+#  vars:
+#    ansible_ssh_pipelining: true
 #  register: "pg_reload_conf"
 #  #changed_when: "pg_reload_conf.rc == 0"
 #  changed_when: pg_reload_conf.stdout == "t"
@@ -62,8 +65,18 @@
 #  debug:
 #    msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_reload_postgres_config }}"
 
+# NOTE: in the following psql tasks need to use ansible_ssh_pipelining with become_user postgres
+#       to avoid errors like
+#         Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user (rc: 1, err: chmod: invalid mode: ‘A+user:postgres:rx:allow’
+#       see: https://github.com/ansible/ansible/issues/16048#issuecomment-229012509
+#       as used by geerlingguy / ansible-role-postgresql
+
 - name: "check if backup_user exists in database"
+  become: true
+  become_user: postgres
   command: "{{ bash_cmd_postgres }} {{ postgres_cmd_test_user_exists }}"
+  vars:
+    ansible_ssh_pipelining: true
   register: "backup_user_exists"
 
 - name: "Print command executed from postgres_cmd_test_user_exists"
@@ -71,7 +84,11 @@
     msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_test_user_exists }}"
 
 - name: "create backup_user user in postgres if user doesn't exist"
+  become: true
+  become_user: postgres
   command: "{{ bash_cmd_postgres }} {{ postgres_cmd_create_user }}"
+  vars:
+    ansible_ssh_pipelining: true
   when: backup_user_exists.stdout == "0"
 
 - name: "Print command executed from postgres_cmd_create_user if backup_user_exists.stdout == 0"
@@ -80,28 +97,44 @@
   when: backup_user_exists.stdout == "0"
 
 - name: "postgres grant select on tables"
+  become: true
+  become_user: postgres
   command: "{{ bash_cmd_postgres }} {{ postgres_cmd_grant_tables }}"
+  vars:
+    ansible_ssh_pipelining: true
 
 - name: "Print command executed from postgres_cmd_grant_tables"
   debug:
     msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_grant_tables }}"
 
 - name: "postgres grant select on sequences"
+  become: true
+  become_user: postgres
   command: "{{ bash_cmd_postgres }} {{ postgres_cmd_grant_sequences }}"
+  vars:
+    ansible_ssh_pipelining: true
 
 - name: "Print command executed from postgres_cmd_grant_sequences"
   debug:
     msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_grant_sequences }}"
 
 - name: "postgres alter default privileges grant select on tables"
+  become: true
+  become_user: postgres
   command: "{{ bash_cmd_postgres }} {{ postgres_cmd_alter_grant_tables }}"
+  vars:
+    ansible_ssh_pipelining: true
 
 - name: "Print command executed from postgres_cmd_alter_grant_tables"
   debug:
     msg: "{{ bash_cmd_postgres }} {{ postgres_cmd_alter_grant_tables }}"
 
 - name: "postgres alter default privileges grant select on sequences"
+  become: true
+  become_user: postgres
   command: "{{ bash_cmd_postgres }} {{ postgres_cmd_alter_grant_sequences }}"
+  vars:
+    ansible_ssh_pipelining: true
 
 - name: "Print command executed from postgres_cmd_alter_grant_sequences"
   debug:

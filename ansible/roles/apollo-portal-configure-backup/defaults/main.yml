@@ -3,7 +3,7 @@
 postgres_backup_user: "backup_user"
 postgres_backup_user_password: "{{ vault_backup_user_db_password }}" # defined in group_vars/newportalvms/vault
 
-bash_postgres_cmd: "psql -U postgres {{postgres_db_name}} -tAc"
+bash_cmd_postgres: "psql -U postgres {{ postgres_db_name }} -tAc"
 
 postgres_cmd_reload_postgres_config: "\"SELECT pg_reload_conf();\""
 postgres_cmd_test_user_exists: "\"SELECT COUNT(1) FROM pg_roles WHERE rolname='{{ postgres_backup_user }}';\""

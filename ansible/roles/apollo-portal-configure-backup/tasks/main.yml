@@ -15,13 +15,22 @@
     cmd: pg_config --version
   register: version_string
 
+- name: "output postgresql version_string"
+  debug: 
+    msg: "'pg_config --version' returns: {{ version_string.stdout }}"
+# eg: PostgreSQL 14.11 (Ubuntu 14.11-0ubuntu0.22.04.1)
+
 - name: set postgresql version major
   set_fact:
-    postgresql_version_major: "{{ version_string | regex_findall('PostgreSQL ([0-9]+).') | first }}"
+    postgresql_version_major: "{{ version_string.stdout | regex_findall('PostgreSQL ([0-9]+).') | first }}"
+
+- name: "output postgresql_version_major"
+  debug: 
+    msg: "postgresql_version_major: {{ postgresql_version_major }}"
 
 - name: set postgresql location for Ubuntu
   set_fact:
-    postgres_conf_dir: "/etc/postgresql/{{ postgres_version_major }}/main"
+    postgres_conf_dir: "/etc/postgresql/{{ postgresql_version_major }}/main"
 
 - name: "ensure listen_addresses = '*' in {{ postgres_conf_dir }}/postgresql.conf"
   lineinfile:
@@ -39,7 +48,7 @@
 - name: "restart postgres to instigate changes to config"
   systemd:
     state: "restarted"
-    name: "postgresql@{{ postgres_version_major }}-main"
+    name: "postgresql@{{ postgresql_version_major }}-main"
 
 # rather than restarting postgres service is it better to reload postgres config from psql?
 #- name: "reload postgres config to instigate changes to config"

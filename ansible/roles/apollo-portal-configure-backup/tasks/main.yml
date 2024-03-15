@@ -4,22 +4,24 @@
 - name: "create .pgpass for backup_user"
   copy:
     dest: "/home/backup_user/.pgpass"
-    content: "localhost:5432:{{ postgres_db_name}}:backup_user:{{ portal_backup_user_db_password }}"
+    content: "localhost:5432:{{ postgres_db_name}}:backup_user:{{ postgres_backup_user_password }}"
     mode: "0600"
     group: "backup_user"
     owner: "backup_user"
 
 # the following is taken from https://github.com/usegalaxy-au/infrastructure/blob/master/roles/move-postgresql-data-directory/tasks/main.yml
 - name: get postgresql version string
-  shell: pg_config --version
+  shell:
+    cmd: pg_config --version
   register: version_string
+
 - name: set postgresql version major
   set_fact:
-  postgresql_version_major: "{{ version_string | regex_findall('PostgreSQL ([0-9]+).') | first }}"
+    postgresql_version_major: "{{ version_string | regex_findall('PostgreSQL ([0-9]+).') | first }}"
 
 - name: set postgresql location for Ubuntu
   set_fact:
-  postgres_conf_dir: "/etc/postgresql/{{ postgres_version_major }}/main"
+    postgres_conf_dir: "/etc/postgresql/{{ postgres_version_major }}/main"
 
 - name: "ensure listen_addresses = '*' in {{ postgres_conf_dir }}/postgresql.conf"
   lineinfile:

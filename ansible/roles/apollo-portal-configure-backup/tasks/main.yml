@@ -1,4 +1,11 @@
 ---
+- name: "Allow connections from backup server"
+  ufw:
+    rule: allow
+    proto: tcp
+    port: '5432'
+    src: '{{ backup_server_cidr }}'
+
 # Note that this requires that common-create-admin-users-logins role has already been run
 # to create backup_user with associated login, group and sudo permissions
 - name: "create .pgpass for backup_user"
@@ -39,10 +46,10 @@
     line: "listen_addresses = '*'                 # what IP address(es) to listen on;"
     state: present
 
-- name: "trust backup_user connections to databases from apollo-backup via internal network by configuring in {{ postgres_conf_dir }}/pg_hba.conf"
+- name: "trust backup_user connections to databases from apollo-backup {{ backup_server_cidr }} by configuring in {{ postgres_conf_dir }}/pg_hba.conf"
   lineinfile:
     dest: "{{ postgres_conf_dir }}/pg_hba.conf"
-    line: "host    all             backup_user     192.168.0.116/32          trust"
+    line: "host    all             backup_user     {{ backup_server_cidr }}          trust"
     state: present
 
 - name: "restart postgres to instigate changes to config"

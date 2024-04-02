@@ -1,4 +1,6 @@
 ---
+backup_server_cidr: 192.168.0.116/32
+
 #postgres_db_name: "apollo_portal" # defined in group_vars/newportalvms/vars
 postgres_backup_user: "backup_user"
 postgres_backup_user_password: "{{ vault_backup_user_db_password }}" # defined in group_vars/newportalvms/vault

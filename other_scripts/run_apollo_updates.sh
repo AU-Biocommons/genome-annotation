@@ -29,9 +29,9 @@ echo "run system updates on ubuntu infrastructure and test VMs (this may involve
 echo "ansible-playbook playbook-system-updates-ubuntu.yml --limit otherubuntuvms"
 ansible-playbook playbook-system-updates-ubuntu.yml --limit otherubuntuvms
 
-echo "run system updates on centos infrastructure and test VMs (this may involve reboots)"
-echo "ansible-playbook playbook-system-updates-centos.yml --limit centosvms"
-ansible-playbook playbook-system-updates-centos.yml --limit centosvms
+#echo "run system updates on centos infrastructure and test VMs (this may involve reboots)"
+#echo "ansible-playbook playbook-system-updates-centos.yml --limit centosvms"
+#ansible-playbook playbook-system-updates-centos.yml --limit centosvms
 
 echo "run system updates on all apollo VMs (this may involve reboots)"
 echo "ansible-playbook playbook-system-updates-ubuntu.yml --limit apollovms"

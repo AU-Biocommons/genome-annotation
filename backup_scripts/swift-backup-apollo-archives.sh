@@ -8,9 +8,10 @@ BACKUP_ROOT=/mnt/backup00
 BACKUP_BIN=$BACKUP_ROOT/scripts
 
 SWIFT_CRED_FILE=$HOME/app-cred-swift-openrc.sh
-SWIFT_PATH=$HOME/.local/bin
+#SWIFT_PATH=$HOME/.local/bin
 MTIME=1 # modified in last day
 CONTAINER="Apollo_SQL_Archive"
 
-$BACKUP_BIN/backupToSwift.sh -v -p $SWIFT_PATH -c $SWIFT_CRED_FILE -m $MTIME -b $BACKUP_ROOT -d 'apollo-???_archive' -f 'apollo-???_*.tgz' $CONTAINER
+#$BACKUP_BIN/backupToSwift.sh -v -p $SWIFT_PATH -c $SWIFT_CRED_FILE -m $MTIME -b $BACKUP_ROOT -d 'apollo-???_archive' -f 'apollo-???_*.tgz' $CONTAINER
+$BACKUP_BIN/backupToSwift.sh -v -c $SWIFT_CRED_FILE -m $MTIME -b $BACKUP_ROOT -d 'apollo-???_archive' -f 'apollo-???_*.tgz' $CONTAINER
 

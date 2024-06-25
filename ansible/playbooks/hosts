@@ -13,6 +13,7 @@ apollo-008.genome.edu.au ansible_host=apollo-008 allowed_groups="ubuntu apollo_a
 apollo-009.genome.edu.au ansible_host=apollo-009 allowed_groups="ubuntu apollo_admin backup_user slimsuite_user"
 apollo-010.genome.edu.au ansible_host=apollo-010 allowed_groups="ubuntu apollo_admin backup_user coral_user"
 apollo-011.genome.edu.au ansible_host=apollo-011 allowed_groups="ubuntu apollo_admin backup_user sandpit_user"
+apollo-012.genome.edu.au ansible_host=apollo-012 allowed_groups="ubuntu apollo_admin backup_user wheat-dawn_user"
 apollo-014.genome.edu.au ansible_host=apollo-014 allowed_groups="ubuntu apollo_admin backup_user frankenberg_user"
 apollo-015.genome.edu.au ansible_host=apollo-015 allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
 apollo-017.genome.edu.au ansible_host=apollo-017 allowed_groups="ubuntu apollo_admin backup_user pulsepathogens_user"

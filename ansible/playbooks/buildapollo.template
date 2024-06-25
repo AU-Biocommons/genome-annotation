@@ -5,7 +5,7 @@ APOLLONAME.genome.edu.au target_environment=TESTORPROD apollo_instance_number=AP
 apollo-deploy.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
-apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
+#apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]
 hostname_for_ip=APOLLONAME
@@ -25,7 +25,8 @@ apollo_instance_number=APOLLOINSTANCENUMBER
 private_ip=PRIVATEIP
 
 [backupservervms]
-apollo-backup.genome.edu.au
+#apollo-backup.genome.edu.au
+apollo-deploy.genome.edu.au
 
 [backupservervms:vars]
 apollo_instance_number=APOLLOINSTANCENUMBER

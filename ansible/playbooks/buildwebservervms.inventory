@@ -7,7 +7,7 @@ apollo-portal.genome.edu.au
 apollo-deploy.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
-apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
+#apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 [changeipvms:vars]
 # this will be apollo-portal when go live

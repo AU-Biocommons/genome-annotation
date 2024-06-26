@@ -30,6 +30,16 @@
     state: present
   when: apollo_servers_conf.stdout == ""
 
+# Note: this requires at least one entry to already exist
+- name: if the root disk is on /dev/vda1 append apollo to existing list in nagios vda-root-disk group
+  lineinfile:
+    path: "{{ nagios_conf_vda_root_disk }}"
+    backrefs: yes
+    regexp: '^([ \t]*members(.*)$)'
+    line: '\1,{{ apollo_full_domain_name }}'
+    state: present
+  when: root_on_vda == 'true'
+
 # restart nagios for changes to take effect
 - name: "Restart nagios service"
   systemd:

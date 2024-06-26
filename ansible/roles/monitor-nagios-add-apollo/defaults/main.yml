@@ -2,4 +2,4 @@
 # NOTE: this requires the monitor-decode-extravars-setfacts role to be run first
 nagios_conf_file_path: "{{ nagios_conf_path }}/{{ apollo_short_machine_name }}.cfg"
 nagios_conf_apollo_servers: "{{ nagios_conf_path }}/web-apollo.cfg"
-
+nagios_conf_vda_root_disk: "{{ nagios_conf_path }}/vda-root-disk.cfg"

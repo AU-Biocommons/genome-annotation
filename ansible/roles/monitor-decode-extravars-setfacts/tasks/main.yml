@@ -61,6 +61,14 @@
   debug: 
     msg: "Full domain = {{apollo_full_domain_name}} - Machine name = {{apollo_short_machine_name}} - Instance number = {{apollo_padded_number}}"
 
+- name: Determine if root disk is /dev/vda (based on setting in inventory file)
+  set_fact:
+  root_on_vda: "{{ 'true' if apollo_root_disk_device == '/dev/vda1' else 'false' }}"
+
+- name: Print root disk information
+  debug:
+    msg: "Root disk is {{ apollo_root_disk_device }} - root_on_vda: {{ root_on_vda }}"
+
 # when target_environment is test modify test nagios and grafana config files in ubuntu home directory
 - name: "set fact override config locations if apollo_evironment is test"
   set_fact:

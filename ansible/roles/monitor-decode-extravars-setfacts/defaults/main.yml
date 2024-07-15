@@ -1,6 +1,10 @@
 ---
-# This role to be run by a playbook requires to enter domain name value through the command line
+# This role to be run by a playbook requires the domain name value entered through the command line
+# or using an inventory file
 # use  --extra-vars="apollo_instance_number=<enter_domain_name_here>"
 # use  --extra-vars="target_environment=prod" or --extra-vars="target_environment=test"
+# use  --extra-vars="apollo_root_disk_device=/dev/vda1"
 apollo_instance_number: "enter_in_command_line"
 target_environment: "enter_in_command_line"
+apollo_root_disk_device: "enter_in_command_line"
+

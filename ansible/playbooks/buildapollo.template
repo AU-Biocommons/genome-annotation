@@ -23,6 +23,7 @@ apollo-monitor.genome.edu.au
 [monitorservervms:vars]
 apollo_instance_number=APOLLOINSTANCENUMBER
 private_ip=PRIVATEIP
+apollo_root_disk_device=ROOTDISKDEVICE
 
 [backupservervms]
 #apollo-backup.genome.edu.au

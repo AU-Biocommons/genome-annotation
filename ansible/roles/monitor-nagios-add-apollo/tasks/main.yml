@@ -30,6 +30,20 @@
     state: present
   when: apollo_servers_conf.stdout == ""
 
+# test whether this apollo VM has already been added to /etc/nagios4/servers/vda-root-disk.cfg
+- name: "check if apollo instance has already been added to {{ nagios_conf_vda_root_disk }}"
+  shell: "cat {{ nagios_conf_vda_root_disk }} | grep members | grep {{ apollo_short_machine_name }}"
+  register: apollo_servers_vda_conf
+  # There are two ways this can be done as per below SO question
+  # https://stackoverflow.com/questions/50440515/ansible-error-on-shell-command-returning-zero
+  # using "ignore_errors: true"
+  # or as below which I think it's a cleaner way
+  failed_when: apollo_servers_vda_conf.rc != 1 and apollo_servers_vda_conf.rc != 0
+
+- name: Print whether root disk is on /dev/vda
+  debug:
+    msg: "root_on_vda: {{ root_on_vda }}"
+
 # Note: this requires at least one entry to already exist
 - name: if the root disk is on /dev/vda1 append apollo to existing list in nagios vda-root-disk group
   lineinfile:
@@ -38,7 +52,7 @@
     regexp: '^([ \t]*members(.*)$)'
     line: '\1,{{ apollo_full_domain_name }}'
     state: present
-  when: root_on_vda == 'true'
+  when: root_on_vda == true and apollo_servers_vda_conf.stdout == ""
 
 # restart nagios for changes to take effect
 - name: "Restart nagios service"

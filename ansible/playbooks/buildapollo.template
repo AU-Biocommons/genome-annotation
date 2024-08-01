@@ -1,5 +1,5 @@
 [newapollovms]
-APOLLONAME.genome.edu.au target_environment=TESTORPROD apollo_instance_number=APOLLOINSTANCENUMBER apollo_subdomain_name=CUSTOMHOSTNAME apollo_root_disk_device=ROOTDISKDEVICE
+APOLLONAME.genome.edu.au ansible_host=APOLLONAME target_environment=TESTORPROD apollo_instance_number=APOLLOINSTANCENUMBER apollo_subdomain_name=CUSTOMHOSTNAME apollo_root_disk_device=ROOTDISKDEVICE
 
 [changeipvms]
 apollo-deploy.genome.edu.au ansible_user=ubuntu admin_group=sudo

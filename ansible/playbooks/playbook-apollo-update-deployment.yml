@@ -25,9 +25,9 @@
         name: apollo-cleanup-old-deploy
     # the following is needed to update PERL5LIB to match location of Perl libraries in new apollo_version
     - import_role:
-        name: common-tomcat-ubuntu20
+        name: common-tomcat-ubuntu
     - import_role:
-        name: apollo-copy-war-ubuntu20
+        name: apollo-copy-war-ubuntu
     - import_role:
         name: apollo-deploy-war
     # the following will update the postgres password for access from apollo web app (currently assumes latest password)

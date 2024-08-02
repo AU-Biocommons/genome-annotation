@@ -58,11 +58,11 @@
     - import_role:
         name: common-open-jdk
     - import_role:
-        name: common-tomcat-ubuntu20
+        name: common-tomcat-ubuntu
     - import_role:
         name: apollo-add-nfs-mount-to-fstab
     - import_role:
-        name: apollo-copy-war-ubuntu20
+        name: apollo-copy-war-ubuntu
     - import_role:
         name: apollo-create-apollo-data-dir
     - import_role:
@@ -74,7 +74,7 @@
     - import_role:
         name: common-nagios-nrpe
     - import_role:
-        name: prometheus-exporters-ubuntu20
+        name: prometheus-exporters-ubuntu
     - import_role:
         name: prometheus-exporters-set-conf
     - import_role:

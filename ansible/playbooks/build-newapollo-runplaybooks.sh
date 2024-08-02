@@ -71,10 +71,10 @@ echo "Done."
 echo
 
 echo "set up NFS export for apollo VM"
-echo "ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --inventory-file $inventory_file --limit nfsservervms $check_str"
-ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --inventory-file $inventory_file --limit nfsservervms $check_str
+echo "ansible-playbook playbook-apollo-ubuntu-nfs-server.yml --inventory-file $inventory_file --limit nfsservervms $check_str"
+ansible-playbook playbook-apollo-ubuntu-nfs-server.yml --inventory-file $inventory_file --limit nfsservervms $check_str
 if [ $? -ne 0 ] && [ -z "$check_str" ]; then
-  echo >&2 "Error running playbook-apollo-ubuntu20-nfs-server.yml... aborting!"
+  echo >&2 "Error running playbook-apollo-ubuntu-nfs-server.yml... aborting!"
   exit 1
 fi
 echo
@@ -85,14 +85,14 @@ echo "run combined playbook to build apollo"
 # if no admin password provided, ansible will use default from ansible vault
 if [ -z "$admin_password" ]; then
     echo "INFO: using default apollo admin password from ansible vault"
-    echo "ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str"
-    ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str
+    echo "ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str"
+    ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str
 else
-    echo "ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file $inventory_file --limit newapollovms -extra-vars=\"apollo_admin_password=<SECRET>\" $check_str"
-    ansible-playbook playbook-apollo-ubuntu20-combined.yml --inventory-file $inventory_file --limit newapollovms --extra-vars="apollo_admin_password=$admin_password" $check_str
+    echo "ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms -extra-vars=\"apollo_admin_password=<SECRET>\" $check_str"
+    ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms --extra-vars="apollo_admin_password=$admin_password" $check_str
 fi
 if [ $? -ne 0 ] && [ -z "$check_str" ]; then
-  echo >&2 "Error running playbook-apollo-ubuntu20-combined.yml... aborting!"
+  echo >&2 "Error running playbook-apollo-ubuntu-combined.yml... aborting!"
   echo >&2 "Note: a common cause of this is when unattended-upgrades is running on instance"
   echo >&2 "      fix by logging into the VM and killing the unattended-upgrades process with"
   echo >&2 "          sudo kill -KILL \$(pgrep -u root -f unattended-upgrades)"
@@ -110,10 +110,10 @@ if [ "$target_environment" = "test" ]; then
 fi
 
 echo "add apollo instance to monitoring"
-echo "ansible-playbook playbook-apollo-ubuntu20-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str"
-ansible-playbook playbook-apollo-ubuntu20-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str
+echo "ansible-playbook playbook-apollo-ubuntu-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str"
+ansible-playbook playbook-apollo-ubuntu-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str
 if [ $? -ne 0 ] && [ -z "$check_str" ]; then
-  echo >&2 "Error running playbook-apollo-ubuntu20-monitor.yml... aborting!"
+  echo >&2 "Error running playbook-apollo-ubuntu-monitor.yml... aborting!"
   exit 1
 fi
 echo

@@ -84,13 +84,13 @@ case $vcpus in
 esac
 
 if [ "$apollo_number" = "999" ]; then
-    apollo_name="JKL_ubuntu20_test_$(date +%Y%m%d)"
+    apollo_name="JKL_ubuntu22_test_$(date +%Y%m%d)"
 else
     apollo_name="JKL_apollo_${apollo_number}_$(date +%Y%m%d)"
 fi
 
 # the following will output the image ID and name for ONLY the FIRST matching image
-image_details="$(openstack image list | grep 'Pawsey - Ubuntu 20.04' | grep -v -E '(GPU|Bio)' | awk -F '|' '{ print $2, $3; exit }' | xargs)"
+image_details="$(openstack image list | grep 'Pawsey - Ubuntu 22.04' | grep -v -E '(GPU|Bio)' | awk -F '|' '{ print $2, $3; exit }' | xargs)"
 image_id="$(echo $image_details | cut -f 1 -d ' ')"
 image_name="$(echo $image_details | cut -f 2- -d ' ')"
 echo "creating apollo VM as $fname with name $apollo_name using image $image_name"
@@ -98,11 +98,17 @@ echo "creating apollo VM as $fname with name $apollo_name using image $image_nam
 # 578525b1-f1e3-495d-b673-3a3b9cd32b23 | Pawsey - Ubuntu 20.04 - 2021-02
 # 67bab16e-453b-46a8-a262-c0796fa35d85 | Pawsey - Ubuntu 20.04 - 2022-05
 # 435b9e2b-8de0-4d20-9e18-2f7a69c6e889 | Pawsey - Ubuntu 20.04 - 2023-06
+# 6532c039-0bc6-48f0-86a7-3e3b9489f868 | Pawsey - Ubuntu 20.04 - 2024-05
+# 99e4492f-7e6b-4545-8ad8-ee36b31a7db0 | Pawsey - Ubuntu 22.04 - 2024-05
 #
-# note that old Ubuntu 20.04 - 2021-02 image uses /dev/vda
-#      --image 578525b1-f1e3-495d-b673-3a3b9cd32b23 \
-#           new Ubuntu 20.04 - 2022-05 image uses /dev/sda
-#      --image 67bab16e-453b-46a8-a262-c0796fa35d85 \
+# note that original Ubuntu 20.04 - 2021-02 image uses /dev/vda
+#        --image 578525b1-f1e3-495d-b673-3a3b9cd32b23
+#      2022-23 Ubuntu 20.04 - 2022-05 image uses /dev/sda
+#        --image 67bab16e-453b-46a8-a262-c0796fa35d85
+#      2024 Ubuntu 20.04 - 2024-05 image uses /dev/vda
+#        --image 6532c039-0bc6-48f0-86a7-3e3b9489f868
+#      2024 Ubuntu 22.04 - 2024-05 image uses /dev/vda
+#        --image 99e4492f-7e6b-4545-8ad8-ee36b31a7db0
 
 openstack server create \
       --flavor "$flavor" \

@@ -96,9 +96,10 @@ echo "creating VM as $fname with name $vm_name using image $image_name"
 
 # 97c4562f-1087-4f2c-abc6-a7b02fb9f9b9 | Pawsey - Ubuntu 18.04 - 2022-05
 # 67bab16e-453b-46a8-a262-c0796fa35d85 | Pawsey - Ubuntu 20.04 - 2022-05
-# 435b9e2b-8de0-4d20-9e18-2f7a69c6e889 | Pawsey - Ubuntu 20.04 - 2023-06
 # 9c37814e-1e77-4b47-a14e-4368420408de | Pawsey - Ubuntu 22.04 - 2022-05
+# 435b9e2b-8de0-4d20-9e18-2f7a69c6e889 | Pawsey - Ubuntu 20.04 - 2023-06
 # a6dede08-16b8-4c47-b348-2d0cfaa9a09a | Pawsey - Ubuntu 22.04 - 2023-06
+# 99e4492f-7e6b-4545-8ad8-ee36b31a7db0 | Pawsey - Ubuntu 22.04 - 2024-05
 
 openstack server create \
       --flavor "$flavor" \

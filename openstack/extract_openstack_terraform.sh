@@ -4,6 +4,7 @@
 #source apollo-openrc.sh
 
 # define keypair
+echo >&2 "define keypair..."
 
 #cat <<EOF >> "keylist.tf"
 cat <<EOF
@@ -17,10 +18,12 @@ EOF
 ### Extract and Generate Terraform config for security groups
 
 # Get list of all security groups
+echo >&2 "define security groups..."
 security_groups=$(openstack security group list -f json)
 
 # Loop through each security group
 echo "$security_groups" | jq -c '.[]' | while read -r sg; do
+  echo >&2 "processing security group $sg ..."
   sg_id=$(echo "$sg" | jq -r '.ID')
   sg_name=$(echo "$sg" | jq -r '.Name')
   sg_description=$(echo "$sg" | jq -r '.Description')
@@ -35,6 +38,7 @@ resource "openstack_networking_secgroup_v2" "${sg_name}" {
 EOF
 
   # Get security group rules for this security group
+  echo >&2 "define security group rules..."
   sg_rules=$(openstack security group show "$sg_id" -f json | jq -c '.rules')
 
   # Add rules to the security group config
@@ -82,11 +86,12 @@ done # sg
 ### Extract and Generate Terraform config for servers
 
 # Get list of servers
+echo >&2 "define servers (including attached non-root volumes)..."
 servers=$(openstack server list -f json)
 
 # Loop through servers and generate Terraform config
 echo "$servers" | jq -c '.[]' | while read -r server; do
-  echo "processing $server ..."
+  echo >&2 "processing server $server ..."
   name=$(echo "$server" | jq -r '.Name')
   id=$(echo "$server" | jq -r '.ID')
   server_details=$(openstack server show "$id" -f json)
@@ -114,19 +119,17 @@ resource "openstack_compute_instance_v2" "${name}" {
 }
 
 EOF
-done # server
 
-### Extract and Generate Terraform config for volumes
-
-# Loop through servers and generate Terraform config
-for vol in $volumes; do
-  vdet=$(openstack volume show "$vol" -f json)
-  vdevice=$(echo $vdet | jq -r '.attachments[].device') # assume no multiattach
-  vsize=$(echo $vdet | jq -r '.size')
-  vname=$(echo $vdet | jq -r '.name')
-  vzone=$(echo $vdet | jq -r '.availability_zone')
-  # only process non-root device volumes
-  if [[ "$vdevice" != "/dev/sda" && "$vdevice" != "/dev/vda" ]]; then
+  # Extract and Generate Terraform config for non-root volumes attached to this server
+  for vol in $volumes; do
+    vdet=$(openstack volume show "$vol" -f json)
+    vdevice=$(echo $vdet | jq -r '.attachments[].device') # assume no multiattach
+    vsize=$(echo $vdet | jq -r '.size')
+    vname=$(echo $vdet | jq -r '.name')
+    vzone=$(echo $vdet | jq -r '.availability_zone')
+    # only process non-root device volumes
+    if [[ "$vdevice" != "/dev/sda" && "$vdevice" != "/dev/vda" ]]; then
+      echo >&2 "defining non-root volume $vol ..."
 
 cat <<EOF
 resource "openstack_blockstorage_volume_v2" "$vname" {
@@ -143,7 +146,8 @@ resource "openstack_compute_volume_attach_v2" "${vname}-name" {
 }
 
 EOF
-  fi # non-root device volume
-done # vol
+    fi # non-root device volume
+  done # vol
+done # server
 
-
+echo >&2 "Done!"

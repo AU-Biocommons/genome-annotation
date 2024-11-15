@@ -1,0 +1,17 @@
+- hosts: all
+  remote_user: ubuntu
+  become: yes 
+  become_method: sudo
+  connection: "ssh"
+
+  vars:
+    docker_install_compose_plugin: true
+    docker_compose_package: docker-compose-plugin
+    docker_compose_package_state: present
+    docker_users:
+      - ubuntu
+
+  tasks:
+    - import_role:
+        name: geerlingguy.docker
+

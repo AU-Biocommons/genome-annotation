@@ -10,3 +10,7 @@
 
 # install postgresql install role
 - src: geerlingguy.postgresql
+
+# install docker/docker-compose install role
+- src: geerlingguy.docker
+

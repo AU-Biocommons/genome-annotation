@@ -12,6 +12,13 @@
       - ubuntu
 
   tasks:
+    - name: Ensure docker does not exist in apt sources - prevents 'Conflicting values' error for keys
+      file: 
+        path: "{{ item }}"
+        state: absent
+        force: yes
+      with_fileglob:
+        - /etc/apt/sources.list.d/docker*
     - import_role:
         name: geerlingguy.docker
 

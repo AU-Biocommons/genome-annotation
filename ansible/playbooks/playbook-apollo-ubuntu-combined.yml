@@ -82,7 +82,7 @@
     - import_role:
         name: apollo-restart-tomcat
     - import_role:
-        name: apollo-restart-nginx
+        name: common-restart-nginx
     - import_role:
         name: apollo-admin-users-groups
     - import_role:

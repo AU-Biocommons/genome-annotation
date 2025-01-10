@@ -1,0 +1,28 @@
+---
+- name: "import vars"
+  include_vars:
+    file: users.yml
+
+- name: "adding backup_user to tomcat group"
+  user:
+    name: "backup_user"
+    groups: "tomcat" 
+    append: yes
+
+- name: "adding admin_users to apollo_admin (allows login) and tomcat groups"
+  user:
+    name: "{{ item }}"
+    groups: 
+    - "apollo_admin" 
+    - "tomcat" 
+    append: yes
+  with_items: "{{ admin_users }}"
+
+- name: "adding sudo_users to OS-specific sudo group"
+  user:
+    name: "{{ item }}"
+    groups:
+    - "{{ admin_group }}"
+    append: yes
+  with_items: "{{ sudo_users }}"
+

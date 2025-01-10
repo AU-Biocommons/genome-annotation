@@ -1,0 +1,12 @@
+---
+- name: "Include apollo dependencies variables"
+  include_vars:
+    file: "apollo_deps.yml"
+
+- name: "install apollo dependencies"
+  apt:
+    pkg: "{{ apollo_deps }}"
+    state: present
+    update_cache: yes
+
+

@@ -1,0 +1,25 @@
+---
+apollo_deps:
+    - ssl-cert
+    - lsb-release
+    - curl
+    - wget
+    - netcat
+    - git
+    - zip
+    - unzip
+    - build-essential
+    - python3-pip
+    - libpq-dev
+    - gnupg2
+    - xmlstarlet
+    - libpng-dev
+    - zlib1g-dev
+    - libexpat1-dev
+    - ant
+    - atop
+    - tree
+    - mlocate
+    - net-tools
+    - samtools
+

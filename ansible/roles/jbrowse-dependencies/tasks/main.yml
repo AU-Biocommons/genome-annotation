@@ -1,12 +1,11 @@
 ---
-- name: "Include apollo dependencies variables"
+- name: "Include JBrowse dependencies variables"
   include_vars:
-    file: "apollo_deps.yml"
+    file: "jbrowse_deps.yml"
 
-- name: "install apollo dependencies"
+- name: "install JBrowse dependencies"
   apt:
-    pkg: "{{ apollo_deps }}"
+    pkg: "{{ jbrowse_deps }}"
     state: present
     update_cache: yes
-
 

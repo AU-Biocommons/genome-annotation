@@ -5,19 +5,19 @@
     prompt: |
       ======================
 
-        The Apollo instance
+        The JBrowse instance
           {{ apollo_short_machine_name }} / {{ apollo_subdomain_name }} .genome.edu.au
         has been created.
         The next steps are
         1. ssh into {{ apollo_short_machine_name }} and set the root password
            sudo passwd root
-        2. verify apollo is working from browser
-           https:///{{ apollo_full_domain_name }}/apollo
-           https://{{ apollo_custom_full_domain_name }}/apollo
-        3. run playbook to add apollo instance to monitoring
-           ansible-playbook playbook-apollo-ubuntu20-monitor.yml --limit monitorservervms
+        2. verify JBrowse is working from browser
+           https:///{{ apollo_full_domain_name }}
+           https://{{ apollo_custom_full_domain_name }}
+        3. run playbook to add JBrowse instance to monitoring
+           ansible-playbook playbook-jbrowse-ubuntu-monitor.yml --limit monitorservervms
         4. run playbook to add apollo instance to list of apollo's to backup
-           ansible-playbook playbook-apollo-add-to-backup-server.yml --limit backupservervms
+           ansible-playbook playbook-jbrowse-add-to-backup-server.yml --limit backupservervms
 
       ======================
 

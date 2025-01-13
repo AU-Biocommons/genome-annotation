@@ -1,5 +1,28 @@
 ---
-- name: "Do something here"
+# Install Node.js 12 using NVM on Ubuntu as per https://nodejs.org/en/download#debian-and-ubuntu-based-linux-distributions
+
+- name: Download and install NVM
+  shell: |
+    curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  args:
+    executable: /bin/bash
+
+- name: Load NVM and install Node.js 12
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \ . "$NVM_DIR/nvm.sh"
+    nvm install 12
+  args:
+    executable: /bin/bash
+
+- name: Verify Node.js installation
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \ . "$NVM_DIR/nvm.sh"
+    node -v
+  register: node_version
+
+- name: Display installed Node.js version
   debug:
-    msg: "do something"
+    msg: "Installed Node.js version is {{ node_version.stdout }}"
 

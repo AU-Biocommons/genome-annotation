@@ -3,18 +3,18 @@
   include_vars:
     file: users.yml
 
-- name: "adding backup_user to tomcat group"
+- name: "adding backup_user to www-data group"
   user:
     name: "backup_user"
-    groups: "tomcat" 
+    groups: "www-data" 
     append: yes
 
-- name: "adding admin_users to apollo_admin (allows login) and tomcat groups"
+- name: "adding admin_users to apollo_admin (allows login) and www-data groups"
   user:
     name: "{{ item }}"
     groups: 
     - "apollo_admin" 
-    - "tomcat" 
+    - "www-data" 
     append: yes
   with_items: "{{ admin_users }}"
 

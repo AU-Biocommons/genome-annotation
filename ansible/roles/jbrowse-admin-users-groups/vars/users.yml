@@ -1,10 +1,9 @@
 
-# add to apollo_admin and tomcat groups
+# add to apollo_admin and www-data groups
 admin_users:
   - "j.lee"
   - "n.rhodes"
   - "m.thang"
-#  - "s.williams"
 
 # sudo rights on apollo machines ONLY
 sudo_users:

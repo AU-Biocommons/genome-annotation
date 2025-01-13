@@ -95,7 +95,7 @@
     - import_role:
         name: apollo-certbot-add-domain
     - import_role:
-        name: common-nginx-set-conf
+        name: apollo-nginx-set-conf
     - import_role:
         name: common-nginx-add-domain
     # add a delay here to ensure that tomcat (on restart) has finished

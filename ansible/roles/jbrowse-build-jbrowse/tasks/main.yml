@@ -1,0 +1,29 @@
+---
+# install JBrowse and configure to point to the volvox sample data (TODO: fix to be able to point to user's data)
+- name: Clone JBrowse repository
+  git:
+    repo: "https://github.com/gmod/jbrowse.git"
+    dest: "/opt/jbrowse"
+    version: master
+
+- name: Change ownership of /opt/jbrowse to www-data group
+  file:
+    path: "/opt/jbrowse"
+    owner: "root"
+    group: "www-data"
+    mode: "0775"
+    recurse: yes
+
+- name: Set dataRoot in jbrowse.conf
+  lineinfile:
+    path: "/opt/jbrowse/jbrowse.conf"
+    line: "dataRoot = sample_data/json/volvox"
+    create: yes
+
+- name: Run setup.sh to build JBrowse
+  shell: |
+    cd /opt/jbrowse
+    ./setup.sh
+  args:
+    executable: /bin/bash
+

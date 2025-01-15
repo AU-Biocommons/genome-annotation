@@ -63,6 +63,7 @@
     - "web-apollo.cfg"
     - "web-apollo-training.cfg"
     - "web-server.cfg"
+    - "jbrowse.cfg"
 
 - name: "copy host definitions from local files dir {{ role_path}}/files/ to {{ nagios_servers_conf_path }}"
   copy:

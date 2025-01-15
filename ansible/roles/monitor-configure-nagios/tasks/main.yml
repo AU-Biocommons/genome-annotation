@@ -58,7 +58,8 @@
   loop:
     - "linux.cfg"
     - "infrastructure.cfg"
-    - "large-disk.cfg"
+    - "large-disk-sdb.cfg"
+    - "large-disk-vdc.cfg"
     - "vda-root-disk.cfg"
     - "web-apollo.cfg"
     - "web-apollo-training.cfg"

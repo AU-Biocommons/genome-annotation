@@ -34,5 +34,7 @@
     - import_role:
         name: apollo-docker-postgres
     - import_role:
+        name: apollo-set-tools-path
+    - import_role:
         name: apollo-restart-tomcat
 

@@ -1,5 +1,5 @@
 ---
-apollo_copy_war_name: "Apollo-{{apollo_build_version}}-deploy-Ubuntu20.tar.gz"
+apollo_copy_war_name: "Apollo-{{apollo_build_version}}-deploy-Ubuntu.tar.gz"
 apollo_copy_war_src_path: "/home/data/apollo_files/deploy/{{ apollo_copy_war_name }}"
 apollo_copy_war_dest_path: "/opt/{{apollo_copy_war_name}}"
 apollo_copy_war_dest_unpack: "/opt/"

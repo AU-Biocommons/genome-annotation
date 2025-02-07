@@ -14,25 +14,28 @@ apollo-007
 apollo-008
 apollo-009
 apollo-010
-apollo-012
+#apollo-012 # jbrowse only
 apollo-013
 apollo-014
 apollo-015
+#apollo-016 # deleted
 apollo-017
 apollo-018
 apollo-019
 apollo-020
-apollo-021
-apollo-022
+#apollo-021 # custom methylation plugin
+#apollo-022 # deleted
 apollo-023
 apollo-024
-apollo-025
-apollo-026
+#apollo-025 # deleted
+#apollo-026 # deleted
 apollo-027
+apollo-028
 apollo-029
 apollo-030
 apollo-031
-apollo-032
+#apollo-032 # deleted
 apollo-033
 apollo-034
-
+apollo-035
+apollo-036

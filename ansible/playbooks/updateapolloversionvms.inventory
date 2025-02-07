@@ -10,8 +10,8 @@ apollo-003
 apollo-004
 apollo-005
 apollo-006
-apollo-007
-apollo-008
+apollo-007 postgresql_container_name="postgres10_5432_network"
+apollo-008 postgresql_container_name="postgres10_5432_network"
 apollo-009
 apollo-010
 #apollo-012 # jbrowse only
@@ -23,7 +23,7 @@ apollo-017
 apollo-018
 apollo-019
 apollo-020
-#apollo-021 # custom methylation plugin
+apollo-021 # NOTE: custom methylation plugin
 #apollo-022 # deleted
 apollo-023
 apollo-024
@@ -37,5 +37,5 @@ apollo-031
 #apollo-032 # deleted
 apollo-033
 apollo-034
-#apollo-035 # blast + custom login
+apollo-035 # NOTE: custom login + blast search
 apollo-036

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IFS='' read -d '' -r usage_str <<EOF
-Usage: $(basename $0) [ -h ] [ -d ] [ -p admin_password ] [-a apollovms_hosts_file] [-r root_disk_device] apollo_number custom_hostname private_ip_address
+Usage: $(basename $0) [ -h ] [ -d ] [ -p admin_password ] [-a apollovms_hosts_file] [-r root_disk_device] [-u ubuntu_version] apollo_number custom_hostname private_ip_address
 Where:
     -h provides this handy help
     -d specifies dry-run - don't build apollo or update hosts file
@@ -12,6 +12,7 @@ Where:
         primarily used for running system updates
         the new apollo VM will be added to this group in the hosts file
     -r root_disk_device = /dev/vda1 (default) or /dev/sda1
+    -u ubuntu_version = default is 20.04, if not specify, eg 22.04
     apollo_number = 001-998 for target_environment=prod, or 999 for target_environment=test
     custom_hostname = alphanumeric string with '-' allowed within string
     private_ip_address = 192.168.X.Y
@@ -29,11 +30,12 @@ secret_password_str=""
 apollovms_hosts_file="hosts"
 apollo_number="000"
 root_disk_device=""
+ubuntu_version="20.04"
 custom_hostname=""
 ip_address=""
 target_environment="prod"
 
-while getopts hdp:a:r: opt; do
+while getopts hdp:a:r:u: opt; do
     case "$opt" in
         h) # help
             echo >&2 "$usage_str"
@@ -51,6 +53,9 @@ while getopts hdp:a:r: opt; do
             ;;
         r) # non-default (/dev/vda1) root disk
             root_disk_device="-r $OPTARG"
+            ;;
+        u) # non-default (20.04) ubuntu version
+            ubuntu_version="-u $OPTARG"
             ;;
         \?) # unknown flag
             echo >&2 "$usage_str"
@@ -100,12 +105,12 @@ fi
 shift
 
 inventory_file="buildapollo.${apollo_number}.inventory"
-echo >&2 "build-newapollo-inventory.sh $root_disk_device $apollo_number $custom_hostname $ip_address"
-build-newapollo-inventory.sh $root_disk_device $apollo_number $custom_hostname $ip_address
+echo >&2 "build-newapollo-inventory.sh $root_disk_device $ubuntu_version $apollo_number $custom_hostname $ip_address"
+build-newapollo-inventory.sh $root_disk_device $ubuntu_version $apollo_number $custom_hostname $ip_address
 if [ $? -ne 0 ]; then
     echo >&2 "Error creating inventory file ($inventory_file) for Apollo build... aborting"
     echo >&2 "Command run was:"
-    echo >&2 "    build-newapollo-inventory.sh $root_disk_device $apollo_number $custom_hostname $ip_address"
+    echo >&2 "    build-newapollo-inventory.sh $root_disk_device $ubuntu_version $apollo_number $custom_hostname $ip_address"
     exit 1
 fi
 

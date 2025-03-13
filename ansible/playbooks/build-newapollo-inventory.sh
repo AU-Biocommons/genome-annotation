@@ -1,13 +1,14 @@
 #!/bin/bash
 
 IFS='' read -d '' -r usage_str <<EOF
-Usage: $(basename $0) [ -t template_file ] [ -r root_disk_device ] apollo_number custom_hostname private_ip_address
+Usage: $(basename $0) [ -t template_file ] [ -r root_disk_device ] [-u ubuntu_version ] apollo_number custom_hostname private_ip_address
 Where:
     template_file = an existing inventory template file (default: buildapollo.template)
     apollo_number = 001-998 for target_environment=prod, or 999 for target_environment=test
     custom_hostname = alphanumeric string with '-' allowed within string
     private_ip_address = 192.168.X.Y
     root_disk_device = /dev/vda1 (default) or /dev/sda1
+    ubuntu_version = default is 20.04 otherwise specify, eg 22.04
 Output:
     buildapollo.XXX.inventory: resulting ansible inventory file for building apollo instance
                                (where XXX=apollo_number)
@@ -18,6 +19,7 @@ apollo_instance_number="0"
 custom_hostname=""
 ip_address=""
 root_disk_device="/dev/vda1"
+ubuntu_version="20.04"
 target_environment="prod"
 
 if [ $# -gt 1 ] && [ "$1" = "-t" ]; then
@@ -33,6 +35,17 @@ if [ $# -gt 1 ] && [ "$1" = "-r" ]; then
       shift
     else
       echo >&2 "invalid root disk device: $1"
+      exit 1
+    fi
+fi
+
+if [ $# -gt 1 ] && [ "$1" = "-u" ]; then
+    shift
+    if [[ $1 =~ ^[0-9][0-9].[0-9][0-9]$ ]]; then
+      ubuntu_version="$1"
+      shift
+    else
+      echo >&2 "invalid ubuntu version: $1"
       exit 1
     fi
 fi
@@ -88,7 +101,7 @@ inventory_file="buildapollo.${apollo_full_number}.inventory"
 apollo_name="apollo-${apollo_full_number}"
 
 
-sed "s/APOLLOINSTANCENUMBER/${apollo_instance_number}/g; s/APOLLONAME/${apollo_name}/g; s/CUSTOMHOSTNAME/${custom_hostname}/g; s/PRIVATEIP/${ip_address}/g; s#ROOTDISKDEVICE#${root_disk_device}#g; s/TESTORPROD/${target_environment}/g" $template_file > $inventory_file
+sed "s/APOLLOINSTANCENUMBER/${apollo_instance_number}/g; s/APOLLONAME/${apollo_name}/g; s/CUSTOMHOSTNAME/${custom_hostname}/g; s/PRIVATEIP/${ip_address}/g; s#ROOTDISKDEVICE#${root_disk_device}#g; s/UBUNTUVERSION/${ubuntu_version}/g; s/TESTORPROD/${target_environment}/g" $template_file > $inventory_file
 
 echo >&2 "ansible inventory file generated for apollo build: ${inventory_file}"
 

@@ -104,3 +104,16 @@
     mode: "02775"
     recurse: yes
   when: "stat_result_sourcedata.stat.exists == false"
+
+- name: "Set tomcat GID based on Ubuntu version"
+  set_fact:
+    tomcat_gid: "{{ '997' if ubuntu_version == '20.04' else '998' }}"
+
+- name: "Set group ownership of {{ apollo_data_dir_path }} with correct tomcat GID (for Ubuntu 22.04)"
+  command: chgrp -R "{{ tomcat_gid }}" "{{ apollo_data_dir_path }}"
+  when: ubuntu_version == '22.04'
+
+- name: "Set group ownership of {{ sourcedata_dir_path }} with correct tomcat GID (for Ubuntu 22.04)"
+  command: chgrp -R "{{ tomcat_gid }}" "{{ sourcedata_dir_path }}"
+  when: ubuntu_version == '22.04'
+

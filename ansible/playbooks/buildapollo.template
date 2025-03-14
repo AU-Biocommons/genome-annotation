@@ -15,7 +15,8 @@ private_ip=PRIVATEIP
 apollo-data.genome.edu.au
 
 [nfsservervms:vars]
-apollo_instance_number=APOLLOINSTANCENUMBER ubuntu_version=UBUNTUVERSION
+apollo_instance_number=APOLLOINSTANCENUMBER
+ubuntu_version=UBUNTUVERSION
 
 [monitorservervms]
 apollo-monitor.genome.edu.au

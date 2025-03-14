@@ -6,6 +6,7 @@
     home_data_hostname_dir_path: "{{create_nfs_export_main_dir_path}}"
     apollo_data_dir_path: "{{create_nfs_home_data_dir_path}}/{{create_nfs_apollo_data_dir_path}}"
     sourcedata_dir_path: "{{create_nfs_home_data_dir_path}}/{{create_nfs_sourcedata_dir_path}}"
+    ubuntu_version: "{{ ubuntu_version | string }}" # otherwise 22.04 (for eg) is interpreted as a float
 
 - name: "debug facts - host_machine_simple_name - etc_exports_file_path"
   debug:
@@ -105,15 +106,23 @@
     recurse: yes
   when: "stat_result_sourcedata.stat.exists == false"
 
-- name: "Set tomcat GID based on Ubuntu version"
+- name: "Debug ubuntu_version value"
+  debug:
+    msg: "ubuntu_version is {{ ubuntu_version }} (type: {{ ubuntu_version | type_debug }})"
+
+- name: "Set tomcat GID based on Ubuntu version {{ ubuntu_version }}"
   set_fact:
-    tomcat_gid: "{{ '997' if ubuntu_version == '20.04' else '998' }}"
+    tomcat_gid: "{{ '998' if ubuntu_version == '22.04' else '997' }}"
+
+- name: "debug fact tomcat_gid"
+  debug:
+    msg: "tomcat_gid = {{ tomcat_gid }} for ubuntu_version = {{ ubuntu_version }}"
 
 - name: "Set group ownership of {{ apollo_data_dir_path }} with correct tomcat GID (for Ubuntu 22.04)"
   command: chgrp -R "{{ tomcat_gid }}" "{{ apollo_data_dir_path }}"
-  when: ubuntu_version == '22.04'
+  when: tomcat_gid != '997'
 
 - name: "Set group ownership of {{ sourcedata_dir_path }} with correct tomcat GID (for Ubuntu 22.04)"
   command: chgrp -R "{{ tomcat_gid }}" "{{ sourcedata_dir_path }}"
-  when: ubuntu_version == '22.04'
+  when: tomcat_gid != '997'
 

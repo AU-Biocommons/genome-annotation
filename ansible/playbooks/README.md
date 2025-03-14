@@ -395,7 +395,7 @@ To install and configure an Apollo VM or VMs the following playbooks should be r
         [newapollovms:vars]
         apollo_admin_password="<APOLLO-ADMIN-USER_PASSWORD>"
         ```
-    8. Optionally define `apollo_version=<VERSION>` in the inventory file to specify a different build (the default is `2.8.0`).
+    8. Optionally define `apollo_version=<VERSION>` in the inventory file to specify a different build (the default is `2.7.0`).
 
    Please see the following example inventory file configuration:
     ```

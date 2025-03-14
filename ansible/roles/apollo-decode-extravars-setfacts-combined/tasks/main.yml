@@ -77,7 +77,7 @@
     apollo_tomcat_memory_opts: "{{ '-Xms512m -Xmx2g' if target_environment == 'test' else '-Xms8g -Xmx12g' }}"
 
 # define the apollo build version from apollo_version=<VERSION> in inventory file or --extra-vars="...", otherwise use the default as the original Apollo build
-- name: "set apollo_build_version to supplied apollo_version value (eg 2.6.5) or default (2.8.0)"
+- name: "set apollo_build_version to supplied apollo_version value (eg 2.6.5) or default (2.7.0)"
   set_fact:
-    apollo_build_version: "{{ '{{apollo_version}}' if apollo_version is defined else '2.8.0' }}"
+    apollo_build_version: "{{ '{{apollo_version}}' if apollo_version is defined else '2.7.0' }}"
 

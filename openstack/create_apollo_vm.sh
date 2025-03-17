@@ -90,7 +90,7 @@ else
 fi
 
 # the following will output the image ID and name for ONLY the FIRST matching image
-image_details="$(openstack image list | grep 'Pawsey - Ubuntu 22.04' | grep -v -E '(GPU|Bio)' | awk -F '|' '{ print $2, $3; exit }' | xargs)"
+image_details="$(openstack image list | grep 'Pawsey - Ubuntu 20.04' | grep -v -E '(GPU|Bio)' | awk -F '|' '{ print $2, $3; exit }' | xargs)"
 image_id="$(echo $image_details | cut -f 1 -d ' ')"
 image_name="$(echo $image_details | cut -f 2- -d ' ')"
 echo "creating apollo VM as $fname with name $apollo_name using image $image_name"

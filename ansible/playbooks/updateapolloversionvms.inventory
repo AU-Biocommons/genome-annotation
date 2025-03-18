@@ -18,13 +18,13 @@ apollo-010
 apollo-013
 apollo-014
 apollo-015
-#apollo-016 # deleted
+apollo-016 apollo_version=2.8.0
 apollo-017
 apollo-018
 apollo-019
 apollo-020
 apollo-021 # NOTE: custom methylation plugin
-#apollo-022 # deleted
+apollo-022 apollo_version=2.8.0
 apollo-023
 apollo-024
 #apollo-025 # deleted

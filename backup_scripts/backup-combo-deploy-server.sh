@@ -9,10 +9,10 @@ LOGFILE_DIR="/mnt/backup00/logs"
 LOGFILE=$LOGFILE_DIR"/"$NAME".log"
 ARCHIVE_DIR=$BACKUP_DIR"_archive"
 if [ ! -d $BACKUP_DIR ]; then
-	mkdir $BACKUP_DIR;
+    mkdir $BACKUP_DIR;
 fi
 if [ ! -d $ARCHIVE_DIR ]; then
-        mkdir $ARCHIVE_DIR;
+    mkdir $ARCHIVE_DIR;
 fi
 
 # remote backup - when apollo-deploy was separate
@@ -22,9 +22,9 @@ fi
 sudo /usr/bin/rsync -e ssh -avr --delete --safe-links --numeric-ids  /home/ $BACKUP_DIR --log-file=$LOGFILE
 sudo /usr/bin/rsync -e ssh -avr --delete --safe-links --numeric-ids  /etc $BACKUP_DIR --log-file=$LOGFILE
 if [ $DAY_OF_WEEK == $ARCHIVE_DAY ]; then
-   echo "Archiving data ..."
-   tar czf $ARCHIVE_DIR/$NAME"_"$DAY".tgz" $BACKUP_DIR
-   echo "completed"
+    echo "Archiving data ..."
+    tar czf $ARCHIVE_DIR/$NAME"_"$DAY".tgz" $BACKUP_DIR
+    echo "completed"
 fi
 
 # delete archive files older than 30 days

@@ -1,0 +1,22 @@
+# +---------------- minute (0 - 59)
+# |  +------------- hour (0 - 23)
+# |  |  +---------- day of month (1 - 31)
+# |  |  |  +------- month (1 - 12)
+# |  |  |  |  +---- day of week (0 - 6) (Sunday=0 or 7)
+# |  |  |  |  |
+
+# 30 22  *  *  * /mnt/backup00/scripts/backup-deploy-server.sh # combined with backup server
+# 00 23  *  *  * /mnt/backup00/scripts/backup-backup-server.sh # retired
+
+  0 22  *  *  * /mnt/backup00/scripts/backup-monitor-server.sh
+ 15 22  *  *  * /mnt/backup00/scripts/backup-file-server.sh
+ 30 22  *  *  * /mnt/backup00/scripts/backup-combo-deploy-server.sh
+ 00 23  *  *  * /mnt/backup00/scripts/backup-django-portal.sh
+ 15 23  *  *  * /mnt/backup00/scripts/backup-wheat-dawn-apollo.sh
+ 30 23  *  *  * /mnt/backup00/scripts/backup-build-apollo.sh
+  0 0   *  *  * /mnt/backup00/scripts/backup-apollos.sh
+  0 2   *  *  * /mnt/backup00/scripts/swift-backup-delete-old-SQL.sh
+ 15 2   *  *  * /mnt/backup00/scripts/swift-backup-delete-old-data.sh
+ 30 2   *  *  * /mnt/backup00/scripts/swift-backup-apollo-SQL.sh
+ 00 3   *  *  * /mnt/backup00/scripts/swift-backup-apollo-data.sh
+

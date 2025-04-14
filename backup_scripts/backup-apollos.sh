@@ -26,10 +26,14 @@ if [ ! -d $ARCHIVE_DIR ]; then
     mkdir $ARCHIVE_DIR;
 fi
 
-echo "rsyncing data ..."
-#/usr/bin/rsync -e ssh -avrL --numeric-ids --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home/ $BACKUP_DIR --log-file=$LOGFILE
-/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --rsync-path="sudo rsync" --exclude-from=$EXCLUSION_LIST backup_user@$REMOTE_HOST:/home/data/apollo_data $BACKUP_DIR --log-file=$LOGFILE
-echo "completed"
+# JL 14/4/2025: don't backup apollo_data from NFS server:
+# - 1. we're not saving everything, so hard to rebuild from this backup anyway
+# - 2. duplication of large data that we are storing and needs to be transferred (out of Pawsey)
+# - 3. backups of apollo_data and sourcedata should be for archived apollos only and on a case-by-case basis
+#echo "rsyncing apollo_data ..."
+##/usr/bin/rsync -e ssh -avrL --numeric-ids --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home/ $BACKUP_DIR --log-file=$LOGFILE
+#/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --rsync-path="sudo rsync" --exclude-from=$EXCLUSION_LIST backup_user@$REMOTE_HOST:/home/data/apollo_data $BACKUP_DIR --log-file=$LOGFILE
+#echo "completed"
 
 echo "rsyncing home directories ..."
 /usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --rsync-path="sudo rsync" --exclude 'home/data' backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
@@ -54,8 +58,10 @@ find $BACKUP_DIR -type f -name $REMOTE_HOST"*.sql" -mtime +30 -exec rm {} \;
 
 echo $REMOTE_HOST, $INSTANCE_NUM, $DAY, $DAY_NUM_OF_WEEK
 if [ $INSTANCE_NUM == $DAY_NUM_OF_WEEK ]; then
-    echo "Archiving data for "$REMOTE_HOST
-    tar czf $ARCHIVE_DIR/$REMOTE_HOST"_"$DAY".tgz" $BACKUP_DIR/apollo_data
+    #echo "Archiving apollo_data for "$REMOTE_HOST
+    #tar czf $ARCHIVE_DIR/$REMOTE_HOST"_"$DAY".tgz" $BACKUP_DIR/apollo_data
+    echo "Archiving backups for "$REMOTE_HOST
+    tar czf $ARCHIVE_DIR/$NAME"_"$DAY".tgz" $BACKUP_DIR
     echo "completed"
 fi
 

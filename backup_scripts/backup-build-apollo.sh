@@ -8,10 +8,12 @@ REMOTE_HOST="apollo-011"
 ARCHIVE_DAY="Monday"
 DAY=$(date +"%Y%m%d")
 DAY_OF_WEEK=$(date +%A)
-BACKUP_DIR="/mnt/backup00/$NAME"
-LOGFILE_DIR="/mnt/backup00/logs"
-LOGFILE=$LOGFILE_DIR"/"$NAME".log"
-ARCHIVE_DIR=$BACKUP_DIR"_archive"
+
+BACKUP_VOL="/mnt/backup00/pawsey"
+BACKUP_DIR="${BACKUP_VOL}/${NAME}"
+LOGFILE_DIR="${BACKUP_VOL}/logs"
+LOGFILE="${LOGFILE_DIR}/${NAME}.log"
+ARCHIVE_DIR="${BACKUP_DIR}_archive"
 
 if [ ! -d $BACKUP_DIR ]; then
     mkdir $BACKUP_DIR;
@@ -27,7 +29,7 @@ echo "rsyncing build data ..."
 echo "completed"
 
 echo "rsyncing home directories ..."
-/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --rsync-path="sudo rsync" --exclude 'home/data' backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
+/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --delete-excluded --rsync-path="sudo rsync" --exclude 'home/data' backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
 echo "completed"
 
 echo "rsyncing web page and config directories ..."

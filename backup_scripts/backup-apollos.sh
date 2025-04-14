@@ -5,15 +5,17 @@ LIST_OF_INSTANCES="/mnt/backup00/list_of_apollo_instances.txt"
 EXCLUSION_LIST="/mnt/backup00/apollo_data_exclude_list.txt"
 
 while read REMOTE_HOST; do
-echo $REMOTE_HOST
+NAME="$REMOTE_HOST"
 tmp=${REMOTE_HOST:7:3}
 INSTANCE_NUM=$((10#$tmp%7))
 DAY=$(date +"%Y%m%d")
 DAY_NUM_OF_WEEK=$(date +%w)
-BACKUP_DIR="/mnt/backup00/$REMOTE_HOST"
-ARCHIVE_DIR=$BACKUP_DIR"_archive"
-LOGFILE_DIR="/mnt/backup00/logs"
-LOGFILE=$LOGFILE_DIR"/"$REMOTE_HOST".log"
+
+BACKUP_VOL="/mnt/backup00/pawsey"
+BACKUP_DIR="${BACKUP_VOL}/${NAME}"
+LOGFILE_DIR="${BACKUP_VOL}/logs"
+LOGFILE="${LOGFILE_DIR}/${NAME}.log"
+ARCHIVE_DIR="${BACKUP_DIR}_archive"
 
 echo '#'$INSTANCE_NUM, 'REMOTE_HOST='$REMOTE_HOST
 echo 'Day:'$DAY, 'Day_num:'$DAY_NUM_OF_WEEK
@@ -36,7 +38,7 @@ fi
 #echo "completed"
 
 echo "rsyncing home directories ..."
-/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --rsync-path="sudo rsync" --exclude 'home/data' backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
+/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --rsync-path="sudo rsync" --exclude 'home/data' --exclude='*/.cache' --exclude='*/.local' --delete-excluded backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
 echo "completed"
 
 echo "rsyncing web page and config directories ..."

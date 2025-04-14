@@ -5,10 +5,12 @@ ARCHIVE_DAY="Tuesday"
 REMOTE_HOST="apollo-portal"
 DAY=$(date +"%Y%m%d")
 DAY_OF_WEEK=$(date +%A)
-BACKUP_DIR="/mnt/backup00/$NAME"
-LOGFILE_DIR="/mnt/backup00/logs"
-LOGFILE=$LOGFILE_DIR"/"$NAME".log"
-ARCHIVE_DIR=$BACKUP_DIR"_archive"
+
+BACKUP_VOL="/mnt/backup00/pawsey"
+BACKUP_DIR="${BACKUP_VOL}/${NAME}"
+LOGFILE_DIR="${BACKUP_VOL}/logs"
+LOGFILE="${LOGFILE_DIR}/${NAME}.log"
+ARCHIVE_DIR="${BACKUP_DIR}_archive"
 
 if [ ! -d $BACKUP_DIR ]; then
     mkdir $BACKUP_DIR;
@@ -20,7 +22,8 @@ fi
 WEBSITE_DIR="/srv/sites/apollo_portal/app/apollo_portal"
 
 echo "rsyncing ubuntu home directory excluding django deployment ..."
-/usr/bin/rsync -e ssh -avrL --delete --numeric-ids --exclude={'.git*','.cache/','venv/','apollo_portal/'} --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home/ubuntu $BACKUP_DIR --log-file=$LOGFILE
+/usr/bin/rsync -e ssh -avrL --delete --numeric-ids --exclude={'.git*','.cache/','venv/','apollo_portal/'} --delete-excluded --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home/ubuntu $BACKUP_DIR --log-file=$LOGFILE
+
 # Note: most of the site is available via github so only really need to backup media
 echo "rsyncing media component of website..."
 /usr/bin/rsync -e ssh -avrL --numeric-ids --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:${WEBSITE_DIR}/media $BACKUP_DIR --log-file=$LOGFILE
@@ -30,6 +33,10 @@ echo "rsyncing nginx config directories ..."
 
 echo "backing up SQL ..."
 pg_dump apollo_portal -h $REMOTE_HOST -U backup_user > $BACKUP_DIR"/"$REMOTE_HOST"_"$DAY".sql"
+
+echo "backing up user home directories ..."
+/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --delete-excluded --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home/j.lee $BACKUP_DIR --log-file=$LOGFILE
+/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --delete-excluded --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home/c.hyde $BACKUP_DIR --log-file=$LOGFILE
 
 if [ $DAY_OF_WEEK == $ARCHIVE_DAY ]; then
     echo "Archiving data ..."

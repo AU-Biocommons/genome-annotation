@@ -55,7 +55,7 @@ find $ARCHIVE_DIR -type f -name $REMOTE_HOST"*.tgz" -mtime +13 -exec rm {} \;
 find $BACKUP_DIR -type f -name $REMOTE_HOST"*.sql" -mtime +30 -exec rm {} \;
 
 echo $REMOTE_HOST, $INSTANCE_NUM, $DAY, $DAY_NUM_OF_WEEK
-if [ $INSTANCE_NUM == $DAY_NUM_OF_WEEK ]; then
+if [ $DAY_OF_WEEK == $ARCHIVE_DAY ]; then
     #echo "Archiving data for "$REMOTE_HOST
     #tar czf $ARCHIVE_DIR/$REMOTE_HOST"_"$DAY".tgz" $BACKUP_DIR/apollo_data
     echo "Archiving backups for "$REMOTE_HOST

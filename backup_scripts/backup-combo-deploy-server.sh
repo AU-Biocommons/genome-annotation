@@ -22,7 +22,7 @@ fi
 #/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --delete-excluded --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
 
 # local backup - now that apollo-deploy is also apollo-backup
-sudo /usr/bin/rsync -e ssh -avr --delete --safe-links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --delete-excluded /home/ $BACKUP_DIR --log-file=$LOGFILE
+sudo /usr/bin/rsync -e ssh -avr --delete --safe-links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --delete-excluded /home $BACKUP_DIR --log-file=$LOGFILE
 sudo /usr/bin/rsync -e ssh -avr --delete --safe-links --numeric-ids /etc $BACKUP_DIR --log-file=$LOGFILE
 if [ $DAY_OF_WEEK == $ARCHIVE_DAY ]; then
     echo "Archiving data ..."

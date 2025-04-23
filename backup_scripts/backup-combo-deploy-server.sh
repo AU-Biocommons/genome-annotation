@@ -26,7 +26,8 @@ sudo /usr/bin/rsync -e ssh -avr --delete --safe-links --numeric-ids --exclude='*
 sudo /usr/bin/rsync -e ssh -avr --delete --safe-links --numeric-ids /etc $BACKUP_DIR --log-file=$LOGFILE
 if [ $DAY_OF_WEEK == $ARCHIVE_DAY ]; then
     echo "Archiving data ..."
-    tar czf $ARCHIVE_DIR/$NAME"_"$DAY".tgz" $BACKUP_DIR
+    # note 'sudo tar cvf' required for local backup as ownership and permissions preserved
+    sudo tar czf $ARCHIVE_DIR/$NAME"_"$DAY".tgz" $BACKUP_DIR
     echo "completed"
 fi
 

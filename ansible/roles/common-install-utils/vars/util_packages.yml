@@ -5,7 +5,7 @@ util_packages:
     - lsb-release
     - curl
     - wget
-    - netcat
+    - netcat-traditional
     - git
     - zip
     - unzip
@@ -19,7 +19,7 @@ util_packages:
     - speedometer
     - iperf3
     - tree
-    - mlocate
+    - plocate
     - ack-grep
     - fasd
     - ranger

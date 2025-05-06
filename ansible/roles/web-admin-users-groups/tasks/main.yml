@@ -9,6 +9,12 @@
     groups: "www-data" 
     append: yes
 
+- name: "ensure admin's accounts have shell login enabled (for accounts disabled on other VMs)"
+  user:
+    name: "{{ item }}"
+    shell: /bin/bash
+  with_items: "{{ admin_users }}"
+
 - name: "adding admin_users to apollo_admin (allows login) and www-data groups"
   user:
     name: "{{ item }}"

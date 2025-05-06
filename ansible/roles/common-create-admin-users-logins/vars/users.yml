@@ -3,8 +3,9 @@
 
 # the following users will be created with a home directory
 # BUT to be able to login they must also be defined in the login_user's list
-# commented entries are for logins that may only be required on specific machines
-# these can be uncommented when running playbook for required machines
+# AND NOT defined in inactive_users or remove_users
+# commented entries are for logins that may only be required on specific machines (rarely)
+# and historic users
 users:
   - username: "backup_user"
     comment: ""
@@ -12,21 +13,18 @@ users:
   - username: "j.lee"
     comment: "Justin Lee"
     uid: 19529
-  - username: "n.rhodes"
-    comment: "Nick Rhodes"
-    uid: 12143
   - username: "m.thang"
     comment: "Mike Thang"
     uid: 13486
-  - username: "a.bulgaris"
-    comment: "Alejandro Bulgaris"
-    uid: 34928
   - username: "c.hyde"
     comment: "Cameron Hyde"
     uid: 26717
 #  - username: "s.williams"
 #    comment: "Sarah Williams"
 #    uid: 35938
+#  - username: "n.rhodes"
+#    comment: "Nick Rhodes"
+#    uid: 12143
 #  - username: "c.bromhead"
 #    comment: "Catherine Bromhead"
 #    uid: 37841
@@ -36,6 +34,9 @@ users:
 #  - username: "m.basetti"
 #    comment: "Madeline Basetti"
 #    uid: 28017
+#  - username: "a.bulgaris"
+#    comment: "Alejandro Bulgaris"
+#    uid: 34928
 
 # these users can login using their public key. see above re allowing login for specific machines
 login_users:
@@ -45,12 +46,12 @@ login_users:
     key: files/j.lee.pub
   - username: "m.thang"
     key: files/m.thang.pub
-  - username: "n.rhodes"
-    key: files/n.rhodes.pub
   - username: "c.hyde"
     key: files/c.hyde.pub
 #  - username: "s.williams"
 #    key: files/s.williams.pub
+#  - username: "n.rhodes"
+#    key: files/n.rhodes.pub
 #  - username: "c.bromhead"
 #    key: files/c.bromhead.pub
 #  - username: "a.bulgaris"
@@ -61,20 +62,23 @@ login_users:
 # add sysadmins; or if configuring a sandpit for a user, add that user here (ie m.thang. c.hyde)
 sudo_users:
   - "j.lee"
-  - "n.rhodes"
 #  - "m.thang"
 #  - "c.hyde"
+#  - "n.rhodes"
 
 # deactivate accounts - prevents login on existing account by setting shell to /sbin/nologin
-# this is for users previously added (to some/all machines) and no longer need access
+# this is for users previously added (to some/all machines) and no longer need access (to all machines)
 # the inactive user will be created if not already defined in users list (with next available UID)
 # but can be deleted by adding to the remove_users list
 inactive_users:
-  - "a.bulgaris"
-#  - "s.williams"
+  - "c.hyde" # doesn't need access to anything except web servers, where shell needs to be activated
+#  - "s.williams" # Apollo workshops
+#  - "n.rhodes"
+#  - "a.bulgaris"
 
 # remove users no longer associated with the project
 remove_users:
+  - "n.rhodes"
   - "g.price"
   - "a.bulgaris"
   - "m.basetti"

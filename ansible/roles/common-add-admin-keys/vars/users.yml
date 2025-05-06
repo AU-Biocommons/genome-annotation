@@ -1,0 +1,4 @@
+users:
+  - username: "ubuntu"
+    key: files/admin.pub
+

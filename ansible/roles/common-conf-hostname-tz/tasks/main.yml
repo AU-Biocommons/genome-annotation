@@ -1,0 +1,17 @@
+---
+- name: change hostname to hostname defined in inventory
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: set timezone to Australia/Brisbane
+  timezone:
+    name: Australia/Brisbane
+
+# TODO: this should be done in role that adds local IP entries to /etc/hosts
+#- name: disable update_etc_hosts in cloud.cfg to prevent regeneration of /etc/hosts on reboot
+#  lineinfile:
+#    path: /etc/cloud/cloud.cfg
+#    regexp: '^\s*- update_etc_hosts'
+#    line: '#  - update_etc_hosts'
+#    state: present
+

@@ -1,16 +1,23 @@
-# Install the following roles from the Ansible Galaxy hub at galaxy.ansible.com
-# Install roles with:
+
+# Install the following roles and collections from the Ansible Galaxy hub at galaxy.ansible.com
+# Install collections with
+#     ansible-galaxy collection install -r requirements.yml
+# Install roles with
+#     ansible-galaxy roles install -r requirements.yml
+# Install collections and roles with:
 #     ansible-galaxy install -r requirements.yml
 
-# install ansible install role
-- src: geerlingguy.ansible
+collections:
+  - name: ansible.posix
+  - name: community.general
 
-# install git install role
-- src: geerlingguy.git
-
-# install postgresql install role
-- src: geerlingguy.postgresql
-
-# install docker/docker-compose install role
-- src: geerlingguy.docker
+roles:
+  # install ansible install role
+  - src: geerlingguy.ansible
+  # install git install role
+  - src: geerlingguy.git
+  # install postgresql install role
+  - src: geerlingguy.postgresql
+  # install docker/docker-compose install role
+  - src: geerlingguy.docker
 

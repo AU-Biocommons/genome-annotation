@@ -1,3 +1,6 @@
 ---
 dns_resolv_conf_slink_to_create: "/etc/resolv.conf"
-dns_resolv_conf_slink_file_path: "/run/systemd/resolve/stub-resolv.conf"
+# the wrong file to point to
+#dns_resolv_conf_slink_file_path: "/run/systemd/resolve/stub-resolv.conf"
+# the correct file to point to
+dns_resolv_conf_slink_file_path: "/run/systemd/resolve/resolv.conf"

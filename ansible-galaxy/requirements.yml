@@ -16,6 +16,8 @@ roles:
   - src: geerlingguy.ansible
   # install git install role
   - src: geerlingguy.git
+  # install pip install role
+  - src: geerlingguy.pip
   # install postgresql install role
   - src: geerlingguy.postgresql
   # install docker/docker-compose install role

@@ -1,0 +1,30 @@
+/*
+# WARNING: backups volume is NOT managed by terraform to prevent accidental deletion!
+# this volume already exists, import with: terraform import openstack_blockstorage_volume_v3.apollo_backups_vol <ID>
+# this block will not be used to create a new volume, it's only needed for referencing and managing the volume's attachment
+resource "openstack_blockstorage_volume_v3" "apollo_backups_vol" {
+    availability_zone = "ardc-syd-1"
+    name              = "Apollo-Backups"
+    size              = 5120
+
+    lifecycle {
+      prevent_destroy = true
+    }
+}
+*/
+
+/*
+# WARNING: user-data volume is NOT managed by terraform to prevent accidental deletion!
+# this volume already exists, import with: terraform import openstack_blockstorage_volume_v3.apollo_user_data_a_vol <ID>
+# this block will not be used to create a new volume, it's only needed for referencing and managing the volume's attachment
+resource "openstack_blockstorage_volume_v3" "apollo_user_data_a_vol" {
+    availability_zone = "ardc-syd-1"
+    name              = "Apollo-User-Data-A"
+    size              = 20480
+
+    lifecycle {
+        prevent_destroy = true
+    }
+}
+*/
+

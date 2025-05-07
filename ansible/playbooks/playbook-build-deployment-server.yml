@@ -1,0 +1,60 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  roles:
+    - deploy-install-openstack-ubuntu
+    - deploy-install-terraform-ubuntu
+    - geerlingguy.ansible # if running Ubuntu >= 24.04
+    - geerlingguy.pip
+    - geerlingguy.git
+
+  vars:
+    - repo_name: 'genome-annotation'   
+    - github_owner: 'AU-Biocommons'
+    - repo_dest: '/opt/github-ansible'
+    #- ansiblecore_version: '2.16'
+    #- ansiblecore_venv: "/home/ubuntu/venv/ansiblecore-{{ ansiblecore_version }}"
+
+  post_tasks:
+
+    #- name: Ensure desired version of ansible core is installed when running Ubuntu < 24.04
+    #  pip:
+    #    name: "ansible-core=={{ ansiblecore_version }}"
+    #    umask: "0022"
+    #    virtualenv: "{{ ansiblecore_venv }}"
+
+    - name: "Create the github directory with setgid bit so that all members of apollo_admin can update"
+      file:
+        path: "{{ repo_dest }}"
+        owner: "ubuntu"
+        group: "apollo_admin"
+        state: directory
+        mode: 02775
+
+    - name: "Clone git repo into {{ repo_dest }} directory (with umask for g+rwx,o+rx)"
+      git:
+        repo: "https://github.com/{{ github_owner }}/{{ repo_name }}"
+        dest: "{{ repo_dest }}"
+        umask: '0002'
+        update: yes
+      become: yes
+      become_user: ubuntu
+
+    - name: Update ansible roles
+      command:
+        cmd: "ansible-galaxy install -p roles -r requirements.yml"
+        chdir: "{{ repo_dest }}/ansible-galaxy"
+      become: yes
+      become_user: ubuntu
+
+    - name: "Create symbolic link from {{ repo_name }} in ubuntu home to github repo: {{ repo_dest }}"
+      file:
+        src: "{{ repo_dest }}"
+        dest: "/home/ubuntu/{{ repo_name }}"
+        state: link
+        force: yes
+

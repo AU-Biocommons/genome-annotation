@@ -19,7 +19,17 @@
     #- ansiblecore_version: '2.16'
     #- ansiblecore_venv: "/home/ubuntu/venv/ansiblecore-{{ ansiblecore_version }}"
 
-  post_tasks:
+  pre_tasks:
+    - name: "Install postgresql client for pg_dump"
+      package:
+        name: postgresql-client
+        state: latest
+
+    - name: "Add backup_user to sudo group (needed on apollo-backup only)"
+      user:
+        name: backup_user
+        groups: sudo
+        append: yes
 
     #- name: Ensure desired version of ansible core is installed when running Ubuntu < 24.04
     #  pip:
@@ -27,6 +37,7 @@
     #    umask: "0022"
     #    virtualenv: "{{ ansiblecore_venv }}"
 
+  post_tasks:
     - name: "Create the github directory with setgid bit so that all members of apollo_admin can update"
       file:
         path: "{{ repo_dest }}"
@@ -59,4 +70,95 @@
         force: yes
       become: yes
       become_user: ubuntu
+
+    - name: "Create ubuntu user ansible.cfg to specify default private key to use with ansible"
+      copy:
+        dest: /home/ubuntu/.ansible.cfg
+        content: |
+          [defaults]
+          private_key_file = /home/ubuntu/.ssh/apollo-nectar
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+      become: yes
+      become_user: ubuntu
+
+    - name: "VAULT_PASS_ALLOW_NULL to ubuntu's .bashrc"
+      lineinfile:
+        path: /home/ubuntu/.bashrc
+        line: "export VAULT_PASS_ALLOW_NULL=1 # required to run ANY ansible playbook without needing to explicitly set VAULT_PASSWORD"
+
+    - name: "Create ubuntu user ssh config for connecting to Apollo VMs"
+      copy:
+        dest: /home/ubuntu/.ssh/config
+        content: |
+          Host apollo-*
+               User ubuntu
+               IdentityFile /home/ubuntu/.ssh/apollo-nectar
+               IdentitiesOnly yes
+               StrictHostKeyChecking no
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+      become: yes
+      become_user: ubuntu
+
+    - name: "Create backup_user ssh config for connecting to Apollo VMs"
+      copy:
+        dest: /home/backup_user/.ssh/config
+        content: |
+          Host apollo-*
+               User backup_user
+               Port 22
+               IdentityFile /home/backup_user/.ssh/apollo-nectar-backup_user
+               IdentitiesOnly yes
+               StrictHostKeyChecking no
+
+    - name: "chown ssh config to backup_user"
+      file:
+        path: /home/backup_user/.ssh/config
+        state: file
+        owner: backup_user
+        group: backup_user
+        mode: '0644'
+
+    - name: "Check if private key /home/ubuntu/.ssh/apollo-nectar exists"
+      stat:
+        path: /home/ubuntu/.ssh/apollo-nectar
+      register: ubuntu_user_key
+
+    - name: "Print warning if apollo-nectar private key doesn't exist"
+      debug:
+        msg: "Warning: apollo-nectar private key needs to be manually copied to /home/ubuntu/.ssh/apollo-nectar ... ansible connections will fail without this!"
+      when: not ubuntu_user_key.stat.exists
+
+    - name: "Check if private key /home/backup_user/.ssh/apollo-nectar-backup_user exists"
+      stat:
+        path: /home/backup_user/.ssh/apollo-nectar-backup_user
+      register: backup_user_key
+
+    - name: "Print warning if backup_user private key doesn't exist"
+      debug:
+        msg: "Warning: backup_user's private key needs to be manually copied to /home/backup_user/.ssh/apollo-nectar-backup_user ... apollo backups will fail without this!"
+      when: not backup_user_key.stat.exists
+
+    - name: "Check if Nectar openrc file /home/ubuntu/BioCommons_Apollo-openrc.sh exists"
+      stat:
+        path: /home/ubuntu/BioCommons_Apollo-openrc.sh
+      register: ubuntu_openrc
+
+    - name: "Print warning if Nectar openrc file doesn't exist"
+      debug:
+        msg: "Warning: BioCommons_Apollo-openrc.sh needs to be manually downloaded from Nectar and copied to /home/ubuntu/BioCommons_Apollo-openrc.sh ... openstack and terraform cannot be used without this!"
+      when: not ubuntu_openrc.stat.exists
+
+    - name: "Check if Nectar Swift openrc file /home/backup_user/app-cred-swift-openrc.sh exists"
+      stat:
+        path: /home/backup_user/app-cred-swift-openrc.sh
+      register: backup_openrc
+
+    - name: "Print warning if Nectar Swift openrc file doesn't exist"
+      debug:
+        msg: "Warning: app-cred-swift-openrc.sh needs to be manually downloaded from Nectar and copied to /home/backup_user/app-cred-swift-openrc.sh ... apollo backups to Swift object store will fail without this!"
+      when: not backup_openrc.stat.exists
 

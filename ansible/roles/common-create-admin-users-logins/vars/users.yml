@@ -61,7 +61,6 @@ login_users:
 
 # add sysadmins; or if configuring a sandpit for a user, add that user here (ie m.thang. c.hyde)
 sudo_users:
-  - "backup_user"
   - "j.lee"
 #  - "m.thang"
 #  - "c.hyde"

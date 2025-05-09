@@ -1,7 +1,9 @@
 
 # the apollovms section defines the existing apollo instances
-
 [apollovms]
+apollo-011.genome.edu.au ansible_host=apollo-011 allowed_groups="ubuntu apollo_admin backup_user sandpit_user"
+
+[old-apollovms]
 #apollo-001.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user"
 apollo-002.genome.edu.au ansible_host=apollo-002 allowed_groups="ubuntu apollo_admin backup_user scu_user"
 apollo-003.genome.edu.au ansible_host=apollo-003 allowed_groups="ubuntu apollo_admin backup_user bread-wheat-um_user"
@@ -12,7 +14,6 @@ apollo-007.genome.edu.au ansible_host=apollo-007 allowed_groups="ubuntu apollo_a
 apollo-008.genome.edu.au ansible_host=apollo-008 allowed_groups="ubuntu apollo_admin backup_user degnan_user"
 apollo-009.genome.edu.au ansible_host=apollo-009 allowed_groups="ubuntu apollo_admin backup_user slimsuite_user"
 apollo-010.genome.edu.au ansible_host=apollo-010 allowed_groups="ubuntu apollo_admin backup_user coral_user"
-apollo-011.genome.edu.au ansible_host=apollo-011 allowed_groups="ubuntu apollo_admin backup_user sandpit_user"
 apollo-012.genome.edu.au ansible_host=apollo-012 allowed_groups="ubuntu apollo_admin backup_user wheat-dawn_user"
 apollo-014.genome.edu.au ansible_host=apollo-014 allowed_groups="ubuntu apollo_admin backup_user frankenberg_user"
 apollo-015.genome.edu.au ansible_host=apollo-015 allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
@@ -39,13 +40,14 @@ apollo-025.genome.edu.au ansible_host=apollo-025 allowed_groups="ubuntu apollo_a
 
 
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied
-
 [otherubuntuvms]
+apollo-backup.genome.edu.au
+
+[oldubuntuvms]
 apollo-data.genome.edu.au
 apollo-monitor.genome.edu.au
 apollo-portal.genome.edu.au
 #apollo-portal-main.genome.edu.au # use this when apollo-portal redirects to apollo-portal-offline
-apollo-deploy.genome.edu.au
 django-sandpit.genome.edu.au
 ubuntu-test.genome.edu.au
 

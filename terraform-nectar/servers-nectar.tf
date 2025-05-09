@@ -24,7 +24,8 @@ resource "openstack_compute_instance_v2" "tfs_apollo_backup_20250430" {
         "default",
         "SSH_access",
         "NRPE_local_access",
-        "ICMP_local_access"
+        "ICMP_local_access",
+        "Postgresql_allowed_group"
     ]
 
     metadata = {

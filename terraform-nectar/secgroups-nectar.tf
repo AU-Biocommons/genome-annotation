@@ -125,6 +125,7 @@ resource "openstack_networking_secgroup_rule_v2" "NFS_Server_local_access-ingres
     security_group_id = openstack_networking_secgroup_v2.NFS_Server_local_access.id
 }
 
+/*
 # PostgreSQL Server security group rules
 resource "openstack_networking_secgroup_v2" "Postgresql_Server_local_access" {
     name = "Postgresql_Server_local_access"
@@ -138,7 +139,41 @@ resource "openstack_networking_secgroup_rule_v2" "Postgresql_Server_local_access
     port_range_min = "5432"
     port_range_max = "5432"
     remote_ip_prefix = "192.168.0.0/24"
+    # remote_group_id  = openstack_networking_secgroup_v2.Postgresql_Server_local_access.id # self-referential
     security_group_id = openstack_networking_secgroup_v2.Postgresql_Server_local_access.id
+}
+*/
+
+# Define referential security group from which PostgreSQL connections are allowed (ie apollo-backup)
+resource "openstack_networking_secgroup_v2" "Postgresql_allowed_group" {
+  name        = "Postgresql_allowed_group"
+  description = "Members of this security group can connect to Postgres on VMs belonging to group Postgresql_Server_local_access"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "Postgresql_allowed_group-outbound-tcp-5432" {
+  direction        = "egress"
+  ethertype        = "IPv4"
+  protocol         = "tcp"
+  port_range_min   = "5432"
+  port_range_max   = "5432"
+  remote_group_id  = openstack_networking_secgroup_v2.Postgresql_Server_local_access.id # Allow connections to PostgreSQL on Apollo VMs
+  security_group_id = openstack_networking_secgroup_v2.Postgresql_allowed_group.id
+}
+
+# Define PostgreSQL security group for VMs to which connections are allowed (ie apollo VMs and django-portal)
+resource "openstack_networking_secgroup_v2" "Postgresql_Server_local_access" {
+  name        = "Postgresql_Server_local_access"
+  description = "Allow PostgreSQL connections from allowed local VMs"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "Postgresql_Server_local_access-ingress-tcp-5432" {
+  direction        = "ingress"
+  ethertype        = "IPv4"
+  protocol         = "tcp"
+  port_range_min   = "5432"
+  port_range_max   = "5432"
+  remote_group_id  = openstack_networking_secgroup_v2.Postgresql_allowed_group.id # Allow connections from Apollo Backup VM
+  security_group_id = openstack_networking_secgroup_v2.Postgresql_Server_local_access.id
 }
 
 # ICMP (ping) security group rules

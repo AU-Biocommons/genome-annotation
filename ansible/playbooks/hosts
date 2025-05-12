@@ -42,6 +42,7 @@ apollo-025.genome.edu.au ansible_host=apollo-025 allowed_groups="ubuntu apollo_a
 # the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied
 [otherubuntuvms]
 apollo-backup.genome.edu.au
+apollo-user-nfs.genome.edu.au
 
 [oldubuntuvms]
 apollo-data.genome.edu.au

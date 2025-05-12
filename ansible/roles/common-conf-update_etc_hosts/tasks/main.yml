@@ -1,0 +1,8 @@
+---
+- name: disable update_etc_hosts in cloud.cfg to prevent regeneration of /etc/hosts on reboot
+  lineinfile:
+    path: /etc/cloud/cloud.cfg
+    regexp: '^\s*- update_etc_hosts'
+    line: '#  - update_etc_hosts'
+    state: present
+

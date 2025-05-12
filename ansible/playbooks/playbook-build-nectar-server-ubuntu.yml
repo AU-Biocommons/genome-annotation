@@ -12,6 +12,8 @@
     - import_role:
         name: common-conf-hostname-tz
     - import_role:
+        name: common-conf-update_etc_hosts
+    - import_role:
         name: common-add-admin-keys
     - import_role:
         name: common-configure-shell-logins

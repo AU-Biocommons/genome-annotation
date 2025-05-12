@@ -61,7 +61,7 @@
     state: present
     #backup: yes
   notify:
-    - Restart sshd
+    - Restart ssh
 
 #  - name: Print user defined variables
 #    debug:

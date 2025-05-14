@@ -58,7 +58,12 @@
     opts: bind
   become: yes
 
-- name: "Activate quotas on {{ mount_point }}"
-  command: "quotaon -v {{ mount_point }}"
-  become: yes 
+## Note: The following is not needed as mounting enables the quotas.
+##       This will give an error like: quotaon: using . on /dev/vdb1 [/mnt/user-data]: File exists
+#- name: "Activate quotas on {{ mount_point }}"
+#  command: "quotaon -v {{ mount_point }}"
+#  become: yes 
+
+- name: "display status of quotas on {{ mount_point }}"
+  command: "quotaon -p {{ mount_point }}"
 

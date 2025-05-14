@@ -20,9 +20,15 @@
         msg: "Device with label {{ volume_label }} not found"
       when: volume_device.stdout == ""
 
-    - name: "unmount {{ mount_point }} to change ext4 quota feature"
-      command: umount "{{ mount_point }}"
-      #when: volume_device.stdout != ""
+    - name: "unmount {{ export_root }} bind mount first"
+      ansible.posix.mount:
+        path: "{{ export_root }}"
+        state: unmounted
+
+    - name: "then unmount {{ mount_point }} to change ext4 quota feature"
+      ansible.posix.mount:
+        path: "{{ mount_point }}"
+        state: unmounted
 
     - name: "Enable user and group quotas on the filesystem: use 'tune2fs -Q' to change quota defaults"
       command: tune2fs -O quota "{{ volume_device.stdout }}" # defaults to user and group
@@ -41,6 +47,15 @@
     opts: "{{ mount_opts }},usrquota,grpquota"
     dump: 0
     passno: 2
+  become: yes
+
+- name: "remount bind mount for {{ mount_point }} on {{ export_root }}"
+  ansible.posix.mount:
+    path: "{{ export_root }}"
+    src: "{{ mount_point }}"
+    fstype: none
+    state: mounted
+    opts: bind
   become: yes
 
 - name: "Activate quotas on {{ mount_point }}"

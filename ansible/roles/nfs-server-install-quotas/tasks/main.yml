@@ -66,6 +66,5 @@
 
 - name: "display status of quotas on {{ mount_point }}"
   command: "quotaon -p {{ mount_point }}"
-  changed_when: false
   failed_when: false
 

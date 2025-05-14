@@ -1,0 +1,75 @@
+---
+- name: Install quota packages
+  apt:
+    pkg:
+      - quota
+      - quotatool
+    state: present
+
+# ref: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/managing_file_systems/limiting-storage-space-usage-on-ext4-with-quotas_managing-file-systems
+- name: enable the ext4 quota feature on device specified by LABEL (external quota files on ext4 are deprecated)
+  block:
+    - name: "Find the device with LABEL={{ volume_label }}"
+      command: blkid -L "{{ volume_label }}"
+      register: volume_device
+      changed_when: false
+      failed_when: false
+
+    - name: "Fail if device with LABEL={{ volume_label }} is not found"
+      fail:
+        msg: "Device with label {{ volume_label }} not found"
+      when: volume_device.stdout == ""
+
+    - name: "unmount {{ export_root }} bind mount first"
+      ansible.posix.mount:
+        path: "{{ export_root }}"
+        state: unmounted
+
+    - name: "then unmount {{ mount_point }} to change ext4 quota feature"
+      ansible.posix.mount:
+        path: "{{ mount_point }}"
+        state: unmounted
+
+    - name: "Enable user and group quotas on the filesystem: use 'tune2fs -Q' to change quota defaults"
+      command: tune2fs -O quota "{{ volume_device.stdout }}" # defaults to user and group
+      #command: tune2fs -O quota,usrquota,grpquota "{{ volume_device.stdout }}"
+      become: yes
+      #when: volume_device.stdout != ""
+  become: yes
+
+# remount filesystem to enable filesystem quotas and update /etc/fstab
+- name: "Remount {{ mount_point }} to enable quota enforcement"
+  ansible.posix.mount:
+    path: "{{ mount_point }}"
+    src: "LABEL={{ volume_label }}"
+    fstype: ext4
+    state: mounted
+    opts: "{{ mount_opts }},usrquota,grpquota"
+    dump: 0
+    passno: 2
+  become: yes
+
+- name: "remount bind mount for {{ mount_point }} on {{ export_root }}"
+  ansible.posix.mount:
+    path: "{{ export_root }}"
+    src: "{{ mount_point }}"
+    fstype: none
+    state: mounted
+    opts: bind
+  become: yes
+
+## Note: The following is not needed as mounting enables the quotas.
+##       This will give an error like: quotaon: using . on /dev/vdb1 [/mnt/user-data]: File exists
+#- name: "Activate quotas on {{ mount_point }}"
+#  command: "quotaon -v {{ mount_point }}"
+#  become: yes 
+
+- name: "display status of quotas on {{ mount_point }}"
+  command: "quotaon -p {{ mount_point }}"
+  register: quota_status
+  failed_when: false
+
+- name: "Display output of quota status"
+  debug:
+    var: quota_status.stdout
+

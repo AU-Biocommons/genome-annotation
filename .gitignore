@@ -4,6 +4,4 @@
 buildapollo.???.inventory
 
 # Galaxy-ansible roles
-ansible/roles/geerlingguy.ansible/
-ansible/roles/geerlingguy.git/
-ansible/roles/geerlingguy.postgresql/
+ansible-galaxy/roles/

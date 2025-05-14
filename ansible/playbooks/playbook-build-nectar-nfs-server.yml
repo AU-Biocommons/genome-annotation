@@ -1,0 +1,27 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  roles:
+    - nfs-install-server
+    - nfs-server-install-quotas
+
+  vars:
+    volume_label: 'User-Data-A'
+    mount_point: '/mnt/user-data'
+    export_root: '/srv/export/data'
+
+  pre_tasks:
+    - name: Mount attached pre-existing data volume to instance (assumes already formatted)
+      include_role:
+        name: common-mount-volume-by-label
+
+#  post_tasks:
+#    - name: Reload exportfs
+#      command: exportfs -ra
+#      become: yes
+#      become_user: root
+

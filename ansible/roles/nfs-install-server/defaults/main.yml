@@ -1,0 +1,5 @@
+---
+volume_label: ""
+mount_point: /mnt
+export_root: /srv/export
+

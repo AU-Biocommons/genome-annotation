@@ -13,11 +13,11 @@
     - geerlingguy.git
 
   vars:
-    - repo_name: 'genome-annotation'   
-    - github_owner: 'AU-Biocommons'
-    - repo_dest: '/opt/github-ansible'
-    #- ansiblecore_version: '2.16'
-    #- ansiblecore_venv: "/home/ubuntu/venv/ansiblecore-{{ ansiblecore_version }}"
+    repo_name: 'genome-annotation'   
+    github_owner: 'AU-Biocommons'
+    repo_dest: '/opt/github-ansible'
+    #ansiblecore_version: '2.16'
+    #ansiblecore_venv: "/home/ubuntu/venv/ansiblecore-{{ ansiblecore_version }}"
 
   pre_tasks:
     - name: "Install postgresql client for pg_dump"

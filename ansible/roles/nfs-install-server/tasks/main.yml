@@ -1,0 +1,47 @@
+---
+- name: Install NFS server and utilities"
+  apt:
+    pkg:
+      - nfs-common
+      - nfs-kernel-server
+    state: present
+
+- name: Ensure NFS service is running
+  service:
+    name: nfs-kernel-server
+    enabled: true
+    state: started
+
+- name: Create the mount point directory for bind mount
+  file:
+    path: "{{ export_root }}"
+    state: directory
+  become: yes
+
+# create bind mount and add entry to /etc/fstab:
+#    {{ mount_point }}        {{ export_root }}    none    bind        0 0
+- name: "Create bind mount for {{ mount_point }} on {{ export_root }}"
+  ansible.posix.mount:
+    path: "{{ export_root }}"
+    src: "{{ mount_point }}"
+    fstype: none
+    state: mounted
+    opts: bind
+  become: yes
+
+- name: Define root of the NFSv4 export tree
+  blockinfile:
+    path: /etc/exports
+    insertafter: EOF
+    block: |
+      # fsid=0 defines this as the root of the NFSv4 export tree.
+      # All exports need to be directories under this root
+      {{ export_root }} 192.168.0.0/24(rw,fsid=0,no_subtree_check,sync)
+    marker: "# {mark} ANSIBLE MANAGED BLOCK (role nfs-install-server)"
+  become: yes
+
+- name: update NFS exports from /etc/exports
+  command: exportfs -ra
+  become: yes
+  become_user: root
+

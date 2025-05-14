@@ -6,13 +6,13 @@
   connection: "ssh"
 
   roles:
-    - nfs-install-and-configure-server
+    - nfs-install-server
     - nfs-server-install-quotas
 
   vars:
-    - volume_label: 'User-Data-A'
-    - mount_point: '/mnt/user-data'
-    - export_root: '/srv/export/data'
+    volume_label: 'User-Data-A'
+    mount_point: '/mnt/user-data'
+    export_root: '/srv/export/data'
 
   pre_tasks:
     - name: Mount attached pre-existing data volume to instance (assumes already formatted)

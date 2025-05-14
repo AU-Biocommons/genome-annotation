@@ -1,21 +1,29 @@
 ---
-- name: Install quota package
+- name: Install quota packages
   apt:
-    name: quota
+    pkg:
+      - quota
+      - quotatool
     state: present
 
-# modify existing entry in /etc/fstab created by common-attach-volume-by-label:
-#     LABEL={{ volume_label }}    {{ mount_point }}    ext4    defaults    0 2
-# NOTE: this isn't required if ansible.posix.mount handles the updated mount options in fstab
-#- name: "Enable user and group quotas for {{ mount_point }} in /etc/fstab"
-#  lineinfile:
-#    path: /etc/fstab
-#    regexp: '^LABEL={{ volume_label }}'
-#    line: "LABEL={{ volume_label }}    {{ mount_point }}    ext4    defaults,usrquota,grpquota        0 2"
-#    become: yes 
+# ref: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/managing_file_systems/limiting-storage-space-usage-on-ext4-with-quotas_managing-file-systems
+- name: enable the ext4 quota feature on device specified by LABEL (external quota files on ext4 are deprecated)
+  block:
+    - name: "Find the device with LABEL={{ volume_label }}"
+      command: blkid -L "{{ volume_label }}"
+      register: volume_device
+      changed_when: false
+      failed_when: false
+
+    - name: "Enable user and group quotas on the filesystem: use 'tune2fs -Q' to change quota defaults"
+      command: tune2fs -O quota "{{ volume_device.stdout }}" # defaults to user and group
+      #command: tune2fs -O quota,usrquota,grpquota "{{ volume_device.stdout }}"
+      become: yes
+      when: volume_device.stdout != ""
+  become: yes
 
 # remount filesystem to enable quota and update /etc/fstab
-- name: "Remount {{ mount_point }} to enable quota options"
+- name: "Remount {{ mount_point }} to enable quota enforcement"
   ansible.posix.mount:
     path: "{{ mount_point }}"
     src: "LABEL={{ volume_label }}"

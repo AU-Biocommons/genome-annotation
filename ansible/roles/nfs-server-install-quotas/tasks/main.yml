@@ -66,5 +66,10 @@
 
 - name: "display status of quotas on {{ mount_point }}"
   command: "quotaon -p {{ mount_point }}"
+  register: quota_status
   failed_when: false
+
+- name: "Display output of quota status"
+  debug:
+    var: quota_status.stdout
 

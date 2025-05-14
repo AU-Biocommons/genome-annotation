@@ -1,0 +1,32 @@
+---
+- name: Install quota package
+  apt:
+    name: quota
+    state: present
+
+# modify existing entry in /etc/fstab created by common-attach-volume-by-label:
+#     LABEL={{ volume_label }}    {{ mount_point }}    ext4    defaults    0 2
+# NOTE: this isn't required if ansible.posix.mount handles the updated mount options in fstab
+#- name: "Enable user and group quotas for {{ mount_point }} in /etc/fstab"
+#  lineinfile:
+#    path: /etc/fstab
+#    regexp: '^LABEL={{ volume_label }}'
+#    line: "LABEL={{ volume_label }}    {{ mount_point }}    ext4    defaults,usrquota,grpquota        0 2"
+#    become: yes 
+
+# remount filesystem to enable quota and update /etc/fstab
+- name: "Remount {{ mount_point }} to enable quota options"
+  ansible.posix.mount:
+    path: "{{ mount_point }}"
+    src: "LABEL={{ volume_label }}"
+    fstype: ext4
+    state: mounted
+    opts: "{{ mount_opts }},usrquota,grpquota"
+    dump: 0
+    passno: 2
+  become: yes 
+
+- name: "Enable quotas on the {{ mount_point }}"
+  command: "quotaon -v {{ mount_point }}"
+  become: yes 
+

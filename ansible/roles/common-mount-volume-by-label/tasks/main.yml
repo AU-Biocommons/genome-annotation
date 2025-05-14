@@ -1,0 +1,31 @@
+---
+- name: "Find and mount volume attached to VM specified by LABEL {{ volume_label }}"
+  command: "blkid -L {{ volume_label }}"
+  register: volume_device
+  changed_when: false
+  failed_when: false
+
+- name: "Ensure the volume is found"
+  fail:
+    msg: "Device with label {{ volume_label }} not found. Please attach volume to VM before proceeding."
+  when: volume_device.stdout == ""
+
+- name: "Create the mount point directory at {{ mount_point }}"
+  file:
+    path: "{{ mount_point }}"
+    state: directory
+  become: yes
+
+# mounts and creates entry in /etc/fstab like:
+#     LABEL={{ volume_label }}    {{ mount_point }}    ext4    defaults    0 2
+- name: "Mount the volume using the label and add to /etc/fstab"
+  ansible.posix.mount:
+    path: "{{ mount_point }}"
+    src: "LABEL={{ volume_label }}"
+    fstype: ext4
+    state: mounted
+    opts: "{{ mount_opts }}"
+    dump: 0
+    passno: 2
+  become: yes
+

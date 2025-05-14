@@ -1,0 +1,4 @@
+---
+volume_label: ""
+mount_point: /mnt
+mount_opts: "defaults"

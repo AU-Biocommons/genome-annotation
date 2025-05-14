@@ -1,16 +1,16 @@
 ---
-- name: Install NFS server and utilities
+- name: Install NFS server and utilities"
   apt:
-    name:
+    pkg:
       - nfs-common
       - nfs-kernel-server
     state: present
 
-- name: Ensure NFS service is running.
-  systemd:
-    - name: nfs-kernel-server
-    - enabled: true
-    - state: started
+- name: Ensure NFS service is running
+  service:
+    name: nfs-kernel-server
+    enabled: true
+    state: started
 
 - name: Create the mount point directory for bind mount
   file:

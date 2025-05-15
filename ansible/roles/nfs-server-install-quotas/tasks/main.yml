@@ -16,6 +16,24 @@
     - 'udp'
     - 'tcp'
 
+- name: Enable quotarpc service which runs rpc.rquotad
+  systemd:
+    name: "quotarpc"
+    state: "started"
+    enabled: yes
+
+- name: Configure quotarpc/rpc.rquotad to listen on port 50003
+  lineinfile:
+    path: /etc/default/quota
+    regexp: '^RPCRQUOTADOPTS='
+    line: 'RPCRQUOTADOPTS="-p 50003"'
+    state: present
+
+- name: "Start/Restart quotarpc service with updated config"
+  systemd:
+    name: "quotarpc"
+    state: "restarted"
+
 # ref: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/managing_file_systems/limiting-storage-space-usage-on-ext4-with-quotas_managing-file-systems
 - name: enable the ext4 quota feature on device specified by LABEL (external quota files on ext4 are deprecated)
   block:

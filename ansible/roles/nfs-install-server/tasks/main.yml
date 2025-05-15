@@ -12,6 +12,23 @@
     enabled: true
     state: started
 
+- name: Allow NFS port (2049) from 192.168.0.0/24 (TCP)
+  ufw:
+    rule: allow
+    port: '2049'
+    proto: tcp
+    src: '192.168.0.0/24'
+
+- name: Allow RPCBind port (111) from 192.168.0.0/24 (UDP/TCP)
+  ufw:
+    rule: allow
+    port: '111'
+    proto: "{{ item }}"
+    src: '192.168.0.0/24'
+  with_items:
+    - 'udp'
+    - 'tcp'
+
 - name: Create the mount point directory for bind mount
   file:
     path: "{{ export_root }}"

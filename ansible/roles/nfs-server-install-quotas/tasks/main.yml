@@ -6,6 +6,16 @@
       - quotatool
     state: present
 
+- name: Allow RQUOTAD port (50003) from 192.168.0.0/24 (UDP/TCP)
+  ufw:
+    rule: allow
+    port: '50003'
+    proto: "{{ item }}"
+    src: '192.168.0.0/24'
+  with_items:
+    - 'udp'
+    - 'tcp'
+
 # ref: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/managing_file_systems/limiting-storage-space-usage-on-ext4-with-quotas_managing-file-systems
 - name: enable the ext4 quota feature on device specified by LABEL (external quota files on ext4 are deprecated)
   block:

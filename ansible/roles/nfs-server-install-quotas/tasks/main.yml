@@ -6,6 +6,42 @@
       - quotatool
     state: present
 
+- name: Allow RQUOTAD port (50003) from 192.168.0.0/24 (UDP/TCP)
+  ufw:
+    rule: allow
+    port: '50003'
+    proto: "{{ item }}"
+    src: '192.168.0.0/24'
+  with_items:
+    - 'udp'
+    - 'tcp'
+
+- name: Configure quotarpc/rpc.rquotad to listen on port 50003
+  lineinfile:
+    path: /etc/default/quota
+    regexp: '^RPCRQUOTADOPTS='
+    line: 'RPCRQUOTADOPTS="-p 50003"'
+    state: present
+
+# note: 'state: started' doesn't restart the service if it's already running,
+#       this means if quotarpc is already running the the configuration won't be reflected yet.
+#       unfortunately, ansible seems to be unable to successfully start quotarpc,
+#       so not using 'restarted' to prevent killing an already running quotarpc service.
+- name: Enable and start the quotarpc service with new configuration. This runs rpc.rquotad.
+  systemd:
+    name: quotarpc
+    state: started
+    enabled: yes
+  become: yes
+
+- name: "WARNING: quotarpc may fail to start properly from ansible. Manual intervention may be needed:"
+  debug:
+    msg: "Please run the following commands manually as required:\n\n  sudo systemctl status quotarpc\n  sudo systemctl start quotarpc\n  sudo systemctl status quotarpc\nCGroup should show /usr/sbin/rpc.rquotad -p 50003\n\n"
+
+- name: Wait for a few seconds to read warning above
+  pause:
+    seconds: 5
+
 # ref: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/managing_file_systems/limiting-storage-space-usage-on-ext4-with-quotas_managing-file-systems
 - name: enable the ext4 quota feature on device specified by LABEL (external quota files on ext4 are deprecated)
   block:

@@ -44,7 +44,7 @@
     - import_role:
         name: common-configure-ufw
     - import_role:
-        name: "common-copy-exec-to-bin"
+        name: apollo-copy-exec-to-bin
     - import_role:
         name: apollo-dependencies
     - import_role:

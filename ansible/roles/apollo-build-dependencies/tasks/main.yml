@@ -1,0 +1,72 @@
+---
+- name: Install build dependencies
+  apt:
+    name:
+      - zlib1g
+      - zlib1g-dev
+      - libexpat1-dev
+      - libpng-dev
+      - libgd2-noxpm-dev
+      - build-essential
+      - git
+      - python-software-properties
+      - python
+      - make
+      - ant
+    state: present
+    update_cache: yes
+
+- name: Install NVM as user
+  become: false  # No root access needed here
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    source "$HOME/.nvm/nvm.sh"
+  args:
+    creates: "$HOME/.nvm"  # Only run if NVM is not already installed
+
+- name: Install Node.js version 12 using NVM
+  become: false
+  shell: |
+    source "$HOME/.nvm/nvm.sh"
+    nvm install 12
+  args:
+    creates: "$HOME/.nvm/versions/node/v12.*"
+
+- name: Install Yarn globally
+  become: false
+  npm:
+    name: yarn
+    global: yes
+
+- name: "Install Grails {{ grails_version }} using SDKMAN"
+  become: false
+  shell: |
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+    sdk install grails {{ grails_version }}
+  args:
+    creates: "$HOME/.sdkman/candidates/grails"
+
+- name: "Install Gradle {{ gradle_version }} using SDKMAN
+  become: false
+  shell: |
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+    sdk install gradle {{ gradle version }}
+  args:
+    creates: "$HOME/.sdkman/candidates/gradle"
+
+- name: "Download Apollo release {{ apollo_version }} tarball"
+  become: false
+  shell: |
+    curl -L  https://github.com/GMOD/Apollo/archive/refs/tags/{{ apollo_version }}.tar.gz -o "Apollo-{{ apollo_version }}.tar.gz"
+   args:
+    chdir: "{{ download_dir }}"
+  register: download_result
+
+- name: "Extract apollo {{ apollo_version }} tarball"
+  become: false
+  unarchive:
+    src: "{{ download_dir }}/Apollo-{{ apollo_version }}.tar.gz"
+    dest: "{{ build_dir }}"
+    remote_src: yes
+  when: download_result.rc == 0
+

@@ -22,4 +22,5 @@ apollo_deps:
     - mlocate
     - net-tools
     - samtools
+    - ncbi-blast+
 

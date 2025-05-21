@@ -67,7 +67,7 @@
 - name: "Install Gradle {{ gradle_version }} using SDKMAN"
   become: false
   shell: |
-    . $HOME/.sdkman/bin/sdkman-init.sh && sdk install gradle {{ gradle version }}
+    . $HOME/.sdkman/bin/sdkman-init.sh && sdk install gradle {{ gradle_version }}
   args:
     executable: /bin/bash
     chdir: "$HOME"

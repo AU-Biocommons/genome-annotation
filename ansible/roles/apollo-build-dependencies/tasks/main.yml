@@ -58,7 +58,7 @@
 - name: "Install Grails {{ grails_version }} using SDKMAN"
   become: false
   shell: |
-    . $HOME/sdkman/bin/sdkman-init.sh && sdk install grails {{ grails_version }}
+    . $HOME/.sdkman/bin/sdkman-init.sh && sdk install grails {{ grails_version }}
   args:
     executable: /bin/bash
     chdir: "$HOME"

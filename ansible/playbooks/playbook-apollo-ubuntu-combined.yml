@@ -63,8 +63,8 @@
         name: apollo-add-nfs-mount-to-fstab
     - import_role:
         name: apollo-copy-war-ubuntu
-    - import_role:
-        name: apollo-create-apollo-data-dir
+    #- import_role:
+    #    name: apollo-create-apollo-data-dir # deprecated - pre-NFS
     - import_role:
         name: apollo-deploy-war
     - import_role:

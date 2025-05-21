@@ -40,7 +40,7 @@
     regexp: "^PermitRootLogin"
     line: "PermitRootLogin no"
   notify:
-    - Restart sshd
+    - Restart ssh
 
 - name: "Raise error if allow_groups is not defined"
   fail:

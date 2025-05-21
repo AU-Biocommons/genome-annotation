@@ -46,7 +46,7 @@
   args:
     creates: "$HOME/.sdkman/candidates/grails"
 
-- name: "Install Gradle {{ gradle_version }} using SDKMAN
+- name: "Install Gradle {{ gradle_version }} using SDKMAN"
   become: false
   shell: |
     source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -57,8 +57,8 @@
 - name: "Download Apollo release {{ apollo_version }} tarball"
   become: false
   shell: |
-    curl -L  https://github.com/GMOD/Apollo/archive/refs/tags/{{ apollo_version }}.tar.gz -o "Apollo-{{ apollo_version }}.tar.gz"
-   args:
+    curl -L https://github.com/GMOD/Apollo/archive/refs/tags/{{ apollo_version }}.tar.gz -o Apollo-{{ apollo_version }}.tar.gz
+  args:
     chdir: "{{ download_dir }}"
   register: download_result
 

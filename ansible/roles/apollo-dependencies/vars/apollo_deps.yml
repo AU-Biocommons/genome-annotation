@@ -4,7 +4,7 @@ apollo_deps:
     - lsb-release
     - curl
     - wget
-    - netcat
+    - netcat-traditional
     - git
     - zip
     - unzip
@@ -19,7 +19,7 @@ apollo_deps:
     - ant
     - atop
     - tree
-    - mlocate
+    - plocate
     - net-tools
     - samtools
     - ncbi-blast+

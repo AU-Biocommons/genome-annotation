@@ -1,5 +1,6 @@
 ---
+tomcat_version: 10
 apollo_deploy_war_src_name: "Apollo-{{apollo_build_version}}/target/apollo-{{apollo_build_version}}.war"
 apollo_deploy_war_dest_name: "apollo.war"
-apollo_deploy_war_dest_path: "/var/lib/tomcat9/webapps/{{apollo_deploy_war_dest_name}}"
+apollo_deploy_war_dest_path: "/var/lib/tomcat{{ tomcat_version }}/webapps/{{apollo_deploy_war_dest_name}}"
 

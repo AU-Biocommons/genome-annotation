@@ -1,5 +1,6 @@
 ---
-tomcat_webapps_directory: "/var/lib/tomcat9/webapps"
+tomcat_version: 10
+tomcat_webapps_directory: "/var/lib/tomcat{{ tomcat_version }}/webapps"
 apollo_deploy_webapp_name: "apollo"
 apollo_deploy_war_dest_name: "{{ apollo_deploy_webapp_name }}.war"
 apollo_deploy_war_dest_path: "{{ tomcat_webapps_directory }}/{{ apollo_deploy_war_dest_name }}"

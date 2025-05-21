@@ -1,11 +1,11 @@
 ---
-- name: "Install tomcat 9"
+- name: "Install tomcat {{ tomcat_version }}"
   apt:
-    name: "tomcat9"
+    name: "tomcat{{ tomcat_version }}"
     state: "present"
     update_cache: yes
 
-- name: "Place setenv.sh template in tomcat9 bin directory"
+- name: "Place setenv.sh template in tomcat{{ tomcat_version }} bin directory"
   template:
     src: "setenv.sh"
     dest: "{{ tomcat_setenv_file_path }}"
@@ -15,15 +15,18 @@
     group: root
     mode: "u=rwx,g=rx,o=rx" 
 
-- name: "Place tomcat9 template in etc default directory"
-  template:
-    src: "tomcat9"
-    dest: "{{ tomcat_default_file_path }}"
-    force: yes
-    backup: no
-    owner: root
-    group: root
-    mode: "u=rw,g=r,o=r"
+# TODO: currently the template file has no settings and is from ubuntu 18 or 20 for tomcat9
+#       if /etc/default/tomcat10 (prev tomcat9) has newer settings these should be used instead
+#
+#- name: "Place tomcat{{ tomcat_version }} template in etc default directory"
+#  template:
+#    src: "{{ tomcat_template_file }}"
+#    dest: "{{ tomcat_default_file_path }}"
+#    force: yes
+#    backup: no
+#    owner: root
+#    group: root
+#    mode: "u=rw,g=r,o=r"
 
 - name: "Remove ROOT directory"
   file:

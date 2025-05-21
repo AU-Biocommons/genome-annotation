@@ -21,14 +21,14 @@
   shell: |
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
   args:
-    creates: "{{ ansible_env.HOME }}/.nvm"  # Only run if NVM is not already installed
+    creates: "$HOME/.nvm"  # Only run if NVM is not already installed
 
 - name: Download and install SDKMAN as user
   become: false
   shell: |
     curl -s "https://get.sdkman.io" | bash
   args:
-    creates: "{{ ansible_env.HOME }}/.sdkman"  # Only run if SDKMAN! is not already installed
+    creates: "$HOME/.sdkman"  # Only run if SDKMAN! is not already installed
 
 - name: Add SDKMAN initialisation to .bashrc
   become: false
@@ -41,10 +41,10 @@
 - name: Install Node.js version 12 using NVM
   become: false
   shell: |
-    . {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install 12
+    . $HOME/.nvm/nvm.sh && nvm install 12
   args:
     executable: /bin/bash
-    chdir: "{{ ansible_env.HOME }}"
+    chdir: "$HOME"
     creates: "$HOME/.nvm/versions/node/v12.*"
 
 - name: Install Yarn globally
@@ -56,14 +56,14 @@
 - name: "Install Grails {{ grails_version }} using SDKMAN"
   become: false
   shell: |
-    . /{{ ansible_env.HOME }}.sdkman/bin/sdkman-init.sh && sdk install grails {{ grails_version }}
+    . $HOME/sdkman/bin/sdkman-init.sh && sdk install grails {{ grails_version }}
   args:
     creates: "$HOME/.sdkman/candidates/grails"
 
 - name: "Install Gradle {{ gradle_version }} using SDKMAN"
   become: false
   shell: |
-    . {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install gradle {{ gradle version }}
+    . $HOME/.sdkman/bin/sdkman-init.sh && sdk install gradle {{ gradle version }}
   args:
     creates: "$HOME/.sdkman/candidates/gradle"
 

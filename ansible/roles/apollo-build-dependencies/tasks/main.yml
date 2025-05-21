@@ -9,8 +9,8 @@
       - libgd-dev # replaces libgd2-noxpm-dev
       - build-essential
       - git
-      - python-software-properties
-      - python
+      - python3-software-properties
+      - python3
       - make
       - ant
     state: present

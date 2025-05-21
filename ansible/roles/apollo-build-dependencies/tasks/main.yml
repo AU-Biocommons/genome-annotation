@@ -49,15 +49,19 @@
 
 - name: Install Yarn globally
   become: false
-  npm:
-    name: yarn
-    global: yes
+  shell: |
+    . $HOME/.nvm/nvm.sh && npm install -g yarn
+  args:
+    executable: /bin/bash
+    chdir: "$HOME"
 
 - name: "Install Grails {{ grails_version }} using SDKMAN"
   become: false
   shell: |
     . $HOME/sdkman/bin/sdkman-init.sh && sdk install grails {{ grails_version }}
   args:
+    executable: /bin/bash
+    chdir: "$HOME"
     creates: "$HOME/.sdkman/candidates/grails"
 
 - name: "Install Gradle {{ gradle_version }} using SDKMAN"
@@ -65,6 +69,8 @@
   shell: |
     . $HOME/.sdkman/bin/sdkman-init.sh && sdk install gradle {{ gradle version }}
   args:
+    executable: /bin/bash
+    chdir: "$HOME"
     creates: "$HOME/.sdkman/candidates/gradle"
 
 - name: "Download Apollo release {{ apollo_version }} tarball"

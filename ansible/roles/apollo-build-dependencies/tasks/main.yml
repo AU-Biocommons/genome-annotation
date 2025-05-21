@@ -41,7 +41,7 @@
 - name: Install Node.js version 12 using NVM
   become: false
   shell: |
-    nvm install 12
+    . $HOME/.nvm/nvm.sh && nvm install 12
   args:
     creates: "$HOME/.nvm/versions/node/v12.*"
 
@@ -54,15 +54,14 @@
 - name: "Install Grails {{ grails_version }} using SDKMAN"
   become: false
   shell: |
-    source "$HOME/.sdkman/bin/sdkman-init.sh"
-    sdk install grails {{ grails_version }}
+    . $HOME/.sdkman/bin/sdkman-init.sh && sdk install grails {{ grails_version }}
   args:
     creates: "$HOME/.sdkman/candidates/grails"
 
 - name: "Install Gradle {{ gradle_version }} using SDKMAN"
   become: false
   shell: |
-    sdk install gradle {{ gradle version }}
+    . $HOME/.sdkman/bin/sdkman-init.sh && sdk install gradle {{ gradle version }}
   args:
     creates: "$HOME/.sdkman/candidates/gradle"
 

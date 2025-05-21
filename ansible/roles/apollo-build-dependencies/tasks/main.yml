@@ -6,7 +6,7 @@
       - zlib1g-dev
       - libexpat1-dev
       - libpng-dev
-      - libgd2-noxpm-dev
+      - libgd-dev # replaces libgd2-noxpm-dev
       - build-essential
       - git
       - python-software-properties

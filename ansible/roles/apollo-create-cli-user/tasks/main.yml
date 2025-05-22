@@ -1,20 +1,10 @@
 ---
-- name: "Print user name and user id to be created"
-  debug: 
-    msg: "User Name = {{create_user_name}} - User Id = {{create_user_id}}"
-
-- name: "Create apollo user account"
+- name: "Create apollo CLI user account {{ create_user_name }} with UID {{ create_user_id }}"
   user:
-    name: "{{create_user_name}}"
+    name: "{{ create_user_name }}"
     shell: "/bin/bash"
-    uid: "{{create_user_id}}"
+    uid: "{{ create_user_id }}"
     state: "present"
-
-- name: "Adding user to group"
-  user:
-    name: "{{create_user_name}}"
-    groups: "{{create_user_name}}"
-    append: yes
 
 - name: "Read /etc/ssh/sshd_config content"
   shell:
@@ -24,15 +14,17 @@
 - set_fact:
     var_regex_sshd_config: "{{ var_sshd_config.stdout | regex_search('AllowGroups.*') }}"
 
-- name: "Print"
+- name: "Print AllowGroups entry from sshd_config"
   debug:
-    msg: "Resultado de regex = {{ var_regex_sshd_config}}"
+    msg: "{{ var_regex_sshd_config}}"
 
-- name: "Add groups to /etc/ssh/sshd_config AllowGroups"
+- name: "Append the CLI user's group (same as username) to /etc/ssh/sshd_config AllowGroups"
   lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: "^AllowGroups"
-    line: "{{var_regex_sshd_config}} {{create_user_name}}"
+    #line: "{{ var_regex_sshd_config }} {{ create_user_name }}" # not idempotent
+    line: |
+      AllowGroups {{ lookup('file', '/etc/ssh/sshd_config') | selectattr('key', 'equalto', 'AllowGroups') | map(attribute='value') | join(' ') }} {{ create_user_name }}
     state: present
   notify:
-    - Restart sshd
+    - Restart ssh

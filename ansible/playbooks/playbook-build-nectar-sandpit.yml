@@ -48,4 +48,7 @@
         name: apollo-decode-extravars-setfacts-combined
     - import_role:
         name: apollo-add-nfs-mount-to-fstab
+    - import_role:
+        name: apollo-create-cli-user
+
 

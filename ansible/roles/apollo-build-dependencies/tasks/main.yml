@@ -73,6 +73,22 @@
     chdir: "$HOME"
     creates: "$HOME/.sdkman/candidates/gradle"
 
+- name: "Ensure apollo-build download directory exists: {{ download_dir }}"
+  file:
+    path: "{{ download_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: "Ensure apollo-build build directory exists: {{ build_dir }}"
+  file:
+    path: "{{ build_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
 - name: "Download Apollo release {{ apollo_version }} tarball"
   become: false
   shell: |

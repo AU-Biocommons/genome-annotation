@@ -12,12 +12,19 @@
   vars:
     volume_label: 'User-Data-A'
     mount_point: '/mnt/user-data'
-    export_root: '/srv/export/data'
+    export_root: '/srv/export/data/nectar' # migrated and new data
 
   pre_tasks:
     - name: Mount attached pre-existing data volume to instance (assumes already formatted)
       include_role:
         name: common-mount-volume-by-label
+    - name: "Ensure export root directory {{ export_root }} exists and create if it doesn't"
+      file:
+        path: "{{ export_root }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
 
 #  post_tasks:
 #    - name: Reload exportfs

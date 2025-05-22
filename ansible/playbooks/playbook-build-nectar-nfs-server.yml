@@ -12,7 +12,8 @@
   vars:
     volume_label: 'User-Data-A'
     mount_point: '/mnt/user-data'
-    export_root: '/srv/export/data'
+    bind_point: '/srv/export/data' # root of volume (/mnt/user-data)
+    export_root: '/srv/export/data/nectar' # migrated and new data (/mnt/user-data/nectar)
 
   pre_tasks:
     - name: Mount attached pre-existing data volume to instance (assumes already formatted)

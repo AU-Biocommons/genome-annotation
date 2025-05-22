@@ -31,20 +31,28 @@
 
 - name: Create the mount point directory for bind mount
   file:
-    path: "{{ export_root }}"
+    path: "{{ bind_point }}"
     state: directory
   become: yes
 
 # create bind mount and add entry to /etc/fstab:
-#    {{ mount_point }}        {{ export_root }}    none    bind        0 0
-- name: "Create bind mount for {{ mount_point }} on {{ export_root }}"
+#    {{ mount_point }}        {{ bind_point }}    none    bind        0 0
+- name: "Create bind mount for {{ mount_point }} on {{ bind_point }}"
   ansible.posix.mount:
-    path: "{{ export_root }}"
+    path: "{{ bind_point }}"
     src: "{{ mount_point }}"
     fstype: none
     state: mounted
     opts: bind
   become: yes
+
+- name: "Ensure export root directory {{ export_root }} exists and create if it doesn't"
+  file:
+    path: "{{ export_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
 
 - name: Define root of the NFSv4 export tree
   blockinfile:

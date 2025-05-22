@@ -2,4 +2,4 @@
 volume_label: ""
 mount_point: /mnt
 mount_opts: "defaults"
-export_root: /srv/export
+bind_point: /srv/export

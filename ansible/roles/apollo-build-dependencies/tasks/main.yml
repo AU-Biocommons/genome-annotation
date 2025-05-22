@@ -95,6 +95,7 @@
     curl -L https://github.com/GMOD/Apollo/archive/refs/tags/{{ apollo_version }}.tar.gz -o Apollo-{{ apollo_version }}.tar.gz
   args:
     chdir: "{{ download_dir }}"
+    creates: "{{ download_dir }}/Apollo-{{ apollo_version }}.tar.gz"
   register: download_result
 
 - name: "Extract apollo {{ apollo_version }} tarball"
@@ -104,4 +105,11 @@
     dest: "{{ build_dir }}"
     remote_src: yes
   when: download_result.rc == 0
+
+- name: "Create symlink at /opt/Apollo pointing to extracted apollo source at {{ build_dir }}/Apollo-{{ apollo_version }}"
+  file:
+    src: "{{ build_dir }}/Apollo-{{ apollo_version }}"
+    dest: "/opt/Apollo"
+    state: link
+    force: yes  # This will overwrite the symlink if it already exists
 

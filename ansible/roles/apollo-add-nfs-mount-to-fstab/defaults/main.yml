@@ -5,5 +5,5 @@
 # apollo_padded_number 
 set_nfs_mount_dir_path: "/home/data/"
 set_nfs_mount_etc_fstab: "/etc/fstab"
-set_nfs_mount_server_private_ip: "192.168.0.68"
+set_nfs_mount_server_private_ip: "192.168.0.86"
 set_nfs_mount_machine_name: "{{apollo_short_machine_name}}"

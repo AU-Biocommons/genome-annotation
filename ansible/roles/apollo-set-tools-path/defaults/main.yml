@@ -1,3 +1,5 @@
 ---
-apollo_tools_path: "/opt/Apollo-{{apollo_build_version}}/extlib/bin:/opt/Apollo-{{apollo_build_version}}/jbrowse/bin"
+tomcat_version: 10
+tomcat_setenv_file_path: "/usr/share/tomcat{{ tomcat_version }}/bin"
+apollo_tools_path: "/opt/Apollo/extlib/bin:/opt/Apollo/jbrowse/bin"
 

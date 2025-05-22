@@ -1,0 +1,116 @@
+---
+- name: Install build dependencies
+  apt:
+    name:
+      - zlib1g
+      - zlib1g-dev
+      - libexpat1-dev
+      - libpng-dev
+      - libgd-dev # replaces libgd2-noxpm-dev
+      - build-essential
+      - git
+      - python3-software-properties
+      - python3
+      - make
+      - ant
+    state: present
+    update_cache: yes
+
+- name: Install NVM as user (which adds NVM initialisation to .bashrc)
+  become: false  # No root access needed here
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+  args:
+    creates: "$HOME/.nvm"  # Only run if NVM is not already installed
+
+- name: Download and install SDKMAN as user
+  become: false
+  shell: |
+    curl -s "https://get.sdkman.io" | bash
+  args:
+    creates: "$HOME/.sdkman"  # Only run if SDKMAN! is not already installed
+
+- name: Add SDKMAN initialisation to .bashrc
+  become: false
+  lineinfile:
+    path: "$HOME/.bashrc"
+    line: 'source $HOME/.sdkman/bin/sdkman-init.sh'
+    create: yes
+    state: present
+
+- name: Install Node.js version 12 using NVM
+  become: false
+  shell: |
+    . $HOME/.nvm/nvm.sh && nvm install 12
+  args:
+    executable: /bin/bash
+    chdir: "$HOME"
+    creates: "$HOME/.nvm/versions/node/v12.*"
+
+- name: Install Yarn globally with NVM
+  become: false
+  shell: |
+    . $HOME/.nvm/nvm.sh && npm install -g yarn
+  args:
+    executable: /bin/bash
+    chdir: "$HOME"
+    creates: "$HOME/.nvm/versions/node/v12.*/lib/node_modules/yarn"
+
+- name: "Install Grails {{ grails_version }} using SDKMAN"
+  become: false
+  shell: |
+    . $HOME/.sdkman/bin/sdkman-init.sh && sdk install grails {{ grails_version }}
+  args:
+    executable: /bin/bash
+    chdir: "$HOME"
+    creates: "$HOME/.sdkman/candidates/grails"
+
+- name: "Install Gradle {{ gradle_version }} using SDKMAN"
+  become: false
+  shell: |
+    . $HOME/.sdkman/bin/sdkman-init.sh && sdk install gradle {{ gradle_version }}
+  args:
+    executable: /bin/bash
+    chdir: "$HOME"
+    creates: "$HOME/.sdkman/candidates/gradle"
+
+- name: "Ensure apollo-build download directory exists: {{ download_dir }}"
+  file:
+    path: "{{ download_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: "Ensure apollo-build build directory exists: {{ build_dir }}"
+  file:
+    path: "{{ build_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: "Download Apollo release {{ apollo_version }} tarball"
+  become: false
+  shell: |
+    curl -L https://github.com/GMOD/Apollo/archive/refs/tags/{{ apollo_version }}.tar.gz -o Apollo-{{ apollo_version }}.tar.gz
+  args:
+    chdir: "{{ download_dir }}"
+    creates: "{{ download_dir }}/Apollo-{{ apollo_version }}.tar.gz"
+  register: download_result
+
+- name: "Extract apollo {{ apollo_version }} tarball"
+  become: false
+  unarchive:
+    src: "{{ download_dir }}/Apollo-{{ apollo_version }}.tar.gz"
+    dest: "{{ build_dir }}"
+    remote_src: yes
+  when: download_result.rc == 0
+
+- name: "Create symlink at /opt/Apollo pointing to extracted apollo source at {{ build_dir }}/Apollo-{{ apollo_version }}"
+  file:
+    src: "{{ build_dir }}/Apollo-{{ apollo_version }}"
+    dest: "/opt/Apollo"
+    state: link
+    force: yes  # This will overwrite the symlink if it already exists
+

@@ -1,6 +1,0 @@
----
-tomcat_setenv_file_path: "/usr/share/tomcat9/bin"
-tomcat_default_file_path: "/etc/default"
-tomcat_root_file_path: "/var/lib/tomcat9/webapps/ROOT"
-tomcat_java_home: "/usr/lib/jvm/java-8-openjdk-amd64"
-tomcat_java_opts: "-Djava.awt.headless=true -XX:+UseG1GC"

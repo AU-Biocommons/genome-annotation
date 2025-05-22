@@ -1,4 +1,22 @@
 ---
+
+- name: Ensure symlink /opt/Apollo points to current Apollo version directory
+  file:
+    src: "/opt/Apollo-{{ apollo_build_version }}"
+    dest: "/opt/Apollo"
+    state: link
+  force: yes
+
+- name: "Perl and Java settings in setenv.sh go in tomcat{{ tomcat_version }} bin directory"
+  template:
+    src: "setenv.sh"
+    dest: "{{ tomcat_setenv_file_path }}"
+    force: yes 
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rwx,g=rx,o=rx" 
+
 - name: "add Apollo tools path to user environment"
   copy:
     dest: /etc/profile.d/apollo-tools-path.sh

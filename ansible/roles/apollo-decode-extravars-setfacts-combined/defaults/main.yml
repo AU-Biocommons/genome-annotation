@@ -4,3 +4,4 @@
 # use  --extra-vars="target_environment=prod" or --extra-vars="target_environment=test"
 apollo_instance_number: "enter_in_command_line"
 target_environment: "enter_in_command_line"
+apollo_version: 2.8.1

@@ -47,13 +47,14 @@
     chdir: "$HOME"
     creates: "$HOME/.nvm/versions/node/v12.*"
 
-- name: Install Yarn globally
+- name: Install Yarn globally with NVM
   become: false
   shell: |
     . $HOME/.nvm/nvm.sh && npm install -g yarn
   args:
     executable: /bin/bash
     chdir: "$HOME"
+    creates: "$HOME/.nvm/versions/node/v12.*/lib/node_modules/yarn"
 
 - name: "Install Grails {{ grails_version }} using SDKMAN"
   become: false

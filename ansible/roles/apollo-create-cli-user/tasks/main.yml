@@ -20,10 +20,11 @@
 
 - set_fact:
     new_allowgroups_line: |
-      {% if create_user_name not in var_regex_sshd_config %}
-        {{ var_regex_sshd_config }} {{ create_user_name }}
+      {% set groups = var_regex_sshd_config | regex_replace('^AllowGroups\\s+', '') %}
+      {% if create_user_name not in groups %}
+      AllowGroups {{ groups }} {{ create_user_name }}
       {% else %}
-        {{ var_regex_sshd_config }}
+      AllowGroups {{ groups }}
       {% endif %}
 
 - name: "Append the CLI user's group (same as username) to /etc/ssh/sshd_config AllowGroups"

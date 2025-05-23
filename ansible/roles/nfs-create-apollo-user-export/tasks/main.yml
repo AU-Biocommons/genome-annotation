@@ -11,7 +11,7 @@
 - name: "Don't continue if {{ nfs_apollo_host_name }} is not in /etc/hosts"
   fail:
     msg: "The hostname '{{ nfs_apollo_host_name }}' is not present in /etc/hosts. Please update /etc/hosts (using playbook-set-etc-hosts-ip.yml) before running this playbook."
-    when: host_present.rc != 0
+  when: host_present.rc != 0
 
 # Creating the user without password and without ssh keys is equivalent to option --disabled-login
 - name: "Create user account {{ nfs_apollo_user_name }} with UID = {{ nfs_apollo_user_id }} on NFS server"
@@ -22,8 +22,8 @@
     create_home: "no"
     state: "present"
 
-- name: "Set user quota for {{ nfs_apollo_user_name }} on filesystem {{ nfs_mount_point }}"
-  command: "setquota -u {{ nfs_apollo_user_name }} {{ nfs_apollo_user_quota }} {{ nfs_mount_point }}"
+- name: "Set user quota for {{ nfs_apollo_user_name }} on filesystem {{ nfs_quota_root }}"
+  command: "setquota -u {{ nfs_apollo_user_name }} {{ nfs_apollo_user_quota }} {{ nfs_quota_root }}"
 
 - name: "Create NFS export directory {{ nfs_apollo_user_dir }} for {{ nfs_apollo_host_name }}"
   file:

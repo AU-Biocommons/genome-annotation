@@ -43,7 +43,7 @@
     #recurse: yes
   loop:
     - "apollo_data"
-    - "sourcedir"
+    - "sourcedata"
 
 - name: "Look for {{ nfs_apollo_host_name }} in /etc/exports"
   shell: "cat /etc/exports | grep {{ nfs_apollo_host_name }}"

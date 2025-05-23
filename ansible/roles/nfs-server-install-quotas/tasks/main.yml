@@ -56,9 +56,9 @@
         msg: "Device with label {{ volume_label }} not found"
       when: volume_device.stdout == ""
 
-    - name: "unmount {{ bind_point }} bind mount first"
+    - name: "unmount {{ export_root }} bind mount first"
       ansible.posix.mount:
-        path: "{{ bind_point }}"
+        path: "{{ export_root }}"
         state: unmounted
 
     - name: "then unmount {{ mount_point }} to change ext4 quota feature"
@@ -85,10 +85,10 @@
     passno: 2
   become: yes
 
-- name: "remount bind mount for {{ mount_point }} on {{ bind_point }}"
+- name: "remount {{ export_root }} which bind mounts to {{ bind_point }}"
   ansible.posix.mount:
-    path: "{{ bind_point }}"
-    src: "{{ mount_point }}"
+    path: "{{ export_root }}"
+    src: "{{ bind_point }}"
     fstype: none
     state: mounted
     opts: bind

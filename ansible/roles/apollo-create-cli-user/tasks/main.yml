@@ -18,13 +18,19 @@
   debug:
     msg: "{{ var_regex_sshd_config}}"
 
+- set_fact:
+    new_allowgroups_line: |
+      {% if create_user_name not in var_regex_sshd_config %}
+        {{ var_regex_sshd_config }} {{ create_user_name }}
+      {% else %}
+        {{ var_regex_sshd_config }}
+      {% endif %}
+
 - name: "Append the CLI user's group (same as username) to /etc/ssh/sshd_config AllowGroups"
   lineinfile:
     dest: "/etc/ssh/sshd_config"
     regexp: "^AllowGroups"
-    #line: "{{ var_regex_sshd_config }} {{ create_user_name }}" # not idempotent
-    line: |
-      AllowGroups {{ lookup('file', '/etc/ssh/sshd_config') | selectattr('key', 'equalto', 'AllowGroups') | map(attribute='value') | join(' ') }} {{ create_user_name }}
+    line: "{{ new_allowgroups_line }}"
     state: present
   notify:
     - Restart ssh

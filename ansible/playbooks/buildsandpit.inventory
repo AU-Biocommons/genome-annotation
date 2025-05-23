@@ -1,5 +1,5 @@
 [newapollovms]
-apollo-011.genome.edu.au ansible_host=apollo-011 target_environment=prod apollo_instance_number=011 apollo_subdomain_name=apollo-sandpit apollo_root_disk_device=/dev/vda2
+apollo-011.genome.edu.au ansible_host=apollo-011 target_environment=prod apollo_instance_number=011 apollo_subdomain_name=apollo-sandpit allowed_groups="ubuntu apollo_admin backup_user sandpit_user" apollo_root_disk_device=/dev/vda2
 
 [changeipvms]
 apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo

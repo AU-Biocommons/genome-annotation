@@ -29,21 +29,10 @@
     - 'udp'
     - 'tcp'
 
-- name: Create the mount point directory for bind mount
+- name: Create the mount point directory for bind mount if it doesn't yet exist
   file:
     path: "{{ bind_point }}"
     state: directory
-  become: yes
-
-# create bind mount and add entry to /etc/fstab:
-#    {{ mount_point }}        {{ bind_point }}    none    bind        0 0
-- name: "Create bind mount for {{ mount_point }} on {{ bind_point }}"
-  ansible.posix.mount:
-    path: "{{ bind_point }}"
-    src: "{{ mount_point }}"
-    fstype: none
-    state: mounted
-    opts: bind
   become: yes
 
 - name: "Ensure export root directory {{ export_root }} exists and create if it doesn't"
@@ -53,6 +42,17 @@
     owner: root
     group: root
     mode: '0755'
+
+# create bind mount and add entry to /etc/fstab:
+#    {{ bind_point }}        {{ export_root }}    none    bind        0 0
+- name: "Create bind mount for {{ export_root }} on {{ bind_point }}"
+  ansible.posix.mount:
+    path: "{{ export_root }}"
+    src: "{{ bind_point }}"
+    fstype: none
+    state: mounted
+    opts: bind
+  become: yes
 
 - name: Define root of the NFSv4 export tree
   blockinfile:

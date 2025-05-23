@@ -1,0 +1,86 @@
+---
+
+# don't do anything until /etc/hosts has an entry for the desired host
+- name: "Check if {{ nfs_apollo_host_name }} is present in /etc/hosts"
+  command: grep "{{ nfs_apollo_host_name }}" /etc/hosts
+  register: host_present
+  failed_when: false  # Prevent failure if grep doesn't find the host
+  changed_when: false  # Don't mark it as a change
+
+# Fail the playbook if the hostname is not found in /etc/hosts
+- name: "Don't continue if {{ nfs_apollo_host_name }} is not in /etc/hosts"
+  fail:
+    msg: "The hostname '{{ nfs_apollo_host_name }}' is not present in /etc/hosts. Please update /etc/hosts (using playbook-set-etc-hosts-ip.yml) before running this playbook."
+  when: host_present.rc != 0
+
+# Creating the user without password and without ssh keys is equivalent to option --disabled-login
+- name: "Create user account {{ nfs_apollo_user_name }} with UID = {{ nfs_apollo_user_id }} on NFS server"
+  user:
+    name: "{{ nfs_apollo_user_name }}"
+    uid: "{{ nfs_apollo_user_id }}"
+    shell: "/bin/false"
+    create_home: "no"
+    state: "present"
+
+- name: "Set user quota for {{ nfs_apollo_user_name }} on filesystem {{ nfs_quota_root }}"
+  command: "setquota -u {{ nfs_apollo_user_name }} {{ nfs_apollo_user_quota }} {{ nfs_quota_root }}"
+
+- name: "Create NFS export directory {{ nfs_apollo_user_dir }} for {{ nfs_apollo_host_name }}"
+  file:
+    path: "{{ nfs_apollo_user_dir }}"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "755"
+
+- name: "Create directories apollo_data and sourcedir under {{ nfs_apollo_user_dir }} with setgid for group {{ nfs_apollo_user_gid }}"
+  file:
+    path: "{{ nfs_apollo_user_dir }}/{{ item }}"
+    state: "directory"
+    owner: "{{ nfs_apollo_user_name }}"
+    group: "{{ nfs_apollo_user_gid }}"
+    mode: "02775"
+    #recurse: yes
+  loop:
+    - "apollo_data"
+    - "sourcedir"
+
+- name: "Look for {{ nfs_apollo_host_name }} in /etc/exports"
+  shell: "cat /etc/exports | grep {{ nfs_apollo_host_name }}"
+  register: var_etc_exports
+  # There are two ways this can be done as per below SO question
+  # https://stackoverflow.com/questions/50440515/ansible-error-on-shell-command-returning-zero
+  # using "ignore_errors: true"
+  # or as below which I think it's a cleaner way
+  failed_when: var_etc_exports.rc != 1 and var_etc_exports.rc != 0
+
+- name: "set facts"
+  set_fact:
+    var_regex_etc_exports: "{{ var_etc_exports.stdout }}"
+    var_line_to_append: "{{ nfs_export_root }}/{{ nfs_apollo_dir_name }} {{ nfs_apollo_host_name }}(rw,nohide,sync,subtree_check)"
+
+- name: "debug result of regex"
+  debug:
+    msg: "Result of regex = {{ var_regex_etc_exports }}"
+
+- name: "debug line to append"
+  debug:
+    msg: "Line to append = {{ var_line_to_append }}"
+
+- name: "Replace export for host {{ nfs_apollo_host_name }} in /etc/exports if it already exists"
+  lineinfile:
+    dest: /etc/exports
+    regexp: '/.*/{{ nfs_apollo_dir_name }} {{ nfs_apollo_host_name }}'
+    line: "{{ var_line_to_append }}"
+    state: present
+  when: var_etc_exports.stdout != ""
+
+- name: "Append export for host {{ nfs_apollo_host_name }} to /etc/exports"
+  lineinfile:
+    dest: /etc/exports
+    line: "{{ var_line_to_append }}"
+  when: var_etc_exports.stdout == ""
+
+- name: "Export new directory for host {{ nfs_apollo_host_name }}"
+  command: "exportfs -ra"
+

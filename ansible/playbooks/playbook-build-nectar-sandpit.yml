@@ -43,4 +43,11 @@
         name: common-tomcat-ubuntu
     - import_role:
         name: apollo-build-dependencies
+    # from here is standard apollo steps also required/desirable for sandpit
+    - import_role:
+        name: apollo-decode-extravars-setfacts-combined
+    - import_role:
+        name: apollo-create-cli-user
+    - import_role:
+        name: apollo-add-nfs-mount-to-fstab
 

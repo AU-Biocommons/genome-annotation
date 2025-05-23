@@ -10,7 +10,7 @@ nfs_apollo_user_id: "16{{ apollo_padded_number }}"
 nfs_mount_point: /mnt/user-data # the root of the filesystem
 nfs_export_root: /srv/export/data/nectar
 nfs_apollo_user_data_root: "{{ nfs_mount_point }}/nectar" # /mnt/user-data//nectar equivalent to /srv/export/data/nectar
-nfs_quota_root: "{{ nfs_export_root }}"
+nfs_quota_root: "{{ nfs_mount_point }}"
 nfs_apollo_user_dir: "{{ nfs_apollo_user_data_root }}/{{ nfs_apollo_dir_name }}"
 nfs_apollo_user_quota: "1024G 2048G 3350000 6700000"
 nfs_apollo_user_gid: 987 # tomcat GID on ubuntu 24.04

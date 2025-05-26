@@ -50,4 +50,13 @@
         name: apollo-create-cli-user
     - import_role:
         name: apollo-add-nfs-mount-to-fstab
+    - import_role:
+        name: apollo-certbot-create-cert
+    - import_role:
+        name: apollo-certbot-add-domain
+    - import_role:
+        name: apollo-nginx-set-conf
+    - import_role:
+        name: common-nginx-add-domain
+
 

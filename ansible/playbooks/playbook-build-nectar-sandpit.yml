@@ -58,5 +58,6 @@
         name: apollo-nginx-set-conf
     - import_role:
         name: common-nginx-add-domain
-
+    - import_role:
+        name: apollo-docker-configure-backup
 

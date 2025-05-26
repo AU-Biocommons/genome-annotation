@@ -14,9 +14,9 @@
 
 - name: "set fact apollo_full_domain_name and apollo_short_machine_name"
   set_fact:
-    apollo_full_domain_name: "{{ apollo_number_only }}.genome.edu.au"
-    apollo_short_machine_name: "apollo-{{apollo_number_only}}"
     apollo_padded_number: "{{ apollo_number_only }}"
+    apollo_short_machine_name: "apollo-{{apollo_number_only}}"
+    apollo_full_domain_name: "apollo-{{ apollo_number_only }}.genome.edu.au"
 
 - name: "Print full domain name"
   debug: 

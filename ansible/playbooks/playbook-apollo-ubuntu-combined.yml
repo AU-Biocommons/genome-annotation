@@ -56,9 +56,9 @@
     - import_role:
         name: common-nginx
     - import_role:
-        name: common-open-jdk
+        name: apollo-open-jdk8
     - import_role:
-        name: common-tomcat-ubuntu
+        name: apollo-tomcat9-ubuntu
     - import_role:
         name: apollo-add-nfs-mount-to-fstab
     - import_role:

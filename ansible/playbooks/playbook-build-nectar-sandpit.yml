@@ -37,15 +37,15 @@
         name: common-certbot-snapd
     - import_role:
         name: common-nginx
-    - import_role:
-        name: common-open-jdk
-    - import_role:
-        name: common-tomcat-ubuntu
-    - import_role:
-        name: apollo-build-dependencies
     # from here is standard apollo steps also required/desirable for sandpit
     - import_role:
         name: apollo-decode-extravars-setfacts-combined
+    - import_role:
+        name: apollo-openjdk8
+    - import_role:
+        name: apollo-tomcat9-ubuntu
+    - import_role:
+        name: apollo-build-dependencies
     - import_role:
         name: apollo-create-cli-user
     - import_role:
@@ -58,6 +58,8 @@
         name: apollo-nginx-set-conf
     - import_role:
         name: common-nginx-add-domain
+    - import_role:
+        name: apollo-docker-postgres
     # from here won't work until apollo is up and running on sandpit - for informational purposes ONLY!
     #- import_role:
     #    name: apollo-docker-configure-backup

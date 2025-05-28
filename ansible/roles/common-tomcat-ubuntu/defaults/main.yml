@@ -1,7 +1,0 @@
----
-tomcat_version: 10
-tomcat_template_file: "tomcat{{ tomcat_version }}"
-tomcat_default_file_path: "/etc/default/{{ tomcat_version }}"
-tomcat_root_file_path: "/var/lib/tomcat{{ tomcat_version }}/webapps/ROOT"
-tomcat_java_home: "/usr/lib/jvm/java-8-openjdk-amd64"
-tomcat_java_opts: "-Djava.awt.headless=true -XX:+UseG1GC"

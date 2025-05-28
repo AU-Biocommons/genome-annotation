@@ -1,13 +1,35 @@
 ---
-- name: "Install tomcat {{ tomcat_version }}"
+- name: Add Ubuntu 22.04 Jammy universe repo for tomcat9
+  apt_repository:
+    repo: "deb http://archive.ubuntu.com/ubuntu jammy universe"
+    filename: tomcat9-jammy
+    state: present
+  become: true
+
+- name: Pin tomcat9 to be installed from jammy
+  copy:
+    dest: /etc/apt/preferences.d/tomcat9-pin
+    content: |
+      Package: tomcat9
+      Pin: release n=jammy
+      Pin-Priority: 1001
+    mode: '0644'
+  become: true
+
+- name: Update apt cache
   apt:
-    name: "tomcat{{ tomcat_version }}"
+    update_cache: yes
+  become: true
+
+- name: Install tomcat9 from jammy repo
+  apt:
+    name: "tomcat9"
     state: "present"
     update_cache: yes
 
-- name: "Place tomcat{{ tomcat_version }} template in /etc/default directory"
+- name: "Place tomcat9 template in /etc/default directory to configure Java version and settings for systemd"
   template:
-    src: "{{ tomcat_template_file }}"
+    src: "tomcat9"
     dest: "{{ tomcat_default_file_path }}"
     force: yes
     backup: no
@@ -15,7 +37,18 @@
     group: root
     mode: "u=rw,g=r,o=r"
 
-- name: "Remove ROOT directory"
+- name: "Perl and Java settings in setenv.sh go in tomcat9 bin directory for Catalina"
+  template:
+    src: "setenv.sh"
+    dest: "{{ tomcat_setenv_file_path }}"
+    force: yes 
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rwx,g=rx,o=rx" 
+
+- name: "Remove tomcat ROOT webapp directory"
   file:
     path: "{{ tomcat_root_file_path }}"
     state: absent
+

@@ -56,7 +56,7 @@
     - import_role:
         name: common-nginx
     - import_role:
-        name: apollo-open-jdk8
+        name: apollo-openjdk8
     - import_role:
         name: apollo-tomcat9-ubuntu
     - import_role:

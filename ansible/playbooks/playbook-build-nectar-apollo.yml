@@ -1,0 +1,104 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  # The roles to be run by this playbook require many settings passed by inventory file
+  # or by variables set in the command line options, for example
+  # --extra-vars="apollo_instance_number=999"
+  # --extra-vars="apollo_subdomain_name=ubuntu-test"
+
+  tasks:
+    - import_role:
+        name: apollo-decode-extravars-setfacts-combined
+    - import_role:
+        name: apollo-pre-build-messages
+    - import_role:
+        name: common-conf-hostname-tz
+    - import_role:
+        name: common-conf-update_etc_hosts
+    - import_role:
+        name: common-add-admin-keys
+    - import_role:
+        name: common-configure-shell-logins
+    - import_role:
+        name: common-create-admin-users-logins
+    - import_role:
+        name: common-install-fail2ban
+    - import_role:
+        name: common-configure-ufw
+    - import_role:
+        name: common-nagios-nrpe
+    # TODO if use prometheus with grafana, configure here
+    # with:
+    #- import_role:
+    #    name: common-prometheus-node-exporter-ubuntu
+    # or:
+    #- import_role:
+    #    name: prometheus-exporters-ubuntu
+    #- import_role:
+    #    name: prometheus-exporters-set-conf
+    - import_role:
+        name: apollo-dependencies
+    - import_role:
+        name: common-webdav  # may no longer be required
+    - import_role:
+       # Need to install postgres 10 in a docker container in Ubuntu >= 20.04
+        name: common-docker-postgres
+    - import_role:
+        # Need to use snapd to install certbot in Ubuntu >= 20.04
+        name: common-certbot-snapd
+    - import_role:
+        name: common-nginx
+    - import_role:
+        name: apollo-openjdk8
+    - import_role:
+        name: apollo-tomcat9-ubuntu
+    - import_role:
+        name: apollo-create-cli-user
+    - import_role:
+        name: apollo-admin-users-groups
+    - import_role:
+        name: apollo-add-nfs-mount-to-fstab
+    - import_role:
+        name: apollo-certbot-create-cert
+    - import_role:
+        name: apollo-certbot-add-domain
+    - import_role:
+        name: apollo-nginx-set-conf
+    - import_role:
+        name: common-nginx-add-domain
+    - import_role:
+        name: apollo-setup-user-home-dir
+    - import_role:
+        name: apollo-copy-exec-to-bin
+    - import_role:
+        name: apollo-copy-war-ubuntu
+    - import_role:
+        name: apollo-deploy-war
+    - import_role:
+        name: apollo-docker-postgres
+    - import_role:
+        name: apollo-set-tools-path
+    - import_role:
+        name: apollo-restart-tomcat
+    - import_role:
+        name: common-restart-nginx
+    # add a delay here to ensure that tomcat (on restart) has finished
+    # extracting apollo from war file and apollo grails app has built database schema
+    # before inserting user
+    - import_role:
+        name: apollo-delay-for-grails-schema-completion
+    - import_role:
+        name: apollo-docker-postgres-create-admin
+    - import_role:
+        name: apollo-docker-configure-backup
+    - import_role:
+        name: apollo-restart-services
+    - import_role:
+        name: update-base-ubuntu
+    - import_role:
+        name: apollo-post-build-messages
+

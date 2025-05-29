@@ -1,5 +1,5 @@
 ---
-copy_exec_src_path: "/home/data/apollo_files/deploy"
+copy_exec_src_path: "/opt/apollo_files/deploy"
 copy_exec_name: 
  - "faToTwoBit"
  - "blat"

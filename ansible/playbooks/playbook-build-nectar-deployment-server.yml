@@ -90,18 +90,26 @@
       become: yes
       become_user: ubuntu
 
-    - name: "Download faToTwoBit from UCSC into {{ files_dest }}"
+    - name: "Create {{ files_dest }}/deploy directory with setgid bit set for apollo_admin group"
+      file:
+        path: "{{ files_dest }}/deploy"
+        owner: "ubuntu"
+        group: "apollo_admin"
+        state: directory
+        mode: 02775
+
+    - name: "Download faToTwoBit from UCSC into {{ files_dest }}/deploy"
       get_url:
         url: https://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/faToTwoBit
-        dest: "{{ files_dest }}/faToTwoBit"
+        dest: "{{ files_dest }}/deploy/faToTwoBit"
         mode: '0664' # when copied to apollo instances executable bit will be set on destination
       become: yes
       become_user: ubuntu
 
-    - name: "Download blat from UCSC into {{ files_dest }}"
+    - name: "Download blat from UCSC into {{ files_dest }}/deploy"
       get_url:
         url: https://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/blat/blat
-        dest: "{{ files_dest }}/blat"
+        dest: "{{ files_dest }}/deploy/blat"
         mode: '0664' # when copied to apollo instances executable bit will be set on destination
       become: yes
       become_user: ubuntu

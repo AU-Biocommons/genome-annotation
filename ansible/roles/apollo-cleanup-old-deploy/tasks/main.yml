@@ -1,8 +1,8 @@
 ---
-- name: "Stop tomcat{{ tomcat_version }} service prior to removing Apollo from tomcat webapps"
+- name: "Stop tomcat9 service prior to removing Apollo from tomcat webapps"
   systemd:
     state: "stopped"
-    name: "tomcat{{ tomcat_version }}"
+    name: "tomcat9"
 
 - name: "Remove Apollo war file from tomcat"
   file:

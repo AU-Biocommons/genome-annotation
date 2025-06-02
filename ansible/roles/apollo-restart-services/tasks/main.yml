@@ -1,10 +1,10 @@
 ---
 #This role should not be run by apollo playbook it should be run by a separate playbook
 #after manually obtaining ssh certificates that are defined in nginx conf file
-- name: "Restart tomcat{{ tomcat_version }} service"
+- name: "Restart tomcat9 service"
   systemd:
     state: "restarted"
-    name: "tomcat{{ tomcat_version }}"
+    name: "tomcat9"
 
 - name: "Restart nginx service"
   systemd:

@@ -16,13 +16,14 @@
     state: "restarted"
     name: "nagios-nrpe-server"
 
-- name: "Restart prometheus node exporter service"
-  systemd:
-    state: "restarted"
-    name: "prometheus-node-exporter"
+# NOTE: prometheus is not yet installed - these will need to be uncommented if we use prometheus
+#- name: "Restart prometheus node exporter service"
+#  systemd:
+#    state: "restarted"
+#    name: "prometheus-node-exporter"
 
-- name: "Restart prometheus postgres exporter service"
-  systemd:
-    state: "restarted"
-    name: "prometheus-postgres-exporter"
+#- name: "Restart prometheus postgres exporter service"
+#  systemd:
+#    state: "restarted"
+#    name: "prometheus-postgres-exporter"
     

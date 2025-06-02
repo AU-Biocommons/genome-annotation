@@ -21,6 +21,23 @@
     update_cache: yes
   become: true
 
+- name: "Ensure tomcat group exists with fixed GID {{ tomcat_gid }} for correct NFS file permissions"
+  group:
+    name: tomcat
+    gid: "{{ tomcat_gid }}"
+    system: yes
+    state: present
+
+- name: "Ensure tomcat user exists with same UID as GID {{ tomcat_gid }}"
+  user:
+    name: tomcat
+    uid: "{{ tomcat_gid }}"
+    group: tomcat
+    system: yes
+    shell: /usr/sbin/nologin
+    home: "{{ tomcat_home }}"
+    state: present
+
 - name: Install tomcat9 from jammy repo
   apt:
     name: "tomcat9"

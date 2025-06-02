@@ -12,7 +12,7 @@
         1. ensure that playbook to propogate new apollo VM's local IP has been run, with
            ansible-playbook playbook-set-etc-hosts-ip.yml --limit changeipvms
         2. ensure that playbook to create export on NFS for new VM has been run, with
-           ansible-playbook playbook-apollo-ubuntu20-nfs-server.yml --limit nfsservervms
+           ansible-playbook playbook-apollo-ubuntu-nfs-server.yml --limit nfsservervms
         3. configure 'newapollovms' in inventory file "hosts" in playbook directory
         4. unlock ansible-vault with
            export VAULT_PASSWORD="<SECRET_VAULT_PASSWORD>"

@@ -85,14 +85,14 @@ echo "run combined playbook to build apollo"
 # if no admin password provided, ansible will use default from ansible vault
 if [ -z "$admin_password" ]; then
     echo "INFO: using default apollo admin password from ansible vault"
-    echo "ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str"
-    ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str
+    echo "ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms $check_str"
+    ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms $check_str
 else
-    echo "ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms -extra-vars=\"apollo_admin_password=<SECRET>\" $check_str"
-    ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms --extra-vars="apollo_admin_password=$admin_password" $check_str
+    echo "ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms -extra-vars=\"apollo_admin_password=<SECRET>\" $check_str"
+    ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms --extra-vars="apollo_admin_password=$admin_password" $check_str
 fi
 if [ $? -ne 0 ] && [ -z "$check_str" ]; then
-  echo >&2 "Error running playbook-apollo-ubuntu-combined.yml... aborting!"
+  echo >&2 "Error running playbook-build-nectar-apollo.yml ... aborting!"
   echo >&2 "Note: a common cause of this is when unattended-upgrades is running on instance"
   echo >&2 "      fix by logging into the VM and killing the unattended-upgrades process with"
   echo >&2 "          sudo kill -KILL \$(pgrep -u root -f unattended-upgrades)"
@@ -109,6 +109,9 @@ if [ "$target_environment" = "test" ]; then
 	exit 0
 fi
 
+: <<'DISABLE_MONITORING_REGISTRATION'
+# ---------------------------
+# Skipping until monitoring is configured
 echo "add apollo instance to monitoring"
 echo "ansible-playbook playbook-apollo-ubuntu-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str"
 ansible-playbook playbook-apollo-ubuntu-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str
@@ -119,7 +122,11 @@ fi
 echo
 echo "Done."
 echo 
+# ---------------------------
+DISABLE_MONITORING_REGISTRATION
 
+: <<'DISABLE_BACKUP_REGISTRATION'
+# ---------------------------
 echo "add apollo instance to list of apollo's to backup"
 echo "ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file $inventory_file --limit backupservervms $check_str"
 ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file $inventory_file --limit backupservervms $check_str
@@ -130,6 +137,8 @@ fi
 echo
 echo "Done."
 echo 
+# ---------------------------
+DISABLE_BACKUP_REGISTRATION
 
 echo "Apollo build complete!"
 echo

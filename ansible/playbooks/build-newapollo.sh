@@ -11,8 +11,8 @@ Where:
         this file contains the 'apollovms' group defining all the apollo VMs
         primarily used for running system updates
         the new apollo VM will be added to this group in the hosts file
-    -r root_disk_device = /dev/vda1 (default) or /dev/sda1
-    -u ubuntu_version = default is 20.04, if not specify, eg 22.04
+    -r root_disk_device = /dev/vda2 (default)
+    -u ubuntu_version = default is 24.04, if not specify, eg 22.04
     apollo_number = 001-998 for target_environment=prod, or 999 for target_environment=test
     custom_hostname = alphanumeric string with '-' allowed within string
     private_ip_address = 192.168.X.Y
@@ -51,10 +51,10 @@ while getopts hdp:a:r:u: opt; do
         a) # non-default apollo inventory file
             apollovms_hosts_file="$OPTARG"
             ;;
-        r) # non-default (/dev/vda1) root disk
+        r) # non-default (/dev/vda2) root disk
             root_disk_device="-r $OPTARG"
             ;;
-        u) # non-default (20.04) ubuntu version
+        u) # non-default (24.04) ubuntu version
             ubuntu_version="-u $OPTARG"
             ;;
         \?) # unknown flag

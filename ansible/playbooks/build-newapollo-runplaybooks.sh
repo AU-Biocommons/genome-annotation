@@ -86,10 +86,10 @@ echo "run combined playbook to build apollo"
 if [ -z "$admin_password" ]; then
     echo "INFO: using default apollo admin password from ansible vault"
     echo "ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str"
-    ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms $check_str
+    ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms $check_str
 else
     echo "ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms -extra-vars=\"apollo_admin_password=<SECRET>\" $check_str"
-    ansible-playbook playbook-apollo-ubuntu-combined.yml --inventory-file $inventory_file --limit newapollovms --extra-vars="apollo_admin_password=$admin_password" $check_str
+    ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms --extra-vars="apollo_admin_password=$admin_password" $check_str
 fi
 if [ $? -ne 0 ] && [ -z "$check_str" ]; then
   echo >&2 "Error running playbook-apollo-ubuntu-combined.yml... aborting!"

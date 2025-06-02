@@ -10,6 +10,8 @@
   #   --limit apollo-sandpit.genome.edu.au
   tasks:
     - import_role:
+        name: apollo-decode-extravars-setfacts-combined
+    - import_role:
         name: common-conf-hostname-tz
     - import_role:
         name: common-conf-update_etc_hosts
@@ -23,6 +25,13 @@
         name: common-install-fail2ban
     - import_role:
         name: common-configure-ufw
+    - import_role:
+        name: apollo-openjdk8
+    - import_role:
+        name: apollo-tomcat9-ubuntu
+    - import_role:
+       # Need to install postgres 10 in a docker container in Ubuntu >= 20.04
+        name: apollo-install-docker-postgres
     #- import_role:
     #    name: common-nagios-nrpe # nagios server not yet available
     - import_role:
@@ -30,22 +39,12 @@
     - import_role:
         name: apollo-dependencies
     - import_role:
-       # Need to install postgres 10 in a docker container in Ubuntu >= 20.04
-        name: common-docker-postgres
+        name: apollo-build-dependencies
     - import_role: 
         # Use snapd to install certbot in Ubuntu >= 20.04
         name: common-certbot-snapd
     - import_role:
         name: common-nginx
-    # from here is standard apollo steps also required/desirable for sandpit
-    - import_role:
-        name: apollo-decode-extravars-setfacts-combined
-    - import_role:
-        name: apollo-openjdk8
-    - import_role:
-        name: apollo-tomcat9-ubuntu
-    - import_role:
-        name: apollo-build-dependencies
     - import_role:
         name: apollo-create-cli-user
     - import_role:

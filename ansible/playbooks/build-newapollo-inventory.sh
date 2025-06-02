@@ -7,8 +7,8 @@ Where:
     apollo_number = 001-998 for target_environment=prod, or 999 for target_environment=test
     custom_hostname = alphanumeric string with '-' allowed within string
     private_ip_address = 192.168.X.Y
-    root_disk_device = /dev/vda1 (default) or /dev/sda1
-    ubuntu_version = default is 20.04 otherwise specify, eg 22.04
+    root_disk_device = /dev/vda2 (default)
+    ubuntu_version = default is 24.04 otherwise specify, eg 22.04
 Output:
     buildapollo.XXX.inventory: resulting ansible inventory file for building apollo instance
                                (where XXX=apollo_number)
@@ -18,8 +18,8 @@ template_file="buildapollo.template"
 apollo_instance_number="0"
 custom_hostname=""
 ip_address=""
-root_disk_device="/dev/vda1"
-ubuntu_version="20.04"
+root_disk_device="/dev/vda2" # Nectar ARDC
+ubuntu_version="24.04"
 target_environment="prod"
 
 if [ $# -gt 1 ] && [ "$1" = "-t" ]; then

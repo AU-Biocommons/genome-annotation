@@ -13,6 +13,7 @@
   tasks:
     - import_role:
         name: apollo-decode-extravars-setfacts-combined
+      tags: ['always']
     - import_role:
         name: apollo-pre-build-messages
     - import_role:
@@ -101,7 +102,7 @@
       tags: ['deploy']
     - import_role:
         name: apollo-docker-postgres-insert-admin
-      tags: ['deploy']
+      tags: ['newonly']
     - import_role:
         name: apollo-docker-configure-backup
       tags: ['deploy']

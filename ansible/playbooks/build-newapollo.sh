@@ -120,7 +120,7 @@ fi
 shopt -s nullglob
 files=(/opt/apollo_files/restore/apollo-${apollo_number}_*.sql)
 if [ ${#files[@]} -gt 0 ]; then
-    skip_tags="-s deploy"
+    skip_tags="-s deploy,newonly"
     echo >&2 "Found database backup for apollo-${apollo_number} in /opt/apollo_files/restore - skipping deploy tasks in playbook."
 echo >&2 ""
 fi

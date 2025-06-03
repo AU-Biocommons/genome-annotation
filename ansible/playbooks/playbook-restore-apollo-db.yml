@@ -1,0 +1,59 @@
+---
+- name: Restore Apollo PostgreSQL database from backup on ansible server
+  hosts: all
+  become: true
+  become_method: sudo
+  remote_user: ubuntu
+  connection: "ssh"
+  vars:
+    restore_dir: "/opt/apollo_files/restore"
+    docker_container_name: "postgres10container"
+    container_tmp_dir: "/var/lib/postgresql/data"
+    tmp_copy_path: "/tmp/apollo_restore.sql"
+
+  tasks:
+    - name: "Look for database backup file in {{ restore_dir }}"
+      find:
+        paths: "{{ restore_dir }}"
+        patterns: "apollo-{{ apollo_instance_number }}_*.sql"
+        recurse: no
+      delegate_to: localhost
+      register: found_sql
+
+    - name: "Fail if no SQL file is found"
+      fail:
+        msg: "No SQL file found for apollo-{{ apollo_instance_number }} in {{ restore_dir }}"
+      when: found_sql.matched == 0
+
+    - name: "Copy SQL backup file to apollo-{{ apollo_instance_number }}"
+      copy:
+        src: "{{ item.path }}"
+        dest: "{{ tmp_copy_path }}"
+      loop: "{{ found_sql.files }}"
+      when: found_sql.matched > 0
+      loop_control:
+        label: "{{ item.path }}"
+
+    - name: "Stop Tomcat before database restore"
+      ansible.builtin.service:
+        name: tomcat9
+        state: stopped
+
+    - name: "Copy SQL backup file into Docker container"
+      ansible.builtin.command:
+        cmd: "docker cp {{ tmp_copy_path }} {{ docker_container_name }}:{{ container_tmp_dir }}/apollo_restore.sql"
+
+    - name: "Run PostgreSQL restore inside {{ docker_container_name }}"
+      ansible.builtin.command:
+        cmd: >
+          docker exec -u postgres {{ docker_container_name }} bash -c "psql -U postgres apollo-production < {{ container_tmp_dir }}/apollo_restore.sql"
+
+    - name: "Cleanup SQL file from container"
+      ansible.builtin.command:
+        cmd: "docker exec {{ docker_container_name }} rm -f {{ container_tmp_dir }}/apollo_restore.sql"
+
+    - name: "Cleanup SQL file from host /tmp"
+      file:
+        path: "{{ tmp_copy_path }}"
+        state: absent
+

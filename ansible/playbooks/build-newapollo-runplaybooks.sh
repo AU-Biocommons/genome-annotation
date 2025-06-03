@@ -33,7 +33,7 @@ while getopts hdp:s:t: opt; do
         s) # ansible tags to skip
             skip_tags="$OPTARG"
 	    ;;
-        s) # ansible tags to run
+        t) # ansible tags to run
             run_tags="$OPTARG"
 	    ;;
         \?) # unknown flag

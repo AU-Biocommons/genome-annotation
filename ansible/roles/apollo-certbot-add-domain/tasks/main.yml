@@ -1,5 +1,5 @@
 ---
 # non-interactively add custom domain to Let's Encrypt SSL certificate
 - name: "add custom domain {{custom_domain_name}} to Let's Encrypt SSL certificate {{apollo_cert_name}}"
-  command: "certbot certonly --noninteractive --nginx --cert-name {{apollo_cert_name}} --domains {{apollo_domain_name}},{{custom_domain_name}}"
+  command: "certbot certonly {% if target_environment == 'test' %}--test-cert{% endif %} --noninteractive --nginx --cert-name {{apollo_cert_name}} --domains {{apollo_domain_name}},{{custom_domain_name}}"
 

@@ -118,10 +118,10 @@ fi
 # if a postgres database backup exists for this apollo in /opt/apollo_files/restore/
 # assume that it will be used to rebuild this apollo, so skip 'deploy' steps
 shopt -s nullglob
-files=(/opt/apollo_files/restore/${apollo_number}_*.sql)
+files=(/opt/apollo_files/restore/apollo-${apollo_number}_*.sql)
 if [ ${#files[@]} -gt 0 ]; then
     skip_tags="-s deploy"
-    echo >&2 "Found database backup for ${apollo_number} in /opt/apollo_files/restore - skipping deploy tasks in playbook."
+    echo >&2 "Found database backup for apollo-${apollo_number} in /opt/apollo_files/restore - skipping deploy tasks in playbook."
 echo >&2 ""
 fi
 

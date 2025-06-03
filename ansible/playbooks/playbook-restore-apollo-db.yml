@@ -45,7 +45,7 @@
 
     - name: "Run PostgreSQL restore inside {{ docker_container_name }}"
       ansible.builtin.shell: |
-        docker exec -i -u postgres {{ docker_container_name }} psql -U postgres apollo-production < {{ container_tmp_dir }}/apollo_restore.sql
+        docker exec -i -u postgres {{ docker_container_name }} "psql -U postgres apollo-production < {{ container_tmp_dir }}/apollo_restore.sql"
 
     - name: "Cleanup SQL file from container"
       ansible.builtin.command:

@@ -75,30 +75,43 @@
     - import_role:
         name: apollo-copy-exec-to-bin
     - import_role:
-        name: apollo-copy-war-ubuntu
-    - import_role:
-        name: apollo-deploy-war
-    - import_role:
-        name: apollo-docker-postgres
+        name: apollo-copy-tarred-build
     - import_role:
         name: apollo-set-tools-path
     - import_role:
+        name: apollo-docker-postgres-createdb # create empty database owned by db user
+    # when rebuilding an apollo from a database backup,
+    # don't run the following steps to deploy apollo until the database has been restored
+    # ie
+    #   ansible-playbook playbook-build-nectar-apollo.yml --skip-tags deploy
+    - import_role:
+        name: apollo-deploy-war
+      tags: ['deploy']
+    - import_role:
         name: apollo-restart-tomcat
+      tags: ['deploy']
     - import_role:
         name: common-restart-nginx
+      tags: ['deploy']
     # add a delay here to ensure that tomcat (on restart) has finished
     # extracting apollo from war file and apollo grails app has built database schema
     # before inserting user
     - import_role:
         name: apollo-delay-for-grails-schema-completion
+      tags: ['deploy']
     - import_role:
-        name: apollo-docker-postgres-create-admin
+        name: apollo-docker-postgres-insert-admin
+      tags: ['deploy']
     - import_role:
         name: apollo-docker-configure-backup
+      tags: ['deploy']
     - import_role:
         name: apollo-restart-services
+      tags: ['deploy']
     - import_role:
         name: update-base-ubuntu
+      tags: ['deploy']
     - import_role:
         name: apollo-post-build-messages
+      tags: ['deploy']
 

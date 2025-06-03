@@ -34,6 +34,7 @@ ubuntu_version=""
 custom_hostname=""
 ip_address=""
 target_environment="prod"
+skip_tags="" # for rebuilding with a database backup
 
 while getopts hdp:a:r:u: opt; do
     case "$opt" in
@@ -114,10 +115,20 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# if a postgres database backup exists for this apollo in /opt/apollo_files/restore/
+# assume that it will be used to rebuild this apollo, so skip 'deploy' steps
+shopt -s nullglob
+files=(/opt/apollo_files/restore/apollo-${apollo_number}_*.sql)
+if [ ${#files[@]} -gt 0 ]; then
+    skip_tags="-s deploy"
+    echo >&2 "Found database backup for apollo-${apollo_number} in /opt/apollo_files/restore - skipping deploy tasks in playbook."
 echo >&2 ""
-buildargs=$(echo "$dryrun_str $admin_password_str $inventory_file" | tr -s ' ')
+fi
+
+echo >&2 ""
+buildargs=$(echo "$dryrun_str $admin_password_str $skip_tags $inventory_file" | tr -s ' ')
 echo >&2 "build-newapollo-runplaybooks.sh $buildargs"
-build-newapollo-runplaybooks.sh $dryrun_str $admin_password_str $inventory_file
+build-newapollo-runplaybooks.sh $buildargs
 if [ $? -ne 0 ]; then
     echo >&2 "Error occurred while running ansible scripts"
     echo >&2 "Fix issue and then re-run with:"
@@ -127,6 +138,17 @@ if [ $? -ne 0 ]; then
     echo >&2 "      which requires manually adding entry for apollo-$apollo_number to 'apollovms' section in the file ${apollovms_hosts_file}:"
     echo >&2 "          apollo-$apollo_number.genome.edu.au allowed_groups=\"ubuntu apollo_admin backup_user ${custom_hostname}_user\""
     exit 1
+fi
+
+if [ -n "$skip_tags" ]; then
+    deploy_tags="-t deploy"
+    buildargs_deploy=$(echo "$dryrun_str $admin_password_str $deploy_tags $inventory_file" | tr -s ' ')
+    echo >&2 "The Apollo database can now be restored from the backup in /opt/apollo_files/restore/"
+    echo >&2 "Once this has been done, re-run this script with:"
+    echo >&2 "    $fullcommandargs"
+    echo >&2 "Or just re-run playbook to complete final deployment steps with"
+    echo >&2 "          build-newapollo-runplaybooks.sh $buildargs_deploy"
+    echo >&2 ""
 fi
 
 if [ -z "$dryrun_str" ] && [ $target_environment = "prod" ]; then

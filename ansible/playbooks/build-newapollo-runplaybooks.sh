@@ -1,20 +1,24 @@
 #!/bin/bash
 
 FS='' read -d '' -r usage_str <<EOF
-Usage: $(basename $0)  [ -h ] [ -d ] [ -p admin_password ] inventory_file
+Usage: $(basename $0)  [ -h ] [ -d ] [ -p admin_password ] [ -s skip_tags ] [ -t tags ] inventory_file
 Where:
     -h provides this handy help
     -d specifies dry-run (don't build apollo) - runs ansible with --check
     -p admin_password = provide secret password for the apollo admin user (ops@qfab.org)
                         (otherwise default password from ansible vault will be used)
+    -s tags: comma-separated list of ansible tags to skip when running playbook (default none)
+    -t tags: comma-separated list of ansible tags to run when running playbook (default all)
     inventory_file = ansible inventory file for building apollo instance
 EOF
 
 admin_password=""
+skip_tags=""
+run_tags=""
 check_str=""
 target_environment="prod"
 
-while getopts hdp: opt; do
+while getopts hdp:s:t: opt; do
     case "$opt" in
         h) # help
             echo >&2 "$usage_str"
@@ -25,6 +29,12 @@ while getopts hdp: opt; do
             ;;
         p) # admin password for apollo
             admin_password="$OPTARG"
+	    ;;
+        s) # ansible tags to skip
+            skip_tags="$OPTARG"
+	    ;;
+        s) # ansible tags to run
+            run_tags="$OPTARG"
 	    ;;
         \?) # unknown flag
             echo >&2 "$usage_str"
@@ -48,6 +58,17 @@ else
     echo >&2 "$usage_str"
     exit 1
 fi
+
+# process ansible tags
+tag_args=""
+if [ -n "$run_tags" ]; then
+  tag_args+=" --tags \"$run_tags\""
+fi
+if [ -n "$skip_tags" ]; then
+  tag_args+=" --skip-tags \"$skip_tags\""
+fi
+# trim leading and trailing spaces
+tag_args="$(echo $tag_args | xargs)"
 
 # determine whether we are deploying a production apollo or test apollo (apollo-999)
 # grep args: -q be quiet; -F pattern is a plain string
@@ -85,11 +106,11 @@ echo "run combined playbook to build apollo"
 # if no admin password provided, ansible will use default from ansible vault
 if [ -z "$admin_password" ]; then
     echo "INFO: using default apollo admin password from ansible vault"
-    echo "ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms $check_str"
-    ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms $check_str
+    echo "ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms $tag_args $check_str"
+    ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms $tag_args $check_str
 else
-    echo "ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms -extra-vars=\"apollo_admin_password=<SECRET>\" $check_str"
-    ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms --extra-vars="apollo_admin_password=$admin_password" $check_str
+    echo "ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms -extra-vars=\"apollo_admin_password=<SECRET>\" $tag_args $check_str"
+    ansible-playbook playbook-build-nectar-apollo.yml --inventory-file $inventory_file --limit newapollovms --extra-vars="apollo_admin_password=$admin_password" $tag_args $check_str
 fi
 if [ $? -ne 0 ] && [ -z "$check_str" ]; then
   echo >&2 "Error running playbook-build-nectar-apollo.yml ... aborting!"

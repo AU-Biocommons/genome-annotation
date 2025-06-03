@@ -26,12 +26,12 @@
     #- import_role:
     #    name: common-tomcat-ubuntu
     - import_role:
-        name: apollo-copy-war-ubuntu
+        name: apollo-copy-tarred-build
     - import_role:
         name: apollo-deploy-war
     # the following will update the postgres password for access from apollo web app (currently assumes latest password)
     - import_role:
-        name: apollo-docker-postgres
+        name: apollo-docker-postgres-createdb
     # the following is needed to update PERL5LIB to match location of Perl libraries in new apollo_version
     - import_role:
         name: apollo-set-tools-path

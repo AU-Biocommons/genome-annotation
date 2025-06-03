@@ -58,10 +58,10 @@
     - import_role:
         name: common-nginx-add-domain
     - import_role:
-        name: apollo-docker-postgres
+        name: apollo-docker-postgres-createdb
     # from here won't work until apollo is up and running on sandpit - for informational purposes ONLY!
     #- import_role:
     #    name: apollo-docker-configure-backup
     #- import_role:
-    #    name: apollo-docker-postgres-create-admin
+    #    name: apollo-docker-postgres-insert-admin
 

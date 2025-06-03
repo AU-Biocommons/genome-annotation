@@ -34,6 +34,11 @@
       loop_control:
         label: "{{ item.path }}"
 
+    - name: "Stop Tomcat before database restore"
+      ansible.builtin.service:
+        name: tomcat9
+        state: stopped
+
     - name: "Copy SQL backup file into Docker container"
       ansible.builtin.command:
         cmd: "docker cp {{ tmp_copy_path }} {{ docker_container_name }}:{{ container_tmp_dir }}/apollo_restore.sql"

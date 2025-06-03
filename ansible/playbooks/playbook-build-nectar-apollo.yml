@@ -102,7 +102,7 @@
       tags: ['deploy']
     - import_role:
         name: apollo-docker-postgres-insert-admin
-      tags: ['deploy']
+      tags: ['newonly']
     - import_role:
         name: apollo-docker-configure-backup
       tags: ['deploy']

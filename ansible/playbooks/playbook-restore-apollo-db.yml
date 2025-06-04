@@ -12,20 +12,28 @@
     tmp_copy_path: "/tmp/apollo_restore.sql"
 
   tasks:
+    - name: "Convert apollo_instance_number {{ apollo_instance_number }} to a 3-digit string with leading zeros"
+      set_fact:
+        apollo_number_only: "{{ '%03d' | format(apollo_instance_number|int) }}"
+
+    - name: "set fact apollo_short_machine_name as apollo-{{ apollo_number_only }}"
+      set_fact:
+        apollo_short_machine_name: "apollo-{{ apollo_number_only }}"
+
     - name: "Look for database backup file in {{ restore_dir }}"
       find:
         paths: "{{ restore_dir }}"
-        patterns: "apollo-{{ apollo_instance_number }}_*.sql"
+        patterns: "{{ apollo_short_machine_name }}_*.sql"
         recurse: no
       delegate_to: localhost
       register: found_sql
 
     - name: "Fail if no SQL file is found"
       fail:
-        msg: "No SQL file found for apollo-{{ apollo_instance_number }} in {{ restore_dir }}"
+        msg: "No SQL file found for {{ apollo_short_machine_name }} in {{ restore_dir }}"
       when: found_sql.matched == 0
 
-    - name: "Copy SQL backup file to apollo-{{ apollo_instance_number }}"
+    - name: "Copy SQL backup file to {{ apollo_short_machine_name }}"
       copy:
         src: "{{ item.path }}"
         dest: "{{ tmp_copy_path }}"

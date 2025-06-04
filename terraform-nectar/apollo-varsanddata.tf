@@ -9,7 +9,7 @@ locals {
     temporary_apollo_numbers = {
     #    "005" = "2025MMDD",
     #    "023" = "2025MMDD",
-        "999" = "20250502"
+        "999" = "20250603"
     }
 
     # internal Apollo instance numbers and creation date: tfi_apollo_XXX_YYYYMMDD
@@ -21,9 +21,15 @@ locals {
 
     # client Apollo instance numbers and creation date: tfc_apollo_XXX_YYYYMMDD
     client_apollo_numbers = {
-    #    "012" = "2025MMDD",
-    #    "020" = "2025MMDD",
-    #    "035" = "2025MMDD"
+        "003" = "20250604",
+        "016" = "20250604",
+        "017" = "20250604",
+        "021" = "20250604",
+        "022" = "20250604",
+        "024" = "20250604",
+        "025" = "20250604",
+        "030" = "20250604",
+        "035" = "20250604"
     }
 
     # apollos with non-default (4c16r r3.medium) flavor
@@ -33,7 +39,7 @@ locals {
     apollo_flavors = {
         "011" = "m3.large",
         #"020" = "r3.large",
-        #"035" = "r3.large",
+        "035" = "r3.large",
         "999" = "r3.small"
     }
 

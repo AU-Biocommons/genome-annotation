@@ -146,9 +146,10 @@ if [ -n "$skip_tags" ]; then
     echo >&2 "The Apollo database can now be restored from the backup in /opt/apollo_files/restore/ with"
     echo >&2 "    ansible-playbook playbook-restore-apollo-db.yml --inventory-file $inventory_file --limit newapollovms"
     echo >&2 "Then the apollo's migrated apollo_data and sourcedata should be moved into place on apollo-user-nfs with the correct group ownership"
-    echo >&2 "Once this has been done, re-run this script with:"
+    echo >&2 "Once this has been done, remove the apollo database backup from /opt/apollo_files/restore/"
+    echo >&2 "and re-run this script with:"
     echo >&2 "    $fullcommandargs"
-    echo >&2 "Or just re-run playbook to complete final deployment steps with"
+    echo >&2 "Or simply re-run playbook to complete final deployment steps with"
     echo >&2 "          build-newapollo-runplaybooks.sh $buildargs_deploy"
     echo >&2 ""
 fi

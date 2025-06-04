@@ -14,11 +14,11 @@
   tasks:
     - name: "Convert apollo_instance_number {{ apollo_instance_number }} to a 3-digit string with leading zeros"
       set_fact:
-      apollo_number_only: "{{ '%03d' | format(apollo_instance_number|int) }}"
+        apollo_number_only: "{{ '%03d' | format(apollo_instance_number|int) }}"
 
     - name: "set fact apollo_short_machine_name as apollo-{{ apollo_number_only }}"
       set_fact:
-      apollo_short_machine_name: "apollo-{{ apollo_number_only }}"
+        apollo_short_machine_name: "apollo-{{ apollo_number_only }}"
 
     - name: "Look for database backup file in {{ restore_dir }}"
       find:

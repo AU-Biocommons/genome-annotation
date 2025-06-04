@@ -23,7 +23,7 @@
     - name: "Look for database backup file in {{ restore_dir }}"
       find:
         paths: "{{ restore_dir }}"
-        patterns: {{ apollo_short_machine_name }}_*.sql"
+        patterns: "{{ apollo_short_machine_name }}_*.sql"
         recurse: no
       delegate_to: localhost
       register: found_sql

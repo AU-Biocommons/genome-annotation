@@ -6,6 +6,14 @@
     uid: "{{ create_user_id }}"
     state: "present"
 
+# needed where apollo organism was created on pawsey using path via symlink in home directory
+# also simplifies admin, but does mean that tomcat can read user's home directory
+- name: "Make the apollo CLI user home directory /home/{{ create_user_name }} world-readable"
+  file:
+    path: "/home/{{ create_user_name }}"
+    mode: "0755"
+    state: directory
+
 - name: "Read /etc/ssh/sshd_config content"
   shell:
     cmd: "cat /etc/ssh/sshd_config"

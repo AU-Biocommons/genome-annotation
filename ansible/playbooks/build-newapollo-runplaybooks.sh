@@ -146,8 +146,6 @@ echo
 # ---------------------------
 DISABLE_MONITORING_REGISTRATION
 
-: <<'DISABLE_BACKUP_REGISTRATION'
-# ---------------------------
 echo "add apollo instance to list of apollo's to backup"
 echo "ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file $inventory_file --limit backupservervms $check_str"
 ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file $inventory_file --limit backupservervms $check_str
@@ -158,8 +156,6 @@ fi
 echo
 echo "Done."
 echo 
-# ---------------------------
-DISABLE_BACKUP_REGISTRATION
 
 echo "Apollo build complete!"
 echo

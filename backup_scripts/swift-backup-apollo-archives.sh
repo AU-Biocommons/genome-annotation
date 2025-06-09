@@ -4,8 +4,8 @@
 # from apollo-XXX_archive directory
 # Note: this should be run after backup-apollos.sh in the crontab
 
-BACKUP_ROOT=/mnt/backup00
-BACKUP_BIN=$BACKUP_ROOT/scripts
+BACKUP_ROOT=/mnt/backup00/nectar
+BACKUP_BIN=$HOME/scripts
 
 SWIFT_CRED_FILE=$HOME/app-cred-swift-openrc.sh
 #SWIFT_PATH=$HOME/.local/bin

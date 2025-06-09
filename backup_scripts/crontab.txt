@@ -5,14 +5,11 @@
 # |  |  |  |  +---- day of week (0 - 6) (Sunday=0 or 7)
 # |  |  |  |  |
 
-# 30 22  *  *  * /mnt/backup00/scripts/backup-deploy-server.sh # combined with backup server
-# 00 23  *  *  * /mnt/backup00/scripts/backup-backup-server.sh # retired
-
   0 22  *  *  * /mnt/backup00/scripts/backup-monitor-server.sh
- 15 22  *  *  * /mnt/backup00/scripts/backup-file-server.sh
+ 15 22  *  *  * /mnt/backup00/scripts/backup-user-nfs.sh
  30 22  *  *  * /mnt/backup00/scripts/backup-combo-deploy-server.sh
  00 23  *  *  * /mnt/backup00/scripts/backup-django-portal.sh
- 15 23  *  *  * /mnt/backup00/scripts/backup-wheat-dawn-apollo.sh
+ 15 23  *  *  * /mnt/backup00/scripts/backup-jbrowse-portal.sh
  30 23  *  *  * /mnt/backup00/scripts/backup-build-apollo.sh
   0 0   *  *  * /mnt/backup00/scripts/backup-apollos.sh
   0 2   *  *  * /mnt/backup00/scripts/swift-backup-delete-old-SQL.sh

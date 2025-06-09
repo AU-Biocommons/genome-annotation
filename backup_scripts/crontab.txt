@@ -5,15 +5,15 @@
 # |  |  |  |  +---- day of week (0 - 6) (Sunday=0 or 7)
 # |  |  |  |  |
 
-  0 22  *  *  * /mnt/backup00/scripts/backup-monitor-server.sh
- 15 22  *  *  * /mnt/backup00/scripts/backup-user-nfs.sh
- 30 22  *  *  * /mnt/backup00/scripts/backup-combo-deploy-server.sh
- 00 23  *  *  * /mnt/backup00/scripts/backup-django-portal.sh
- 15 23  *  *  * /mnt/backup00/scripts/backup-jbrowse-portal.sh
- 30 23  *  *  * /mnt/backup00/scripts/backup-build-apollo.sh
-  0 0   *  *  * /mnt/backup00/scripts/backup-apollos.sh
-  0 2   *  *  * /mnt/backup00/scripts/swift-backup-delete-old-SQL.sh
- 15 2   *  *  * /mnt/backup00/scripts/swift-backup-delete-old-data.sh
- 30 2   *  *  * /mnt/backup00/scripts/swift-backup-apollo-SQL.sh
- 00 3   *  *  * /mnt/backup00/scripts/swift-backup-apollo-data.sh
+  0 22  *  *  * /opt/github-ansible/backup_scripts/backup-monitor-server.sh
+ 15 22  *  *  * /opt/github-ansible/backup_scripts/backup-user-nfs.sh
+ 30 22  *  *  * /opt/github-ansible/backup_scripts/backup-combo-deploy-server.sh
+ 00 23  *  *  * /opt/github-ansible/backup_scripts/backup-django-portal.sh
+ 15 23  *  *  * /opt/github-ansible/backup_scripts/backup-jbrowse-portal.sh
+ 30 23  *  *  * /opt/github-ansible/backup_scripts/backup-build-apollo.sh
+  0 0   *  *  * /opt/github-ansible/backup_scripts/backup-apollos.sh
+  0 2   *  *  * /opt/github-ansible/backup_scripts/swift-backup-delete-old-SQL.sh
+ 15 2   *  *  * /opt/github-ansible/backup_scripts/swift-backup-delete-old-data.sh
+ 30 2   *  *  * /opt/github-ansible/backup_scripts/swift-backup-apollo-SQL.sh
+ 00 3   *  *  * /opt/github-ansible/backup_scripts/swift-backup-apollo-data.sh
 

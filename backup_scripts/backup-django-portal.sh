@@ -6,7 +6,7 @@ REMOTE_HOST="apollo-portal"
 DAY=$(date +"%Y%m%d")
 DAY_OF_WEEK=$(date +%A)
 
-BACKUP_VOL="/mnt/backup00/pawsey"
+BACKUP_VOL="/mnt/backup00/nectar"
 BACKUP_DIR="${BACKUP_VOL}/${NAME}"
 LOGFILE_DIR="${BACKUP_VOL}/logs"
 LOGFILE="${LOGFILE_DIR}/${NAME}.log"

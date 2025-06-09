@@ -8,7 +8,14 @@ USERS_QUERY="SELECT grails_user.id, role.name AS role_name, inactive, first_name
 TOKENS_COUNT="SELECT COUNT(DISTINCT client_token) AS client_token_count FROM preference;"
 TOKENS_LATEST="SELECT COALESCE((SELECT 'last update on ' || last_updated::date as update_day FROM preference ORDER BY update_day DESC LIMIT 1), '-') AS result;"
 
-LIST_OF_INSTANCES="/mnt/backup00/list_of_apollo_instances.txt"
+# optionally specify path to the file listing apollo instances as the first argument
+LIST_OF_INSTANCES="${1:-list_of_apollo_instances.txt}"
+
+# Check if the file exists before proceeding
+if [[ ! -f "$LIST_OF_INSTANCES" ]]; then
+  echo "Error: File '$LIST_OF_INSTANCES' not found."
+  exit 1
+fi
 
 while read REMOTE_HOST; do
     #echo "$REMOTE_HOST"

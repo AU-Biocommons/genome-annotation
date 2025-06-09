@@ -3,8 +3,8 @@
 # delete backups from Apollo_SQL_Archive container when they reach 37 days old (5 weeks 2 days)
 # Note: this should be run after backup-apollos.sh in the crontab
 
-BACKUP_ROOT=/mnt/backup00
-BACKUP_BIN=$BACKUP_ROOT/scripts
+BACKUP_ROOT=/mnt/backup00/nectar
+BACKUP_BIN=$HOME/scripts
 APOLLO_ARCHIVE_COUNT=$(ls -ld $BACKUP_ROOT/apollo-???_archive | wc -l)
 
 SWIFT_CRED_FILE=$HOME/app-cred-swift-openrc.sh

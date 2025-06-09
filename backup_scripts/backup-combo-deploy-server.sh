@@ -1,11 +1,11 @@
 #!/bin/bash
-NAME="apollo-deploy"
+NAME="apollo-backup"
 ARCHIVE_DAY="Monday"
 #REMOTE_HOST="apollo-deploy"
 DAY=$(date +"%Y%m%d")
 DAY_OF_WEEK=$(date +%A)
 
-BACKUP_VOL="/mnt/backup00/pawsey"
+BACKUP_VOL="/mnt/backup00/nectar"
 BACKUP_DIR="${BACKUP_VOL}/${NAME}"
 LOGFILE_DIR="${BACKUP_VOL}/logs"
 LOGFILE="${LOGFILE_DIR}/${NAME}.log"
@@ -18,7 +18,7 @@ if [ ! -d $ARCHIVE_DIR ]; then
     mkdir $ARCHIVE_DIR;
 fi
 
-# remote backup - when apollo-deploy was separate
+# remote backup - when apollo-deploy was separate from apollo-backup
 #/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --delete-excluded --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
 
 # local backup - now that apollo-deploy is also apollo-backup

@@ -205,3 +205,13 @@
         msg: "Warning: app-cred-swift-openrc.sh needs to be manually downloaded from Nectar and copied to /home/backup_user/app-cred-swift-openrc.sh ... apollo backups to Swift object store will fail without this!"
       when: not backup_openrc.stat.exists
 
+    - name: "Check if list of apollos to backup /home/backup_user/list_of_apollo_instances.txt exists"
+      stat:
+        path: /home/backup_user/list_of_apollo_instances.txt
+      register: backup_list_of_apollos
+
+    - name: "Print warning if list_of_apollo_instances.txt doesn't exist"
+      debug:
+        msg: "Warning: /home/backup_user/list_of_apollo_instances.txt needs to be created or copied from existing list!"
+      when: not backup_list_of_apollos.stat.exists
+

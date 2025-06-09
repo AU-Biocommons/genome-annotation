@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LIST_OF_INSTANCES="/mnt/backup00/list_of_apollo_instances.txt"
-#LIST_OF_INSTANCES="/home/backup_user/list_of_apollo_instances.test.txt"
-EXCLUSION_LIST="/mnt/backup00/apollo_data_exclude_list.txt"
+LIST_OF_INSTANCES="/home/backup_user/list_of_apollo_instances.txt"
+#LIST_OF_INSTANCES="/mnt/backup00/list_of_apollo_instances.txt"
+#EXCLUSION_LIST="/mnt/backup00/apollo_data_exclude_list.txt"
 
 while read REMOTE_HOST; do
 NAME="$REMOTE_HOST"
@@ -11,7 +11,7 @@ INSTANCE_NUM=$((10#$tmp%7))
 DAY=$(date +"%Y%m%d")
 DAY_NUM_OF_WEEK=$(date +%w)
 
-BACKUP_VOL="/mnt/backup00/pawsey"
+BACKUP_VOL="/mnt/backup00/nectar"
 BACKUP_DIR="${BACKUP_VOL}/${NAME}"
 LOGFILE_DIR="${BACKUP_VOL}/logs"
 LOGFILE="${LOGFILE_DIR}/${NAME}.log"

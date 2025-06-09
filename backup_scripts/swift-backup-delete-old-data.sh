@@ -4,8 +4,8 @@
 # Note: due to storage limitations this should be run before backup-apollos.sh in the crontab
 #       so that oldest data is deleted before a new one is added - ie only keep 2 weeks worth
 
-BACKUP_ROOT=/mnt/backup00
-BACKUP_BIN=$BACKUP_ROOT/scripts
+BACKUP_ROOT=/mnt/backup00/nectar
+BACKUP_BIN=$HOME/scripts
 APOLLO_BACKUP_COUNT=$(ls -ld $BACKUP_ROOT/apollo-??? | wc -l)
 
 SWIFT_CRED_FILE=$HOME/app-cred-swift-openrc.sh

@@ -1,16 +1,18 @@
 #!/bin/bash
 
-EXCLUSION_LIST="/mnt/backup00/apollo_data_exclude_list.txt"
+#EXCLUSION_LIST="/mnt/backup00/apollo_data_exclude_list.txt"
 
-REMOTE_HOST="apollo-012" # wheat-dawn - JBrowse only
-NAME="$REMOTE_HOST"
+#REMOTE_HOST="apollo-012" # wheat-dawn - JBrowse only
+#NAME="$REMOTE_HOST"
+REMOTE_HOST="jbrowse-portal" # portal for JBrowse
+NAME="jbrowse-portal"
 
 tmp=${REMOTE_HOST:7:3}
 INSTANCE_NUM=$((10#$tmp%7))
 DAY=$(date +"%Y%m%d")
 DAY_NUM_OF_WEEK=$(date +%w)
 
-BACKUP_VOL="/mnt/backup00/pawsey"
+BACKUP_VOL="/mnt/backup00/nectar"
 BACKUP_DIR="${BACKUP_VOL}/${NAME}"
 LOGFILE_DIR="${BACKUP_VOL}/logs"
 LOGFILE="${LOGFILE_DIR}/${NAME}.log"

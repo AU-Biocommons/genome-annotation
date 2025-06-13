@@ -1,17 +1,14 @@
-[newservervms]
-# this will be apollo-portal when go live
-#django-portal.genome.edu.au
-apollo-portal.genome.edu.au
+[newwebservervms]
+apollo-portal.genome.edu.au # ensure CNAME points to apollo-portal-online before using this
+#ubuntu-test.genome.edu.au # testing only
 
 [changeipvms]
-apollo-deploy.genome.edu.au ansible_user=ubuntu admin_group=sudo
-apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
-#apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
+#apollo-user-nfs.genome.edu.au ansible_user=ubuntu admin_group=sudo
 
 [changeipvms:vars]
-# this will be apollo-portal when go live
-# hostname_for_ip=django-portal
 hostname_for_ip=apollo-portal
-private_ip=192.168.0.123
-
+private_ip=192.168.0.104
+#hostname_for_ip=ubuntu-test
+#private_ip=192.168.0.242

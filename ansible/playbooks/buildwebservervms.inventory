@@ -1,6 +1,5 @@
 [newwebservervms]
-#apollo-portal.genome.edu.au # currently points to apollo-portal-offline
-apollo-portal-main.genome.edu.au # use this when apollo-portal redirects to apollo-portal-offline
+apollo-portal.genome.edu.au # ensure CNAME points to apollo-portal-online before using this
 #ubuntu-test.genome.edu.au # testing only
 
 [changeipvms]

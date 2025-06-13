@@ -21,7 +21,7 @@
         name: common-create-admin-users-logins
     - import_role:
         name: web-admin-users-groups
-      when: "'newportalvms' in group_names"
+      when: "'newwebservervms' in group_names"
     - import_role:
         name: common-install-fail2ban
     - import_role:
@@ -32,8 +32,8 @@
         name: common-install-utils
     - import_role:                
         name: common-certbot-snapd
-      when: "'newportalvms' in group_names"
+      when: "'newwebservervms' in group_names"
     - import_role:                
         name: common-nginx        
-      when: "'newportalvms' in group_names"
+      when: "'newwebservervms' in group_names"
 

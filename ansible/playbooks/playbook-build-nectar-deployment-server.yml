@@ -135,6 +135,10 @@
       copy:
         dest: /home/ubuntu/.ssh/config
         content: |
+          # disable ssh agent-loaded identities by default (fixes multi-key auth failures)
+          Host *
+               IdentitiesOnly yes
+
           Host apollo-*
                User ubuntu
                IdentityFile /home/ubuntu/.ssh/apollo-nectar

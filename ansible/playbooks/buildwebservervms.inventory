@@ -1,6 +1,7 @@
 [newwebservervms]
-#apollo-portal.genome.edu.au
-ubuntu-test.genome.edu.au
+#apollo-portal.genome.edu.au # currently points to apollo-portal-offline
+apollo-portal-main.genome.edu.au # use this when apollo-portal redirects to apollo-portal-offline
+#ubuntu-test.genome.edu.au # testing only
 
 [changeipvms]
 apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo
@@ -8,7 +9,7 @@ apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
 #apollo-user-nfs.genome.edu.au ansible_user=ubuntu admin_group=sudo
 
 [changeipvms:vars]
-#hostname_for_ip=apollo-portal
-#private_ip=192.168.0.104
-hostname_for_ip=ubuntu-test
-private_ip=192.168.0.242
+hostname_for_ip=apollo-portal
+private_ip=192.168.0.104
+#hostname_for_ip=ubuntu-test
+#private_ip=192.168.0.242

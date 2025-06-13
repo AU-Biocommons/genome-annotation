@@ -114,6 +114,7 @@
       become: yes
       become_user: ubuntu
 
+    # NOTE: this is overridden by project ansible.cfg so not picked up
     - name: "Create ubuntu user ansible.cfg to specify default private key to use with ansible"
       copy:
         dest: /home/ubuntu/.ansible.cfg
@@ -140,6 +141,12 @@
                IdentitiesOnly yes
 
           Host apollo-*
+               User ubuntu
+               IdentityFile /home/ubuntu/.ssh/apollo-nectar
+               IdentitiesOnly yes
+               StrictHostKeyChecking no
+
+          Host *.genome.edu.au
                User ubuntu
                IdentityFile /home/ubuntu/.ssh/apollo-nectar
                IdentitiesOnly yes

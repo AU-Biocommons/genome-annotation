@@ -20,7 +20,7 @@ apollo-035.genome.edu.au ansible_host=apollo-035 allowed_groups="ubuntu apollo_a
 apollo-backup.genome.edu.au ansible_host=localhost
 apollo-user-nfs.genome.edu.au ansible_host=apollo-user-nfs
 #apollo-portal-main.genome.edu.au # use this when apollo-portal redirects to apollo-portal-offline
-apollo-portal.genome.edu.au
+apollo-portal.genome.edu.au ansible_host=apollo-portal
 apollo-monitor.genome.edu.au
 ubuntu-test.genome.edu.au
 

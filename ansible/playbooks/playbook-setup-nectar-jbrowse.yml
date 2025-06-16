@@ -1,0 +1,17 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  tasks:
+    - import_role:
+        name: jbrowse-dependencies
+    - import_role:
+        name: jbrowse-install-nodejs
+    - import_role:
+        name: jbrowse-build-jbrowse
+    - import_role:
+        name: jbrowse-admin-users-groups
+

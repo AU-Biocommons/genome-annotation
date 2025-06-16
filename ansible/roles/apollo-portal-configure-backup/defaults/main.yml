@@ -1,5 +1,5 @@
 ---
-backup_server_cidr: 192.168.0.90/32
+backup_server_cidr: 192.168.0.26/32
 
 #postgres_db_name: "apollo_portal" # defined in group_vars/newportalvms/vars
 postgres_backup_user: "backup_user"

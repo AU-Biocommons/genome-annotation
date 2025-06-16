@@ -1,13 +1,12 @@
 [newservervms]
 apollo-backup.genome.edu.au
 
-#[changeipvms]
-#ansible-sandpit.genome.edu.au ansible_user=ubuntu admin_group=sudo
-##apollo-data.genome.edu.au ansible_user=ubuntu admin_group=sudo
+[changeipvms]
+apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-user-nfs.genome.edu.au ansible_user=ubuntu admin_group=sudo
 #apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
-##apollo-backup.genome.edu.au ansible_user=centos admin_group=wheel
 
 #[changeipvms:vars]
-#hostname_for_ip=apollo-deploy
-#private_ip=192.168.0.90
+#hostname_for_ip=apollo-backup
+#private_ip=192.168.0.26
 

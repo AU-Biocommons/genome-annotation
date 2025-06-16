@@ -21,6 +21,7 @@ util_packages:
     - tree
     - plocate
     - ack-grep
+    - just
     - fasd
     - ranger
     - byobu

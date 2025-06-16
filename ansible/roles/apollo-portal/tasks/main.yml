@@ -16,6 +16,7 @@
     name:
       - "python{{ python_version }}"
       - python3-pip
+      - python3-venv
 
 - name: add ubuntu user to www-data group"
   user:
@@ -70,10 +71,10 @@
     dest: "/etc/nginx/sites-enabled/{{ inventory_hostname }}"
     state: link
 
-- name: Install Python virtualenv
-  pip:
-    name: virtualenv
-    executable: pip3
+- name: Create Python {{ python_version }} virtual environment
+  command: "python{{ python_version }} -m venv {{ venv_root }}"
+  args:
+    creates: "{{ venv_root }}"
 
 - name: Install Python requirements into venv
   pip:

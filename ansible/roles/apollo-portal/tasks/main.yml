@@ -82,6 +82,15 @@
     virtualenv: "{{ venv_root }}"
     virtualenv_python: "python{{ python_version }}"
 
+- name: Grant database privileges to postgres_db_user
+  ansible.builtin.shell: >
+    sudo -u postgres psql -d {{ postgres_db_name }} -c
+    "GRANT ALL PRIVILEGES ON DATABASE {{ postgres_db_name }} TO {{ postgres_db_user }};
+    GRANT ALL ON SCHEMA public TO {{ postgres_db_user }};"
+  become: yes
+  tags:
+    - pg-permissions
+
 - name: run apollo_portal setup script
   command: "bash {{ setup_root }}/setup.sh"
 

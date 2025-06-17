@@ -9,7 +9,7 @@ locals {
     temporary_apollo_numbers = {
     #    "005" = "2025MMDD",
     #    "023" = "2025MMDD",
-        "999" = "20250603"
+        "999" = "20250617"
     }
 
     # internal Apollo instance numbers and creation date: tfi_apollo_XXX_YYYYMMDD

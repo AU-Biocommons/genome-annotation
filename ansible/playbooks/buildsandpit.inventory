@@ -4,7 +4,7 @@ apollo-011.genome.edu.au ansible_host=apollo-011 target_environment=prod apollo_
 [changeipvms]
 apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-user-nfs.genome.edu.au ansible_user=ubuntu admin_group=sudo
-#apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
 
 [changeipvms:vars]
 hostname_for_ip=apollo-011
@@ -24,10 +24,9 @@ apollo_instance_number=011
 #private_ip=192.168.0.46
 #apollo_root_disk_device=/dev/vda2
 
-## not needed for sandpit
-#[backupservervms]
-#apollo-backup.genome.edu.au
-#
-#[backupservervms:vars]
-#apollo_instance_number=011
+[backupservervms]
+apollo-backup.genome.edu.au
+
+[backupservervms:vars]
+apollo_instance_number=011
 

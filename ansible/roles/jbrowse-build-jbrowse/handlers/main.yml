@@ -1,0 +1,5 @@
+- name: Reload NGINX
+  systemd:
+    name: nginx
+    state: reloaded
+

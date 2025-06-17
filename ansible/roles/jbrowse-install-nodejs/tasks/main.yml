@@ -1,28 +1,18 @@
 ---
-# Install Node.js 12 using NVM on Ubuntu as per https://nodejs.org/en/download#debian-and-ubuntu-based-linux-distributions
 
-- name: Download and install NVM
+- name: Install NVM as user (which adds NVM initialisation to .bashrc)
+  become: false  # No root access needed here
   shell: |
-    curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+  args:
+    creates: "$HOME/.nvm"  # Only run if NVM is not already installed
+
+- name: Install Node.js version 12 using NVM
+  become: false
+  shell: |
+    . $HOME/.nvm/nvm.sh && nvm install 12
   args:
     executable: /bin/bash
-
-- name: Load NVM and install Node.js 12
-  shell: |
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \ . "$NVM_DIR/nvm.sh"
-    nvm install 12
-  args:
-    executable: /bin/bash
-
-- name: Verify Node.js installation
-  shell: |
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \ . "$NVM_DIR/nvm.sh"
-    node -v
-  register: node_version
-
-- name: Display installed Node.js version
-  debug:
-    msg: "Installed Node.js version is {{ node_version.stdout }}"
+    chdir: "$HOME"
+    creates: "$HOME/.nvm/versions/node/v12.*"
 

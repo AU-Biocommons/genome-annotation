@@ -1,0 +1,19 @@
+server {
+    listen 443 ssl;
+    server_name {{ inventory_hostname }};
+
+    ssl_certificate         /etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem;
+
+    client_max_body_size    1024M;
+
+    root {{ jbrowse_web_dir }}/jbrowse;
+    index index.html index.htm;
+}
+
+server {
+    listen 80;
+    server_name {{ inventory_hostname }};
+    return 301 https://$host$request_uri;
+}
+

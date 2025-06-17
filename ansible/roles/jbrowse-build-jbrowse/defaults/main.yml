@@ -1,0 +1,7 @@
+jbrowse_git_repo: "https://github.com/gmod/jbrowse"
+jbrowse_install_dir: "/opt/jbrowse"
+jbrowse_web_dir: "/var/www/{{ inventory_hostname }}/public_html"
+jbrowse_node_version: "12.22.12"
+nvm_version: "v0.40.1"
+jbrowse_conf_source: "/home/data/sourcedata/jbrowse.conf"
+

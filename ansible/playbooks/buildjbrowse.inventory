@@ -1,4 +1,5 @@
-[newwebservervms]
+# this is not really an apollo VM, but it matches functionality closer than newwebservervms group
+[newapollovms]
 # jbrowse-portal is the public name but doesn't match apollo-* so use apollo-user-jbrowse internally
 jbrowse-portal.genome.edu.au
 

@@ -1,29 +1,62 @@
 ---
-# install JBrowse and configure to point to the volvox sample data (TODO: fix to be able to point to user's data)
 - name: Clone JBrowse repository
   git:
-    repo: "https://github.com/gmod/jbrowse.git"
-    dest: "/opt/jbrowse"
+    repo: "{{ jbrowse_git_repo }}"
+    dest: "{{ jbrowse_install_dir }}"
     version: master
 
-- name: Change ownership of /opt/jbrowse to www-data group
+- name: Change ownership of JBrowse to www-data group with setgid
   file:
-    path: "/opt/jbrowse"
-    owner: "root"
-    group: "www-data"
-    mode: "0775"
+    path: "{{ jbrowse_install_dir }}"
+    owner: root
+    group: www-data
+    mode: '2775'
     recurse: yes
 
-- name: Set dataRoot in jbrowse.conf
+# configure default JBrowse to point to the volvox sample data
+- name: Set dataRoot in jbrowse.conf to point to volvox sample data
   lineinfile:
-    path: "/opt/jbrowse/jbrowse.conf"
+    path: "{{ jbrowse_install_dir }}/jbrowse.conf"
     line: "dataRoot = sample_data/json/volvox"
     create: yes
 
-- name: Run setup.sh to build JBrowse
-  shell: |
-    cd /opt/jbrowse
+# TODO copy custom jbrowse.conf specified on the command line
+#- name: Copy custom jbrowse.conf
+#  copy:
+#    src: "{{ jbrowse_conf_source }}"
+#    dest: "{{ jbrowse_install_dir }}/jbrowse.conf"
+#    owner: root
+#    group: www-data
+#    mode: '0644'
+
+# TODO install plugins in /opt/jbrowse/plugins folder before running setup.sh
+
+- name: Run setup.sh to build JBrowse and plugins
+  command: |
     ./setup.sh
   args:
-    executable: /bin/bash
+    chdir: "{{ jbrowse_install_dir }}"
+
+- name: Rsync JBrowse to web directory
+  synchronize:
+    src: "{{ jbrowse_install_dir }}"
+    dest: "{{ jbrowse_web_dir }}/jbrowse"
+    rsync_opts:
+      - "--exclude=.git"
+  delegate_to: localhost
+
+- name: Install NGINX config for JBrowse
+  template:
+    src: jbrowse-nginx.conf.j2
+    dest: "/etc/nginx/sites-available/{{ inventory_hostname }}.conf"
+  notify: Reload NGINX
+
+- name: Enable site (symlink to sites-enabled)
+  file:
+    src: "/etc/nginx/sites-available/{{ inventory_hostname }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ inventory_hostname }}.conf"
+    state: link
+    force: yes
+  notify: Reload NGINX
+
 

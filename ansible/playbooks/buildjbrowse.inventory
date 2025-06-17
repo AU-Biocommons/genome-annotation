@@ -1,0 +1,12 @@
+[newwebservervms]
+# jbrowse-portal is the public name but doesn't match apollo-* so use apollo-user-jbrowse internally
+jbrowse-portal.genome.edu.au
+
+[changeipvms]
+apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-user-nfs.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
+
+[changeipvms:vars]
+hostname_for_ip=apollo-user-jbrowse
+private_ip=192.168.0.40

@@ -57,7 +57,7 @@
 - name: "set facts"
   set_fact:
     var_regex_etc_exports: "{{ var_etc_exports.stdout }}"
-    var_line_to_append: "{{ nfs_export_root }}/{{ nfs_apollo_dir_name }} {{ nfs_apollo_host_name }}(rw,nohide,sync,subtree_check)"
+    var_line_to_append: "{{ nfs_export_root }}/{{ nfs_apollo_dir_name }} {{ nfs_apollo_host_name }}(rw,nohide,sync,no_subtree_check)"
 
 - name: "debug result of regex"
   debug:

@@ -70,3 +70,41 @@
   become: yes
   become_user: root
 
+- name: Disable statd for NFSv4-only (nfs-common)
+  lineinfile:
+    path: /etc/default/nfs-common
+    regexp: '^NEED_STATD='
+    line: 'NEED_STATD="no"'
+    create: yes
+  become: yes
+
+- name: Enable idmapd for NFSv4 (nfs-common)
+  lineinfile:
+    path: /etc/default/nfs-common
+    regexp: '^NEED_IDMAPD='
+    line: 'NEED_IDMAPD="yes"'
+    create: yes
+  become: yes
+
+- name: Disable NFSv2 and NFSv3 in RPCNFSDOPTS
+  lineinfile:
+    path: /etc/default/nfs-kernel-server
+    regexp: '^RPCNFSDOPTS='
+    line: 'RPCNFSDOPTS="-N 2 -N 3"'
+    create: yes
+  become: yes
+
+- name: Disable NFSv2 and NFSv3 in RPCMOUNTDOPTS
+  lineinfile:
+    path: /etc/default/nfs-kernel-server
+    regexp: '^RPCMOUNTDOPTS='
+    line: 'RPCMOUNTDOPTS="--manage-gids -N 2 -N 3"'
+    create: yes
+  become: yes
+
+- name: Restart NFS kernel server to apply version settings
+  service:
+    name: nfs-kernel-server
+    state: restarted
+  become: yes
+

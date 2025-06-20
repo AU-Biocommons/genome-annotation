@@ -3,3 +3,22 @@ ansible_user: ubuntu
 admin_group: sudo
 target_environment: prod
 allowed_groups: "ubuntu apollo_admin backup_user"
+
+jbrowse_builds:
+  - id: "jbrowse-001"
+    domains:
+      - jbrowse-portal.genome.edu.au
+#  - id: "jbrowse-002"
+#    domains:
+#      - wheat-dawn.genome.edu.au
+#  - id: "jbrowse-003"
+#    domains:
+#      - degnan.genome.edu.au
+#      - degnan-marine.genome.edu.au
+#  - id: "jbrowse-004"
+#    domains:
+#      - coral.genome.edu.au
+#  - id: "jbrowse-005"
+#    domains:
+#      - scu.genome.edu.au
+

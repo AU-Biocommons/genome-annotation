@@ -7,20 +7,22 @@
   vars:
     jbrowse_root_path: /srv/export/data/nectar
     nfs_client_hostname: "{{ nfs_client }}"
+    portal_user_name: "jbrowse-portal_user"
+    portal_user_id: 15001
 
   tasks:
     - name: Ensure group jbrowse-portal_user exists (system user)
       group:
-        name: jbrowse-portal_user
-        gid: 15001
+        name: "{{ portal_user_name }}"
+        gid: "{{ portal_user_id }}"
         state: present
         system: yes
 
     - name: Ensure user jbrowse-portal_user exists (system user, no login)
       user:
-        name: jbrowse-portal_user
-        uid: 15001
-        group: jbrowse-portal_user
+        name: "{{ portal_user_name }}"
+        uid: "{{ portal_user_id }}"
+        group: "{{ portal_user_name }}"
         shell: /usr/sbin/nologin
         create_home: no
         system: yes
@@ -69,19 +71,21 @@
   vars:
     nfs_server_hostname: "{{ nfs_hostname }}"
     nfs_export_base: "/srv/export/data/nectar"
+    portal_user_name: "jbrowse-portal_user"
+    portal_user_id: 15001
 
   tasks:
     - name: Ensure group jbrowse-portal_user exists
       group:
-        name: jbrowse-portal_user
-        gid: 15001
+        name: "{{ portal_user_name }}"
+        gid: "{{ portal_user_id }}"
         state: present
 
     - name: Ensure user jbrowse-portal_user exists
       user:
-        name: jbrowse-portal_user
-        uid: 15001
-        group: jbrowse-portal_user
+        name: "{{ portal_user_name }}"
+        uid: "{{ portal_user_id }}"
+        group: "{{ portal_user_name }}"
         shell: /bin/bash
         state: present
 

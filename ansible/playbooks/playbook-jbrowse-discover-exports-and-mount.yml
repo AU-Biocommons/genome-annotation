@@ -1,0 +1,152 @@
+---
+- name: Discover JBrowse export directories on NFS server
+  hosts: nfsservervms
+  become: true
+  gather_facts: false
+
+  vars:
+    jbrowse_root_path: /srv/export/data/nectar
+    nfs_client_hostname: "{{ nfs_client }}"
+    portal_user_name: "jbrowse-portal_user"
+    portal_user_id: 15001
+
+  tasks:
+    - name: Ensure group jbrowse-portal_user exists (system user)
+      group:
+        name: "{{ portal_user_name }}"
+        gid: "{{ portal_user_id }}"
+        state: present
+        system: yes
+
+    - name: Ensure user jbrowse-portal_user exists (system user, no login)
+      user:
+        name: "{{ portal_user_name }}"
+        uid: "{{ portal_user_id }}"
+        group: "{{ portal_user_name }}"
+        shell: /usr/sbin/nologin
+        create_home: no
+        system: yes
+        state: present
+
+    - name: Find jbrowse-[000–999] directories
+      find:
+        paths: "{{ jbrowse_export_root }}"
+        file_type: directory
+        patterns: "jbrowse-[0-9][0-9][0-9]"
+        use_regex: true
+      register: discovered_exports
+
+    - name: Extract JBrowse export IDs
+      set_fact:
+        jbrowse_ids: "{{ discovered_exports.files | map(attribute='path') | map('basename') | list | sort }}"
+
+    - name: Ensure each export is in /etc/exports for client
+      lineinfile:
+        path: /etc/exports
+        regexp: "^{{ jbrowse_export_root }}/{{ item }}\s"
+        line: "{{ jbrowse_export_root }}/{{ item }} {{ nfs_client_hostname }}(rw,nohide,sync,no_subtree_check)"
+        state: present
+        create: yes
+      loop: "{{ jbrowse_ids }}"
+
+    - name: Reload NFS exports
+      command: exportfs -ra
+
+    - name: Share JBrowse IDs with jbrowse-portal
+      add_host:
+        name: "{{ nfs_client_hostname }}"
+        groups: jbrowseportalvms
+        jbrowse_ids: "{{ jbrowse_ids }}"
+
+    - name: Debug - Confirm shared JBrowse IDs
+      debug:
+        msg: "Exported JBrowse instances: {{ jbrowse_ids }}"
+
+
+- name: Mount JBrowse NFS exports on JBrowse portal
+  hosts: jbrowseportalvms
+  become: true
+  gather_facts: false
+
+  vars:
+    nfs_server_hostname: "{{ nfs_hostname }}"
+    nfs_export_base: "/srv/export/data/nectar"
+    portal_user_name: "jbrowse-portal_user"
+    portal_user_id: 15001
+
+  tasks:
+    - name: Ensure group jbrowse-portal_user exists
+      group:
+        name: "{{ portal_user_name }}"
+        gid: "{{ portal_user_id }}"
+        state: present
+
+    - name: Ensure user jbrowse-portal_user exists
+      user:
+        name: "{{ portal_user_name }}"
+        uid: "{{ portal_user_id }}"
+        group: "{{ portal_user_name }}"
+        shell: /bin/bash
+        state: present
+
+    - name: Ensure NFS hostname is set in /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: '.*\s+{{ nfs_hostname }}$'
+        line: '{{ nfs_ip }} {{ nfs_hostname }}'
+        state: present
+        create: yes
+
+    - name: Ensure local mount points exist
+      file:
+        path: "/mnt/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop: "{{ jbrowse_ids | default([]) }}"
+
+    - name: Mount NFS export
+      mount:
+        path: "/mnt/{{ item }}"
+        src: "{{ nfs_server_hostname }}:{{ nfs_export_base }}/{{ item }}"
+        fstype: nfs
+        opts: "_netdev,auto"
+        state: present
+      loop: "{{ jbrowse_ids | default([]) }}"
+
+    - name: Mount all newly added NFS mounts
+      command: mount -a -t nfs
+
+    - name: Find all current /mnt/jbrowse-* mount directories
+      find:
+        paths: /mnt
+        file_type: directory
+        patterns: "jbrowse-[0-9][0-9][0-9]"
+        use_regex: true
+      register: existing_mount_dirs
+
+    - name: Extract stale JBrowse mounts
+      set_fact:
+        stale_jbrowse_mounts: >-
+          {{ existing_mount_dirs.files
+             | map(attribute='path')
+             | map('basename')
+             | difference(jbrowse_ids | default([]))
+             | list }}
+
+    - name: Show stale mount points
+      debug:
+        var: stale_jbrowse_mounts
+
+    - name: Unmount stale mounts
+      mount:
+        path: "/mnt/{{ item }}"
+        state: absent
+      loop: "{{ stale_jbrowse_mounts }}"
+
+    - name: Remove stale mount directories
+      file:
+        path: "/mnt/{{ item }}"
+        state: absent
+      loop: "{{ stale_jbrowse_mounts }}"
+
+

@@ -1,0 +1,3 @@
+jbrowse_git_repo: "https://github.com/gmod/jbrowse"
+git_branch: "master"
+jbrowse_build_user: ubuntu

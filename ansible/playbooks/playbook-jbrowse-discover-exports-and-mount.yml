@@ -9,6 +9,23 @@
     nfs_client_hostname: "{{ nfs_client }}"
 
   tasks:
+    - name: Ensure group jbrowse-portal_user exists (system user)
+      group:
+        name: jbrowse-portal_user
+        gid: 15001
+        state: present
+        system: yes
+
+    - name: Ensure user jbrowse-portal_user exists (system user, no login)
+      user:
+        name: jbrowse-portal_user
+        uid: 15001
+        group: jbrowse-portal_user
+        shell: /usr/sbin/nologin
+        create_home: no
+        system: yes
+        state: present
+
     - name: Find jbrowse-[000–999] directories
       find:
         paths: "{{ jbrowse_export_root }}"
@@ -54,6 +71,20 @@
     nfs_export_base: "/srv/export/data/nectar"
 
   tasks:
+    - name: Ensure group jbrowse-portal_user exists
+      group:
+        name: jbrowse-portal_user
+        gid: 15001
+        state: present
+
+    - name: Ensure user jbrowse-portal_user exists
+      user:
+        name: jbrowse-portal_user
+        uid: 15001
+        group: jbrowse-portal_user
+        shell: /bin/bash
+        state: present
+
     - name: Ensure NFS hostname is set in /etc/hosts
       lineinfile:
         path: /etc/hosts

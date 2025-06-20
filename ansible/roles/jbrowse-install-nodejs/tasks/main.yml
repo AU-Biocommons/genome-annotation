@@ -3,7 +3,7 @@
 - name: Install NVM as user (which adds NVM initialisation to .bashrc)
   become: false  # No root access needed here
   shell: |
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{{ nvm_version }}/install.sh | bash
   args:
     creates: "$HOME/.nvm"  # Only run if NVM is not already installed
 

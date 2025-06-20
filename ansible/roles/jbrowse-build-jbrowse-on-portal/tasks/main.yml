@@ -1,62 +1,121 @@
 ---
-- name: Clone JBrowse repository
+- name: Define paths
+  set_fact:
+    jbrowse_source: "/opt/jbrowse/build/{{ jbrowse.id }}"
+    jbrowse_web_target: "/var/www/{{ jbrowse.id }}/jbrowse"
+    config_path: "/mnt/{{ jbrowse.id }}/conf/jbrowse.conf"
+    data_path: "/mnt/{{ jbrowse.id }}/apollo_data"
+
+- name: add {{ jbrowse_build_user }} to www-data group
+  user:
+    name: "{{ jbrowse_build_user }}"
+    groups: "www-data" 
+    append: yes
+
+- name: Ensure JBrowse build directory exists
+  file:
+    path: "{{ jbrowse_source }}"
+    state: directory
+    mode: "0755"
+
+- name: Clone JBrowse if not present
   git:
     repo: "{{ jbrowse_git_repo }}"
-    dest: "{{ jbrowse_install_dir }}"
+    version: "{{ git_branch }}"
+    dest: "{{ jbrowse_source }}"
+    update: no
+  register: jbrowse_clone
+
+- name: Clone plugins into {{ jbrowse_source }}/plugins
+  git:
+    repo: "{{ plugin.repo }}"
+    dest: "{{ jbrowse_source }}/plugins/{{ plugin.name }}"
     version: master
+  # Optional: only clone if directory missing
+  args:
+    creates: "{{ jbrowse_source }}/plugins/{{ plugin.name }}"
+  loop: "{{ jbrowse.plugins | default([]) }}"
+  loop_control:
+    loop_var: plugin
+  register: plugin_clones
+
+- name: Symlink data directory into JBrowse build
+  file:
+    src: "{{ data_path }}"
+    dest: "{{ jbrowse_source }}/data"
+    state: link
+
+- name: Copy jbrowse.conf to build directory
+  copy:
+    src: "{{ config_path }}"
+    dest: "{{ jbrowse_source }}/jbrowse.conf"
+    remote_src: yes
 
 - name: Change ownership of JBrowse to www-data group with setgid
   file:
-    path: "{{ jbrowse_install_dir }}"
-    owner: root
+    path: "{{ jbrowse_source }}"
+    owner: "{{ jbrowse_build_user }}"
     group: www-data
     mode: '2775'
     recurse: yes
-
-# configure default JBrowse to point to the volvox sample data
-- name: Set dataRoot in jbrowse.conf to point to volvox sample data
-  lineinfile:
-    path: "{{ jbrowse_install_dir }}/jbrowse.conf"
-    line: "dataRoot = sample_data/json/volvox"
-    create: yes
-
-# TODO copy custom jbrowse.conf specified on the command line
-#- name: Copy custom jbrowse.conf
-#  copy:
-#    src: "{{ jbrowse_conf_source }}"
-#    dest: "{{ jbrowse_install_dir }}/jbrowse.conf"
-#    owner: root
-#    group: www-data
-#    mode: '0644'
-
-# TODO install plugins in /opt/jbrowse/plugins folder before running setup.sh
 
 - name: Run setup.sh to build JBrowse and plugins
   command: |
     ./setup.sh
   args:
-    chdir: "{{ jbrowse_install_dir }}"
+    chdir: "{{ jbrowse_source }}"
+  when: >
+    jbrowse_clone.changed or
+    (plugin_clones.results | selectattr('changed') | list | length > 0)
 
 - name: Rsync JBrowse to web directory
   synchronize:
     src: "{{ jbrowse_install_dir }}"
-    dest: "{{ jbrowse_web_dir }}/jbrowse"
+    dest: "{{ jbrowse_web_target }}"
     rsync_opts:
       - "--exclude=.git"
-  delegate_to: localhost
 
-- name: Install NGINX config for JBrowse
+- name: Create NGINX config for each domain
   template:
-    src: jbrowse-nginx.conf.j2
-    dest: "/etc/nginx/sites-available/{{ inventory_hostname }}.conf"
-  notify: Reload NGINX
+    src: nginx-jbrowse.conf.j2
+    dest: "/etc/nginx/sites-available/{{ domain }}.conf"
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
+  notify: Reload nginx
 
-- name: Enable site (symlink to sites-enabled)
+- name: Enable NGINX sites
   file:
-    src: "/etc/nginx/sites-available/{{ inventory_hostname }}.conf"
-    dest: "/etc/nginx/sites-enabled/{{ inventory_hostname }}.conf"
+    src: "/etc/nginx/sites-available/{{ domain }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ domain }}.conf"
     state: link
     force: yes
-  notify: Reload NGINX
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
 
+- name: Obtain Let's Encrypt certs for each domain if not already present
+  command: >
+    certbot
+    {% if target_environment == 'test' %}--test-cert{% endif %}
+    --nginx
+    --non-interactive
+    --agree-tos
+    --email {{ certbot_renew_email }}
+    -d {{ domain }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
+  when: jbrowse.domains is defined
+  notify: Reload Nginx
+  check_mode: no  # prevents Certbot from running in check/dry-run mode
+
+- name: Show build completion message
+  debug:
+    msg: >-
+      JBrowse {{ jbrowse.id }} built successfully.
+      Served on: {{ jbrowse.domains | join(', ') }}
+      Web path: {{ jbrowse_web_target }}
 

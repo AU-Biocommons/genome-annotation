@@ -16,9 +16,16 @@
     state: directory
   become: yes
 
-# mounts and creates entry in /etc/fstab like:
+- name: Check if LABEL={{ volume_label }} exists in /etc/fstab
+  command: "grep -q 'LABEL={{ volume_label }}' /etc/fstab"
+  register: fstab_check
+  changed_when: false
+  failed_when: false
+  ignore_errors: true
+
+# mount and creates entry in /etc/fstab like:
 #     LABEL={{ volume_label }}    {{ mount_point }}    ext4    defaults    0 2
-- name: "Mount the volume using the label and add to /etc/fstab"
+- name: "Mount the volume using the label and add to /etc/fstab ONLY IF not already there"
   ansible.posix.mount:
     path: "{{ mount_point }}"
     src: "LABEL={{ volume_label }}"
@@ -27,5 +34,6 @@
     opts: "{{ mount_opts }}"
     dump: 0
     passno: 2
+  when: fstab_check.rc != 0  # Not already in /etc/fstab
   become: yes
 

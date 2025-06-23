@@ -101,6 +101,12 @@
         shell: /bin/bash
         state: present
 
+    - name: Make the jbrowse-portal_user home directory /home/{{ portal_user_name }} world-readable
+      file:
+        path: "/home/{{ portal_user_name }}"
+        mode: "0755"
+        state: directory
+
     - name: Ensure NFS hostname is set in /etc/hosts
       lineinfile:
         path: /etc/hosts

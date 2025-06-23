@@ -115,6 +115,7 @@
         state: directory
         mode: "0755"
       loop: "{{ jbrowse_ids | default([]) }}"
+      when: target_environment != 'test'
 
     - name: Mount NFS export
       mount:

@@ -5,12 +5,18 @@
   gather_facts: false
 
   vars:
-    jbrowse_root_path: /srv/export/data/nectar
+    etc_exports: /etc/exports # this will be overriden when running with target_environment=test
+    jbrowse_export_root: /srv/export/data/nectar
     nfs_client_hostname: "{{ nfs_client }}"
     portal_user_name: "jbrowse-portal_user"
     portal_user_id: 15001
 
   tasks:
+    - name: Override etc_exports path if in test environment
+      set_fact:
+        etc_exports: "/tmp/test-exports"
+      when: target_environment == 'test'
+
     - name: Ensure group jbrowse-portal_user exists (system user)
       group:
         name: "{{ portal_user_name }}"
@@ -40,27 +46,33 @@
       set_fact:
         jbrowse_ids: "{{ discovered_exports.files | map(attribute='path') | map('basename') | list | sort }}"
 
-    - name: Ensure each export is in /etc/exports for client
+    - name: Ensure each export is in {{ etc_exports }} for client
       lineinfile:
-        path: /etc/exports
-        regexp: "^{{ jbrowse_export_root }}/{{ item }}\s"
-        line: "{{ jbrowse_export_root }}/{{ item }} {{ nfs_client_hostname }}(rw,nohide,sync,no_subtree_check)"
+        path: "{{ etc_exports }}"
+        regexp: '^{{ jbrowse_export_root }}/{{ item }}\s'
+        line: '{{ jbrowse_export_root }}/{{ item }} {{ nfs_client_hostname }}(rw,nohide,sync,no_subtree_check)'
         state: present
         create: yes
       loop: "{{ jbrowse_ids }}"
 
     - name: Reload NFS exports
       command: exportfs -ra
+      when: target_environment != 'test'
+
+    - name: Skipping exportfs reload in test environment
+      debug:
+        msg: "Skipping exportfs -ra because target_environment is 'test'"
+      when: target_environment == 'test'
 
     - name: Share JBrowse IDs with jbrowse-portal
       add_host:
-        name: "{{ nfs_client_hostname }}"
+        name: "{{ groups['jbrowseportalvms'][0] }}"
         groups: jbrowseportalvms
         jbrowse_ids: "{{ jbrowse_ids }}"
 
     - name: Debug - Confirm shared JBrowse IDs
       debug:
-        msg: "Exported JBrowse instances: {{ jbrowse_ids }}"
+        msg: "Exported JBrowse IDs to {{ groups['jbrowseportalvms'][0] }}"
 
 
 - name: Mount JBrowse NFS exports on JBrowse portal
@@ -70,7 +82,6 @@
 
   vars:
     nfs_server_hostname: "{{ nfs_hostname }}"
-    nfs_export_base: "/srv/export/data/nectar"
     portal_user_name: "jbrowse-portal_user"
     portal_user_id: 15001
 
@@ -89,6 +100,17 @@
         shell: /bin/bash
         state: present
 
+    - name: Make the jbrowse-portal_user home directory /home/{{ portal_user_name }} world-readable
+      file:
+        path: "/home/{{ portal_user_name }}"
+        mode: "0755"
+        state: directory
+
+    - name: Install NFS client nfs-common
+      apt:
+        name: "nfs-common"
+        state: "present"
+
     - name: Ensure NFS hostname is set in /etc/hosts
       lineinfile:
         path: /etc/hosts
@@ -103,18 +125,26 @@
         state: directory
         mode: "0755"
       loop: "{{ jbrowse_ids | default([]) }}"
+      when: target_environment != 'test'
 
     - name: Mount NFS export
       mount:
         path: "/mnt/{{ item }}"
-        src: "{{ nfs_server_hostname }}:{{ nfs_export_base }}/{{ item }}"
+        src: "{{ nfs_server_hostname }}:/{{ item }}"
         fstype: nfs
         opts: "_netdev,auto"
         state: present
       loop: "{{ jbrowse_ids | default([]) }}"
+      when: target_environment != 'test'
 
     - name: Mount all newly added NFS mounts
       command: mount -a -t nfs
+      when: target_environment != 'test'
+
+    - name: Skipping NFS mounts in test environment
+      debug:
+        msg: "Skipping NFS mounts because target_environment is 'test'"
+      when: target_environment == 'test'
 
     - name: Find all current /mnt/jbrowse-* mount directories
       find:
@@ -142,11 +172,17 @@
         path: "/mnt/{{ item }}"
         state: absent
       loop: "{{ stale_jbrowse_mounts }}"
+      when: target_environment != 'test'
 
     - name: Remove stale mount directories
       file:
         path: "/mnt/{{ item }}"
         state: absent
       loop: "{{ stale_jbrowse_mounts }}"
+      when: target_environment != 'test'
 
+    - name: Skipping removing stale mounts in test environment
+      debug:
+        msg: "Skipping removal of stale mounts because target_environment is 'test'"
+      when: target_environment == 'test'
 

@@ -42,20 +42,26 @@
   pause:
     seconds: 5
 
+- name: "Find the device with LABEL={{ volume_label }}"
+  command: blkid -L "{{ volume_label }}"
+  register: volume_device
+  changed_when: false
+  failed_when: false
+
+- name: "Fail if device with LABEL={{ volume_label }} is not found"
+  fail:
+    msg: "Device with label {{ volume_label }} not found"
+  when: volume_device.stdout == ""
+
+- name: Check if ext4 quota feature is already enabled on {{ volume_label }}
+  command: "tune2fs -l {{ volume_device.stdout }}"
+  register: tune2fs_output
+  changed_when: false
+  failed_when: false
+
 # ref: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/managing_file_systems/limiting-storage-space-usage-on-ext4-with-quotas_managing-file-systems
 - name: enable the ext4 quota feature on device specified by LABEL (external quota files on ext4 are deprecated)
   block:
-    - name: "Find the device with LABEL={{ volume_label }}"
-      command: blkid -L "{{ volume_label }}"
-      register: volume_device
-      changed_when: false
-      failed_when: false
-
-    - name: "Fail if device with LABEL={{ volume_label }} is not found"
-      fail:
-        msg: "Device with label {{ volume_label }} not found"
-      when: volume_device.stdout == ""
-
     - name: "unmount {{ export_root }} bind mount first"
       ansible.posix.mount:
         path: "{{ export_root }}"
@@ -72,6 +78,12 @@
       become: yes
       #when: volume_device.stdout != ""
   become: yes
+  when: tune2fs_output.stdout is not search("Filesystem features:.*quota")
+
+- name: Skipping quota setup - already enabled on filesystem
+  debug:
+    msg: "Quotas already enabled on device with LABEL={{ volume_label }}. Skipping unmount and tune2fs."
+  when: tune2fs_output.stdout is search("Filesystem features:.*quota")
 
 # remount filesystem to enable filesystem quotas and update /etc/fstab
 - name: "Remount {{ mount_point }} to enable quota enforcement"

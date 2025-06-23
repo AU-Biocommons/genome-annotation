@@ -66,7 +66,7 @@
 
     - name: Share JBrowse IDs with jbrowse-portal
       add_host:
-        name: "{{ nfs_client_hostname }}"
+        name: "{{ groups['jbrowseportalvms'][0] }}"
         groups: jbrowseportalvms
         jbrowse_ids: "{{ jbrowse_ids }}"
 

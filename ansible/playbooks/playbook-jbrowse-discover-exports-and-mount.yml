@@ -72,7 +72,7 @@
 
     - name: Debug - Confirm shared JBrowse IDs
       debug:
-        msg: "Exported JBrowse instances: {{ jbrowse_ids }}"
+        msg: "Exported JBrowse IDs to {{ groups['jbrowseportalvms'][0] }}"
 
 
 - name: Mount JBrowse NFS exports on JBrowse portal

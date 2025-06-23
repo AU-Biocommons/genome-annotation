@@ -43,8 +43,8 @@
     - name: Ensure each export is in /etc/exports for client
       lineinfile:
         path: /etc/exports
-        regexp: "^{{ jbrowse_export_root }}/{{ item }}\s"
-        line: "{{ jbrowse_export_root }}/{{ item }} {{ nfs_client_hostname }}(rw,nohide,sync,no_subtree_check)"
+        regexp: '^{{ jbrowse_export_root }}/{{ item }}\s'
+        line: '{{ jbrowse_export_root }}/{{ item }} {{ nfs_client_hostname }}(rw,nohide,sync,no_subtree_check)'
         state: present
         create: yes
       loop: "{{ jbrowse_ids }}"

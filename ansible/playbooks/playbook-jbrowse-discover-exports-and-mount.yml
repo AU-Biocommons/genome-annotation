@@ -82,7 +82,6 @@
 
   vars:
     nfs_server_hostname: "{{ nfs_hostname }}"
-    nfs_export_base: "/srv/export/data/nectar"
     portal_user_name: "jbrowse-portal_user"
     portal_user_id: 15001
 
@@ -126,7 +125,7 @@
     - name: Mount NFS export
       mount:
         path: "/mnt/{{ item }}"
-        src: "{{ nfs_server_hostname }}:{{ nfs_export_base }}/{{ item }}"
+        src: "{{ nfs_server_hostname }}:/{{ item }}"
         fstype: nfs
         opts: "_netdev,auto"
         state: present

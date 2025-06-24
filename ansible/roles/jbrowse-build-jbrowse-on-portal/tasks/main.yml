@@ -76,12 +76,11 @@
     dest: "{{ jbrowse_source }}/jbrowse.conf"
     remote_src: yes
 
-- name: Change ownership of JBrowse to www-data group with setgid
+- name: Change ownership of JBrowse to www-data group
   file:
     path: "{{ jbrowse_source }}"
     owner: "{{ jbrowse_build_user }}"
     group: www-data
-    mode: '2775'
     recurse: yes
 
 - name: Symlink data directory into JBrowse build after chown/chmod
@@ -95,13 +94,14 @@
     ./setup.sh
   args:
     chdir: "{{ jbrowse_source }}"
+  become: false
   when: >
     jbrowse_clone.changed or
     (plugin_clones.results | selectattr('changed') | list | length > 0)
 
 - name: Rsync JBrowse to web directory
   synchronize:
-    src: "{{ jbrowse_install_dir }}"
+    src: "{{ jbrowse_source }}"
     dest: "{{ jbrowse_web_target }}"
     rsync_opts:
       - "--exclude=.git"

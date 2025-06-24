@@ -89,15 +89,28 @@
     dest: "{{ jbrowse_source }}/data"
     state: link
 
-- name: Run setup.sh to build JBrowse and plugins
-  command: |
+- name: Run setup.sh to build JBrowse and plugins (with NVM)
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    nvm use 12
     ./setup.sh
   args:
     chdir: "{{ jbrowse_source }}"
   become: false
+  become_user: "{{ jbrowse_build_user }}"
+  environment:
+    HOME: "/home/{{ jbrowse_build_user }}"
   when: >
-    jbrowse_clone.changed or
-    (plugin_clones.results | selectattr('changed') | list | length > 0)
+    target_environment == 'test' or
+    (jbrowse_clone is defined and jbrowse_clone.changed) or
+    (plugin_clones is defined and plugin_clones.results | selectattr('changed') | list | length > 0)
+
+- name: Ensure JBrowse web directory exists
+  file:
+    path: "{{ jbrowse_web_target }}"
+    state: directory
+    mode: "0755"
 
 - name: Rsync JBrowse build to web directory
   synchronize:
@@ -115,7 +128,6 @@
   loop: "{{ jbrowse.domains }}"
   loop_control:
     loop_var: domain
-  notify: Reload nginx
 
 - name: Enable NGINX sites
   file:
@@ -126,6 +138,8 @@
   loop: "{{ jbrowse.domains }}"
   loop_control:
     loop_var: domain
+  when: target_environment == 'prod'
+  notify: Reload nginx
 
 - name: Obtain Let's Encrypt certs for each domain if not already present
   command: >

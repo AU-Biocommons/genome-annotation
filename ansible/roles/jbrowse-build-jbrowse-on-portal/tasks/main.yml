@@ -114,7 +114,7 @@
 
 - name: Rsync JBrowse build to web directory
   synchronize:
-    src: "{{ jbrowse_source }}"
+    src: "{{ jbrowse_source }}/" # trailing / to copy contents of dir to target
     dest: "{{ jbrowse_web_target }}"
     rsync_opts:
       - "--exclude=.git"

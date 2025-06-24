@@ -99,12 +99,14 @@
     jbrowse_clone.changed or
     (plugin_clones.results | selectattr('changed') | list | length > 0)
 
-- name: Rsync JBrowse to web directory
+- name: Rsync JBrowse build to web directory
   synchronize:
     src: "{{ jbrowse_source }}"
     dest: "{{ jbrowse_web_target }}"
     rsync_opts:
       - "--exclude=.git"
+    mode: push
+  delegate_to: "{{ inventory_hostname }}"
 
 - name: Create NGINX config for each domain
   template:

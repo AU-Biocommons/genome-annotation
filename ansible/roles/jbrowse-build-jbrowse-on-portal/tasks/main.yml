@@ -139,7 +139,7 @@
   loop_control:
     loop_var: domain
   when: target_environment == 'prod'
-  notify: Reload nginx
+  notify: Reload Nginx
 
 - name: Obtain Let's Encrypt certs for each domain if not already present
   command: >

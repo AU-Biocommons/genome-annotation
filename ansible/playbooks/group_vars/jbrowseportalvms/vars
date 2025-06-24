@@ -11,20 +11,20 @@ jbrowse_builds:
     domains:
       - jbrowse-portal.genome.edu.au
     plugins:
-      - name: RegexSequenceSearch
-        repo: "https://github.com/GMOD/RegexSequenceSearch.git"
-      - name: NeatHTMLFeatures
-        repo: "https://github.com/cmdcolin/NeatHTMLFeatures.git"
+      - name: multibigwig
+        repo: "https://github.com/elsiklab/multibigwig"
+      - name: ComboTrackSelector
+        repo: "https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector"
 #  - id: "jbrowse-002"
 #    domains:
 #      - wheat-dawn.genome.edu.au
 #    plugins:
 #      - name: GCContent
-#        repo: https://github.com/cmdcolin/gccontent
+#        repo: "https://github.com/cmdcolin/gccontent"
 #      - name: multibigwig
-#        repo: https://github.com/elsiklab/multibigwig
+#        repo: "https://github.com/elsiklab/multibigwig"
 #      - name: FeatureSequence
-#        repo: https://github.com/tsaari88/FeatureSequence
+#        repo: "https://github.com/tsaari88/FeatureSequence"
 #  - id: "jbrowse-003"
 #    domains:
 #      - degnan.genome.edu.au

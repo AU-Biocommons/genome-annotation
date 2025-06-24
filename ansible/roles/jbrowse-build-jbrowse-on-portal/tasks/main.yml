@@ -26,24 +26,49 @@
     update: no
   register: jbrowse_clone
 
-- name: Clone plugins into {{ jbrowse_source }}/plugins
+- name: Check if plugin {{ plugin.name }} already exists
+  stat:
+    path: "{{ jbrowse_source }}/plugins/{{ plugin.name }}"
+  register: plugin_stats
+  loop: "{{ jbrowse.plugins | default([]) }}"
+  loop_control:
+    loop_var: plugin
+
+- name: Map plugin names to stat results
+  set_fact:
+    plugin_stat_map: >-
+      {{
+        plugin_stat_map | default({}) | combine({
+          plugin_result.item.name: plugin_result.stat
+        })
+      }}
+  loop: "{{ plugin_stats.results | default([]) }}"
+  loop_control:
+    loop_var: plugin_result
+  when: plugin_result.item is defined and plugin_result.stat is defined
+
+- name: Clone missing plugins into {{ jbrowse_source }}/plugins
   git:
     repo: "{{ plugin.repo }}"
     dest: "{{ jbrowse_source }}/plugins/{{ plugin.name }}"
     version: master
-  # Optional: only clone if directory missing
-  args:
-    creates: "{{ jbrowse_source }}/plugins/{{ plugin.name }}"
+  when: not (plugin_stat_map[plugin.name] is defined and plugin_stat_map[plugin.name].exists | default(false))
   loop: "{{ jbrowse.plugins | default([]) }}"
   loop_control:
     loop_var: plugin
   register: plugin_clones
 
-- name: Symlink data directory into JBrowse build
+- name: Check if data symlink exists
+  stat:
+    path: "{{ jbrowse_source }}/data"
+    follow: false
+  register: data_symlink
+
+- name: Remove existing data symlink if present to prevent errors with recursing into NFS mount
   file:
-    src: "{{ data_path }}"
-    dest: "{{ jbrowse_source }}/data"
-    state: link
+    path: "{{ jbrowse_source }}/data"
+    state: absent
+  when: data_symlink.stat.islnk is defined and data_symlink.stat.islnk
 
 - name: Copy jbrowse.conf to build directory
   copy:
@@ -51,40 +76,61 @@
     dest: "{{ jbrowse_source }}/jbrowse.conf"
     remote_src: yes
 
-- name: Change ownership of JBrowse to www-data group with setgid
+- name: Change ownership of JBrowse to www-data group
   file:
     path: "{{ jbrowse_source }}"
     owner: "{{ jbrowse_build_user }}"
     group: www-data
-    mode: '2775'
     recurse: yes
 
-- name: Run setup.sh to build JBrowse and plugins
-  command: |
+- name: Symlink data directory into JBrowse build after chown/chmod
+  file:
+    src: "{{ data_path }}"
+    dest: "{{ jbrowse_source }}/data"
+    state: link
+
+- name: Run setup.sh to build JBrowse and plugins (with NVM)
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    nvm use 12
     ./setup.sh
   args:
     chdir: "{{ jbrowse_source }}"
+  become: false
+  become_user: "{{ jbrowse_build_user }}"
+  environment:
+    HOME: "/home/{{ jbrowse_build_user }}"
   when: >
-    jbrowse_clone.changed or
-    (plugin_clones.results | selectattr('changed') | list | length > 0)
+    target_environment == 'test' or
+    (jbrowse_clone is defined and jbrowse_clone.changed) or
+    (plugin_clones is defined and plugin_clones.results | selectattr('changed') | list | length > 0)
 
-- name: Rsync JBrowse to web directory
+- name: Ensure JBrowse web directory exists
+  file:
+    path: "{{ jbrowse_web_target }}"
+    state: directory
+    mode: "0755"
+
+- name: Rsync JBrowse build to web directory
   synchronize:
-    src: "{{ jbrowse_install_dir }}"
+    src: "{{ jbrowse_source }}/" # trailing / to copy contents of dir to target
     dest: "{{ jbrowse_web_target }}"
     rsync_opts:
       - "--exclude=.git"
+    mode: push
+  delegate_to: "{{ inventory_hostname }}"
 
-- name: Create NGINX config for each domain
+- name: Create HTTP-only NGINX config for certbot challenge
   template:
-    src: nginx-jbrowse.conf.j2
+    src: nginx-jbrowse-http.conf.j2
     dest: "/etc/nginx/sites-available/{{ domain }}.conf"
   loop: "{{ jbrowse.domains }}"
   loop_control:
     loop_var: domain
-  notify: Reload nginx
+  notify: Reload Nginx
 
-- name: Enable NGINX sites
+- name: Enable NGINX site for domain (HTTP only)
   file:
     src: "/etc/nginx/sites-available/{{ domain }}.conf"
     dest: "/etc/nginx/sites-enabled/{{ domain }}.conf"
@@ -93,12 +139,19 @@
   loop: "{{ jbrowse.domains }}"
   loop_control:
     loop_var: domain
+  when: target_environment == 'prod'
+  notify: Reload Nginx
 
-- name: Obtain Let's Encrypt certs for each domain if not already present
+- name: Reload NGINX so HTTP-only config is live
+  meta: flush_handlers
+  when: target_environment == 'prod'
+
+- name: Obtain Let's Encrypt certs using webroot
   command: >
-    certbot
+    certbot certonly
     {% if target_environment == 'test' %}--test-cert{% endif %}
-    --nginx
+    --webroot
+    --webroot-path /var/www/{{ jbrowse.id }}/jbrowse
     --non-interactive
     --agree-tos
     --email {{ certbot_renew_email }}
@@ -109,8 +162,33 @@
   loop_control:
     loop_var: domain
   when: jbrowse.domains is defined
-  notify: Reload Nginx
   check_mode: no  # prevents Certbot from running in check/dry-run mode
+
+- name: Enable NGINX sites
+  file:
+    src: "/etc/nginx/sites-available/{{ domain }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ domain }}.conf"
+    state: link
+    force: yes
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
+  when: target_environment == 'prod'
+  notify: Reload Nginx
+
+- name: Overwrite NGINX config with SSL-enabled version
+  template:
+    src: nginx-jbrowse-ssl.conf.j2
+    dest: "/etc/nginx/sites-available/{{ domain }}.conf"
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
+  when: target_environment == 'prod'
+  notify: Reload Nginx
+
+- name: Final reload of NGINX after SSL certs and config are in place
+  meta: flush_handlers
+  when: target_environment == 'prod'
 
 - name: Show build completion message
   debug:

@@ -26,14 +26,33 @@
     update: no
   register: jbrowse_clone
 
-- name: Clone plugins into {{ jbrowse_source }}/plugins
+- name: Check if plugin {{ plugin.name }} already exists
+  stat:
+    path: "{{ jbrowse_source }}/plugins/{{ plugin.name }}"
+  register: plugin_stats
+  loop: "{{ jbrowse.plugins | default([]) }}"
+  loop_control:
+    loop_var: plugin
+
+- name: Map plugin names to stat results
+  set_fact:
+    plugin_stat_map: >-
+      {{
+        plugin_stat_map | default({}) | combine({
+          plugin_result.item.name: plugin_result.stat
+        })
+      }}
+  loop: "{{ plugin_stats.results | default([]) }}"
+  loop_control:
+    loop_var: plugin_result
+  when: plugin_result.item is defined and plugin_result.stat is defined
+
+- name: Clone missing plugins into {{ jbrowse_source }}/plugins
   git:
     repo: "{{ plugin.repo }}"
     dest: "{{ jbrowse_source }}/plugins/{{ plugin.name }}"
     version: master
-  # Optional: only clone if directory missing
-  args:
-    creates: "{{ jbrowse_source }}/plugins/{{ plugin.name }}"
+  when: not (plugin_stat_map[plugin.name] is defined and plugin_stat_map[plugin.name].exists | default(false))
   loop: "{{ jbrowse.plugins | default([]) }}"
   loop_control:
     loop_var: plugin

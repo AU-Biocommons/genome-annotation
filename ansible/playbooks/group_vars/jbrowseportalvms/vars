@@ -9,7 +9,7 @@ certbot_renew_email: "ops@qfab.org"
 jbrowse_builds:
   - id: "jbrowse-001"
     domains:
-      - jbrowse-portal.genome.edu.au
+      - jbrowse-sandpit.genome.edu.au
     plugins:
       - name: multibigwig
         repo: "https://github.com/elsiklab/multibigwig"

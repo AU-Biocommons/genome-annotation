@@ -60,11 +60,17 @@
     loop_var: plugin
   register: plugin_clones
 
-- name: Symlink data directory into JBrowse build
+- name: Check if data symlink exists
+  stat:
+    path: "{{ jbrowse_source }}/data"
+    follow: false
+  register: data_symlink
+
+- name: Remove existing data symlink if present to prevent errors with recursing into NFS mount
   file:
-    src: "{{ data_path }}"
-    dest: "{{ jbrowse_source }}/data"
-    state: link
+    path: "{{ jbrowse_source }}/data"
+    state: absent
+  when: data_symlink.stat.islnk is defined and data_symlink.stat.islnk
 
 - name: Copy jbrowse.conf to build directory
   copy:
@@ -79,6 +85,12 @@
     group: www-data
     mode: '2775'
     recurse: yes
+
+- name: Symlink data directory into JBrowse build after chown/chmod
+  file:
+    src: "{{ data_path }}"
+    dest: "{{ jbrowse_source }}/data"
+    state: link
 
 - name: Run setup.sh to build JBrowse and plugins
   command: |

@@ -129,6 +129,24 @@
   loop_control:
     loop_var: domain
 
+- name: Obtain Let's Encrypt certs for each domain if not already present
+  command: >
+    certbot certonly
+    {% if target_environment == 'test' %}--test-cert{% endif %}
+    --webroot
+    --webroot-path /var/www/{{ jbrowse.id }}/jbrowse
+    --non-interactive
+    --agree-tos
+    --email {{ certbot_renew_email }}
+    -d {{ domain }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
+  when: jbrowse.domains is defined
+  check_mode: no  # prevents Certbot from running in check/dry-run mode
+
 - name: Enable NGINX sites
   file:
     src: "/etc/nginx/sites-available/{{ domain }}.conf"
@@ -140,24 +158,6 @@
     loop_var: domain
   when: target_environment == 'prod'
   notify: Reload Nginx
-
-- name: Obtain Let's Encrypt certs for each domain if not already present
-  command: >
-    certbot
-    {% if target_environment == 'test' %}--test-cert{% endif %}
-    --nginx
-    --non-interactive
-    --agree-tos
-    --email {{ certbot_renew_email }}
-    -d {{ domain }}
-  args:
-    creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
-  loop: "{{ jbrowse.domains }}"
-  loop_control:
-    loop_var: domain
-  when: jbrowse.domains is defined
-  notify: Reload Nginx
-  check_mode: no  # prevents Certbot from running in check/dry-run mode
 
 - name: Show build completion message
   debug:

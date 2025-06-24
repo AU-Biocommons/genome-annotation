@@ -2,8 +2,10 @@
   hosts: jbrowseportalvms
   become: true
 
-  roles:
-    - role: jbrowse-build-jbrowse-on-portal
+  tasks:
+    - name: Build each JBrowse instance
+      include_role:
+        name: jbrowse-build-jbrowse-on-portal
       loop: "{{ jbrowse_builds }}"
       loop_control:
         loop_var: jbrowse

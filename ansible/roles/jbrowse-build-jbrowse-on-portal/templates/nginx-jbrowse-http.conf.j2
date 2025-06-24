@@ -1,0 +1,16 @@
+server {
+    listen 80;
+    server_name {{ domain }};
+
+    root /var/www/{{ jbrowse.id }}/jbrowse;
+    index index.html index.htm;
+
+    location /.well-known/acme-challenge/ {
+        allow all;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+

@@ -1,6 +1,8 @@
 server {
     listen 443 ssl;
     server_name {{ domain }};
+    error_log /var/log/nginx/{{ domain }}-error.log;
+    access_log /var/log/nginx/{{ domain }}-access.log;
 
     ssl_certificate         /etc/letsencrypt/live/{{ domain }}/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/{{ domain }}/privkey.pem;

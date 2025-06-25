@@ -1,0 +1,71 @@
+---
+- name: Stat fullchain.pem to check if cert was issued (resolves symlink)
+  stat:
+    path: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+  register: cert_check
+
+- name: Set cert_missing fact based on stat result
+  set_fact:
+    cert_missing: "{{ not cert_check.stat.exists }}"
+
+- name: Set config_ssl fact as this domain required setup
+  set_fact:
+    config_ssl: true
+  when: cert_missing
+
+- name: Define paths
+  set_fact:
+    jbrowse_web_target: "/var/www/{{ jbrowse.id }}/jbrowse"
+
+- name: Create HTTP-only NGINX config for certbot challenge
+  template:
+    src: nginx-jbrowse-http.conf.j2
+    dest: "/etc/nginx/sites-available/{{ domain }}.conf"
+  when: cert_missing
+  notify: Reload Nginx
+
+- name: Enable NGINX site for domain (HTTP only)
+  file:
+    src: "/etc/nginx/sites-available/{{ domain }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ domain }}.conf"
+    state: link
+    force: yes
+  when: target_environment == 'prod'
+  notify: Reload Nginx
+
+- name: Reload NGINX so HTTP-only config is live
+  meta: flush_handlers
+  when: target_environment == 'prod'
+
+- name: Obtain Let's Encrypt certs using webroot
+  command: >
+    certbot certonly
+    {% if target_environment == 'test' %}--test-cert{% endif %}
+    --webroot
+    --webroot-path /var/www/{{ jbrowse.id }}/jbrowse
+    --non-interactive
+    --agree-tos
+    --email {{ certbot_renew_email }}
+    -d {{ domain }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+  check_mode: no  # prevents Certbot from running in check/dry-run mode
+
+- name: Refresh existence of SSL cert after obtaining cert
+  stat:
+    path: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+  register: cert_check
+
+- name: Set cert_missing fact based on refreshed results
+  set_fact:
+    cert_missing: "{{ not cert_check.stat.exists }}"
+
+- name: Overwrite NGINX config with SSL-enabled version
+  template:
+    src: nginx-jbrowse-ssl.conf.j2
+    dest: "/etc/nginx/sites-available/{{ domain }}.conf"
+  when:
+    - target_environment == 'prod'
+    - not cert_missing
+  notify: Reload Nginx
+

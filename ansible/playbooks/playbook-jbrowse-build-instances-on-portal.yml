@@ -19,4 +19,10 @@
       loop: "{{ jbrowse_builds }}"
       loop_control:
         loop_var: jbrowse
+    - name: Configure website for each JBrowse instance
+      include_role:
+        name: jbrowse-configure-web-on-portal
+      loop: "{{ jbrowse_builds }}"
+      loop_control:
+        loop_var: jbrowse
 

@@ -1,0 +1,70 @@
+---
+- name: Define paths
+  set_fact:
+    jbrowse_web_target: "/var/www/{{ jbrowse.id }}/jbrowse"
+
+- name: Create HTTP-only NGINX config for certbot challenge
+  template:
+    src: nginx-jbrowse-http.conf.j2
+    dest: "/etc/nginx/sites-available/{{ domain }}.conf"
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
+  notify: Reload Nginx
+
+- name: Enable NGINX site for domain (HTTP only)
+  file:
+    src: "/etc/nginx/sites-available/{{ domain }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ domain }}.conf"
+    state: link
+    force: yes
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
+  when: target_environment == 'prod'
+  notify: Reload Nginx
+
+- name: Reload NGINX so HTTP-only config is live
+  meta: flush_handlers
+  when: target_environment == 'prod'
+
+- name: Obtain Let's Encrypt certs using webroot
+  command: >
+    certbot certonly
+    {% if target_environment == 'test' %}--test-cert{% endif %}
+    --webroot
+    --webroot-path /var/www/{{ jbrowse.id }}/jbrowse
+    --non-interactive
+    --agree-tos
+    --email {{ certbot_renew_email }}
+    -d {{ domain }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
+  when: jbrowse.domains is defined
+  check_mode: no  # prevents Certbot from running in check/dry-run mode
+
+- name: Overwrite NGINX config with SSL-enabled version
+  template:
+    src: nginx-jbrowse-ssl.conf.j2
+    dest: "/etc/nginx/sites-available/{{ domain }}.conf"
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
+  when:
+    - target_environment == 'prod'
+    - lookup('ansible.builtin.file', "/etc/letsencrypt/live/{{ domain }}/fullchain.pem", errors='ignore') is not none
+  notify: Reload Nginx
+
+- name: Final reload of NGINX after SSL certs and config are in place
+  meta: flush_handlers
+  when: target_environment == 'prod'
+
+- name: Show deployment completion message
+  debug:
+    msg: >-
+      JBrowse {{ jbrowse.id }} deployed on: {{ jbrowse.domains | join(', ') }}
+      Web path: {{ jbrowse_web_target }}
+

@@ -1,0 +1,12 @@
+---
+
+- name: Determine if web configuration should run
+  set_fact:
+    config_ssl: true
+  when: lookup('file', "/etc/letsencrypt/live/{{ domain }}/fullchain.pem", errors='ignore') is none
+        or jbrowse.force_redeploy | default(false)
+
+- name: Include web config tasks
+  include_tasks: configure-web-domain.yml
+  when: config_ssl | default(false)
+

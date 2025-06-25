@@ -107,6 +107,18 @@
     (jbrowse_clone is defined and jbrowse_clone.changed) or
     (plugin_clones is defined and plugin_clones.results | selectattr('changed') | list | length > 0)
 
+- name: Check for JBrowse build output (main.bundle.js)
+  stat:
+    path: "{{ jbrowse_source }}/dist/main.bundle.js"
+  register: jbrowse_build_output
+
+- name: Fail if JBrowse build failed (main.bundle.js not found)
+  fail:
+    msg: >
+      JBrowse build failed for {{ jbrowse.id }} — setup.sh did not generate dist/main.bundle.js.
+      Check the setup.log in {{ jbrowse_source }} or rerun manually to debug.
+  when: not jbrowse_build_output.stat.exists
+
 - name: Ensure JBrowse web directory exists
   file:
     path: "{{ jbrowse_web_target }}"

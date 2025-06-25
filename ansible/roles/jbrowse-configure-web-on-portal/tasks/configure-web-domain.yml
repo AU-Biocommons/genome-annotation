@@ -1,7 +1,12 @@
 ---
-- name: Determine if cert already exists
+- name: Stat fullchain.pem to check if cert was issued (resolves symlink)
+  stat:
+    path: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+  register: cert_check
+
+- name: Set cert_missing fact based on stat result
   set_fact:
-    cert_missing: "{{ lookup('ansible.builtin.file', '/etc/letsencrypt/live/' ~ domain ~ '/fullchain.pem', errors='ignore') is none }}"
+    cert_missing: "{{ not cert_check.stat.exists }}"
 
 - name: Set config_ssl fact as this domain required setup
   set_fact:
@@ -46,9 +51,14 @@
     creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
   check_mode: no  # prevents Certbot from running in check/dry-run mode
 
-- name: Refresh cert_missing after obtaining cert
+- name: Refresh existence of SSL cert after obtaining cert
+  stat:
+    path: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+  register: cert_check
+
+- name: Set cert_missing fact based on refreshed results
   set_fact:
-    cert_missing: "{{ lookup('ansible.builtin.file', '/etc/letsencrypt/live/' ~ domain ~ '/fullchain.pem', errors='ignore') is none }}"
+    cert_missing: "{{ not cert_check.stat.exists }}"
 
 - name: Overwrite NGINX config with SSL-enabled version
   template:

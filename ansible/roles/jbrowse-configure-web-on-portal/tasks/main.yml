@@ -9,7 +9,7 @@
   loop: "{{ jbrowse.domains }}"
   loop_control:
     loop_var: domain
-  when: lookup('file', "/etc/letsencrypt/live/{{ domain }}/fullchain.pem", errors='ignore') is none
+  when: lookup('file', "/etc/letsencrypt/live/" ~ domain ~ "/fullchain.pem", errors='ignore') is none
         or jbrowse.force_redeploy | default(false)
 
 - name: Final reload of NGINX after any domain config

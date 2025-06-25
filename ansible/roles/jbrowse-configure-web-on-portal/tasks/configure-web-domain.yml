@@ -1,7 +1,12 @@
 ---
+- name: Determine if cert already exists
+  set_fact:
+    cert_missing: "{{ lookup('ansible.builtin.file', '/etc/letsencrypt/live/' ~ domain ~ '/fullchain.pem', errors='ignore') is none }}"
+
 - name: Set config_ssl fact as this domain required setup
   set_fact:
     config_ssl: true
+  when: cert_missing
 
 - name: Define paths
   set_fact:
@@ -11,6 +16,7 @@
   template:
     src: nginx-jbrowse-http.conf.j2
     dest: "/etc/nginx/sites-available/{{ domain }}.conf"
+  when: cert_missing
   notify: Reload Nginx
 
 - name: Enable NGINX site for domain (HTTP only)
@@ -40,12 +46,16 @@
     creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
   check_mode: no  # prevents Certbot from running in check/dry-run mode
 
+- name: Refresh cert_missing after obtaining cert
+  set_fact:
+    cert_missing: "{{ lookup('ansible.builtin.file', '/etc/letsencrypt/live/' ~ domain ~ '/fullchain.pem', errors='ignore') is none }}"
+
 - name: Overwrite NGINX config with SSL-enabled version
   template:
     src: nginx-jbrowse-ssl.conf.j2
     dest: "/etc/nginx/sites-available/{{ domain }}.conf"
   when:
     - target_environment == 'prod'
-    - lookup('ansible.builtin.file', "/etc/letsencrypt/live/{{ domain }}/fullchain.pem", errors='ignore') is not none
+    - not cert_missing
   notify: Reload Nginx
 

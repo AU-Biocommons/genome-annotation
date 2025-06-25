@@ -1,12 +1,25 @@
 ---
 
-- name: Determine if web configuration should run
+- name: initialise config_ssl flag to false - it will be set if any domains are updated
   set_fact:
-    config_ssl: true
+    config_ssl: false
+
+- name: Include web config tasks for each domain (only if needed)
+  include_tasks: configure-web-domain.yml
+  loop: "{{ jbrowse.domains }}"
+  loop_control:
+    loop_var: domain
   when: lookup('file', "/etc/letsencrypt/live/{{ domain }}/fullchain.pem", errors='ignore') is none
         or jbrowse.force_redeploy | default(false)
 
-- name: Include web config tasks
-  include_tasks: configure-web-domain.yml
+- name: Final reload of NGINX after any domain config
+  meta: flush_handlers
+  when: target_environment == 'prod' and config_ssl | default(false)
+
+- name: Show deployment completion message for JBrowse instance {{ jbrowse.id }}
+  debug:
+    msg: >-
+      JBrowse {{ jbrowse.id }} deployed on: {{ jbrowse.domains | join(', ') }}
+      Web path: /var/www/{{ jbrowse.id }}/jbrowse
   when: config_ssl | default(false)
 

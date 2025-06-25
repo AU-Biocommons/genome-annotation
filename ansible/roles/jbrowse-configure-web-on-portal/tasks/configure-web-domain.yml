@@ -1,4 +1,8 @@
 ---
+- name: Set config_ssl fact as this domain required setup
+  set_fact:
+    config_ssl: true
+
 - name: Define paths
   set_fact:
     jbrowse_web_target: "/var/www/{{ jbrowse.id }}/jbrowse"
@@ -7,9 +11,6 @@
   template:
     src: nginx-jbrowse-http.conf.j2
     dest: "/etc/nginx/sites-available/{{ domain }}.conf"
-  loop: "{{ jbrowse.domains }}"
-  loop_control:
-    loop_var: domain
   notify: Reload Nginx
 
 - name: Enable NGINX site for domain (HTTP only)
@@ -18,9 +19,6 @@
     dest: "/etc/nginx/sites-enabled/{{ domain }}.conf"
     state: link
     force: yes
-  loop: "{{ jbrowse.domains }}"
-  loop_control:
-    loop_var: domain
   when: target_environment == 'prod'
   notify: Reload Nginx
 
@@ -40,31 +38,14 @@
     -d {{ domain }}
   args:
     creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
-  loop: "{{ jbrowse.domains }}"
-  loop_control:
-    loop_var: domain
-  when: jbrowse.domains is defined
   check_mode: no  # prevents Certbot from running in check/dry-run mode
 
 - name: Overwrite NGINX config with SSL-enabled version
   template:
     src: nginx-jbrowse-ssl.conf.j2
     dest: "/etc/nginx/sites-available/{{ domain }}.conf"
-  loop: "{{ jbrowse.domains }}"
-  loop_control:
-    loop_var: domain
   when:
     - target_environment == 'prod'
     - lookup('ansible.builtin.file', "/etc/letsencrypt/live/{{ domain }}/fullchain.pem", errors='ignore') is not none
   notify: Reload Nginx
-
-- name: Final reload of NGINX after SSL certs and config are in place
-  meta: flush_handlers
-  when: target_environment == 'prod'
-
-- name: Show deployment completion message
-  debug:
-    msg: >-
-      JBrowse {{ jbrowse.id }} deployed on: {{ jbrowse.domains | join(', ') }}
-      Web path: {{ jbrowse_web_target }}
 

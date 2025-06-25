@@ -1,7 +1,15 @@
 ---
 jbrowse_deps:
     - build-essential
+    - zlib1g
     - zlib1g-dev
+    - libexpat1-dev
+    - libpng-dev
+    - libgd-dev # replaces libgd2-noxpm-dev
+    - build-essential
+    - python3-software-properties
+    - python3
+    - make
     - unzip
     - git
 

@@ -6,12 +6,6 @@
     config_path: "/mnt/{{ jbrowse.id }}/conf/jbrowse.conf"
     data_path: "/mnt/{{ jbrowse.id }}/apollo_data"
 
-- name: add {{ jbrowse_build_user }} to www-data group
-  user:
-    name: "{{ jbrowse_build_user }}"
-    groups: "www-data" 
-    append: yes
-
 - name: Ensure JBrowse build directory exists
   file:
     path: "{{ jbrowse_source }}"
@@ -89,11 +83,11 @@
     dest: "{{ jbrowse_source }}/data"
     state: link
 
-- name: Run setup.sh to build JBrowse and plugins (with NVM)
+- name: Run setup.sh to build JBrowse and plugins (with Node {{ node_version }})
   shell: |
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-    nvm use 12
+    nvm use {{ node_version }}
     ./setup.sh
   args:
     chdir: "{{ jbrowse_source }}"

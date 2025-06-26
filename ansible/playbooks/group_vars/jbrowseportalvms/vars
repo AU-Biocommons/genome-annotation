@@ -20,7 +20,6 @@ jbrowse_builds:
   - id: "jbrowse-012"
     domains:
       - wheat-dawn.genome.edu.au
-    force_rebuild: true # rebuild even if no changes
     plugins:
       - name: GCContent
         repo: "https://github.com/cmdcolin/gccontent"

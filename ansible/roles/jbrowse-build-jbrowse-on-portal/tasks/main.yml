@@ -52,6 +52,14 @@
     loop_var: plugin
   register: plugin_clones
 
+- name: Determine if JBrowse needs to be rebuilt
+  set_fact:
+    jbrowse_needs_rebuild: >-
+      {{ target_environment == 'test'
+         or (jbrowse.force_rebuild | default(false))
+         or (jbrowse_clone is defined and jbrowse_clone.changed)
+         or (plugin_clones is defined and plugin_clones.results | selectattr('changed') | list | length > 0) }}
+
 - name: Check if data symlink exists
   stat:
     path: "{{ jbrowse_source }}/data"
@@ -62,7 +70,9 @@
   file:
     path: "{{ jbrowse_source }}/data"
     state: absent
-  when: data_symlink.stat.islnk is defined and data_symlink.stat.islnk
+  when:
+    - jbrowse_needs_rebuild
+    - data_symlink.stat.islnk is defined and data_symlink.stat.islnk
 
 - name: Copy jbrowse.conf to build directory
   copy:
@@ -76,12 +86,14 @@
     owner: "{{ jbrowse_build_user }}"
     group: www-data
     recurse: yes
+  when: jbrowse_needs_rebuild
 
 - name: Symlink data directory into JBrowse build after chown/chmod
   file:
     src: "{{ data_path }}"
     dest: "{{ jbrowse_source }}/data"
     state: link
+  when: jbrowse_needs_rebuild
 
 - name: Run setup.sh to build JBrowse and plugins (with Node {{ node_version }})
   shell: |
@@ -95,11 +107,7 @@
   become_user: "{{ jbrowse_build_user }}"
   environment:
     HOME: "/home/{{ jbrowse_build_user }}"
-  when: >
-    target_environment == 'test' or
-    (jbrowse.force_rebuild | default(false)) or
-    (jbrowse_clone is defined and jbrowse_clone.changed) or
-    (plugin_clones is defined and plugin_clones.results | selectattr('changed') | list | length > 0)
+  when: jbrowse_needs_rebuild
 
 - name: Check for JBrowse build output (main.bundle.js)
   stat:

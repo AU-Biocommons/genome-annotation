@@ -9,7 +9,7 @@
     jbrowse_export_root: /srv/export/data/nectar
     nfs_client_hostname: "{{ nfs_client }}"
     portal_user_name: "jbrowse-portal_user"
-    portal_user_id: 15001
+    portal_user_id: 16001
 
   tasks:
     - name: Override etc_exports path if in test environment
@@ -83,7 +83,7 @@
   vars:
     nfs_server_hostname: "{{ nfs_hostname }}"
     portal_user_name: "jbrowse-portal_user"
-    portal_user_id: 15001
+    portal_user_id: 16001
 
   tasks:
     - name: Ensure group jbrowse-portal_user exists

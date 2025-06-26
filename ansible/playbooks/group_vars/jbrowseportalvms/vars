@@ -17,24 +17,24 @@ jbrowse_builds:
         repo: "https://github.com/elsiklab/multibigwig"
       - name: ComboTrackSelector
         repo: "https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector"
-#  - id: "jbrowse-002"
-#    domains:
-#      - wheat-dawn.genome.edu.au
-#    plugins:
-#      - name: GCContent
-#        repo: "https://github.com/cmdcolin/gccontent"
-#      - name: multibigwig
-#        repo: "https://github.com/elsiklab/multibigwig"
-#      - name: FeatureSequence
-#        repo: "https://github.com/tsaari88/FeatureSequence"
-#  - id: "jbrowse-003"
+  - id: "jbrowse-012"
+    domains:
+      - wheat-dawn.genome.edu.au
+    plugins:
+      - name: GCContent
+        repo: "https://github.com/cmdcolin/gccontent"
+      - name: multibigwig
+        repo: "https://github.com/elsiklab/multibigwig"
+      - name: FeatureSequence
+        repo: "https://github.com/tsaari88/FeatureSequence"
+#  - id: "jbrowse-008"
 #    domains:
 #      - degnan.genome.edu.au
 #      - degnan-marine.genome.edu.au
-#  - id: "jbrowse-004"
+#  - id: "jbrowse-010"
 #    domains:
 #      - coral.genome.edu.au
-#  - id: "jbrowse-005"
+#  - id: "jbrowse-002"
 #    domains:
 #      - scu.genome.edu.au
 

@@ -20,10 +20,11 @@ jbrowse_builds:
   - id: "jbrowse-012"
     domains:
       - wheat-dawn.genome.edu.au
+    force_rebuild: true # rebuild even if no changes
     plugins:
       - name: GCContent
         repo: "https://github.com/cmdcolin/gccontent"
-      - name: multibigwig
+      - name: MultiBigWig
         repo: "https://github.com/elsiklab/multibigwig"
       - name: FeatureSequence
         repo: "https://github.com/tsaari88/FeatureSequence"

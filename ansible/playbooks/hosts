@@ -29,7 +29,7 @@ ubuntu-test.genome.edu.au
 [oldubuntuvms]
 django-sandpit.genome.edu.au
 
-[old-apollovms]
+[oldapollovms]
 #apollo-001.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user"
 apollo-002.genome.edu.au ansible_host=apollo-002 allowed_groups="ubuntu apollo_admin backup_user scu_user"
 apollo-004.genome.edu.au ansible_host=apollo-004 allowed_groups="ubuntu apollo_admin backup_user jbrowse-sandpit_user"

@@ -58,6 +58,7 @@ locals {
         "SequenceServer_Web_access",
         "Apollo3_Server_access",
         "NRPE_local_access",
+        "Prometheus_Server_local_access",
         "ICMP_local_access"
     ]
 }

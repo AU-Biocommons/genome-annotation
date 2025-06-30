@@ -27,6 +27,7 @@ resource "openstack_compute_instance_v2" "tfs_apollo_backup_20250430" {
         "default",
         "SSH_access",
         "NRPE_local_access",
+        "Prometheus_Server_local_access",
         "ICMP_local_access",
         "Postgresql_allowed_group"
     ]
@@ -102,6 +103,7 @@ resource "openstack_compute_instance_v2" "tfs_apollo_user_nfs_20250512" {
         "default",
         "SSH_access",
         "NRPE_local_access",
+        "Prometheus_Server_local_access",
         "ICMP_local_access",
         "NFS_Server_local_access"
     ]
@@ -168,9 +170,10 @@ resource "openstack_compute_instance_v2" "tfs_apollo_monitor_20250529" {
         "default",
         "SSH_access",
         "NRPE_local_access",
+        "Prometheus_Server_local_access",
         "ICMP_local_access",
-        "Web_Server_access_full"
-#        "Grafana_Server_Web_access" # define if we run Grafana
+        "Web_Server_access_full",
+        "Grafana_Server_Web_access"
     ]
 
     metadata = {
@@ -225,6 +228,7 @@ resource "openstack_compute_instance_v2" "tfs_apollo_portal_20250609" {
         "default",
         "SSH_access",
         "NRPE_local_access",
+        "Prometheus_Server_local_access",
         "ICMP_local_access",
         "Postgresql_Server_local_access",
         "Web_Server_access_full"
@@ -282,6 +286,7 @@ resource "openstack_compute_instance_v2" "tfs_jbrowse_portal_20250617" {
         "default",
         "SSH_access",
         "NRPE_local_access",
+        "Prometheus_Server_local_access",
         "ICMP_local_access",
         "Web_Server_access_full"
     ]

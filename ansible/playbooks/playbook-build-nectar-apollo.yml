@@ -41,15 +41,8 @@
         name: apollo-dependencies
     - import_role:
         name: common-nagios-nrpe
-    # TODO if use prometheus with grafana, configure here
-    # with:
-    #- import_role:
-    #    name: common-prometheus-node-exporter-ubuntu
-    # or:
-    #- import_role:
-    #    name: prometheus-exporters-ubuntu
-    #- import_role:
-    #    name: prometheus-exporters-set-conf
+    - import_role:
+        name: common-prometheus-node-exporter-ubuntu
     - import_role:
         name: common-webdav  # may no longer be required
     - import_role:

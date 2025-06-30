@@ -4,7 +4,6 @@
   apt:
     pkg:
       - prometheus-node-exporter
-      - prometheus-pushgateway
       - prometheus-alertmanager
     state: present
     update_cache: yes
@@ -31,6 +30,6 @@
     port: '{{ item }}'
     src: '{{ grafana_server }}'
   with_items:
-    - '9100'
-#    - '9187'
+    - '9100' # node-exporter
+#    - '9187' # postgres-exporter
 

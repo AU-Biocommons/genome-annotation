@@ -251,7 +251,7 @@ resource "openstack_networking_secgroup_rule_v2" "NRPE_local_access-ingress-tcp-
 # Prometheus server (Grafana) security group rules
 resource "openstack_networking_secgroup_v2" "Prometheus_Server_local_access" {
     name = "Prometheus_Server_local_access"
-    description = "Allow local Prometheus connections on port 9090"
+    description = "Allow local Prometheus connections on port 9090 and 9100 (node-exporter)"
 }
 
 # Rule for general Prometheus connections
@@ -265,7 +265,6 @@ resource "openstack_networking_secgroup_rule_v2" "Prometheus_Server_local_access
     security_group_id = openstack_networking_secgroup_v2.Prometheus_Server_local_access.id
 }
 
-/*** TODO: define this ONLY if it is used
 # rule for Prometheus Node Exporter
 resource "openstack_networking_secgroup_rule_v2" "Prometheus_Server_local_access-node_exporter-ingress-tcp-9100" {
     direction = "ingress"
@@ -276,7 +275,6 @@ resource "openstack_networking_secgroup_rule_v2" "Prometheus_Server_local_access
     remote_ip_prefix = "192.168.0.0/24"
     security_group_id = openstack_networking_secgroup_v2.Prometheus_Server_local_access.id
 }
-***/
 
 /*** TODO: define this ONLY if it is used
 # rule for Prometheus Postgres Exporter

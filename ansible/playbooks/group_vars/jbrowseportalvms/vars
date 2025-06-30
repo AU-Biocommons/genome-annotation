@@ -30,7 +30,7 @@ jbrowse_builds:
 #  - id: "jbrowse-008"
 #    domains:
 #      - degnan.genome.edu.au
-#      - degnan-marine.genome.edu.au
+#      - degnanmarine.genome.edu.au
 #  - id: "jbrowse-010"
 #    domains:
 #      - coral.genome.edu.au

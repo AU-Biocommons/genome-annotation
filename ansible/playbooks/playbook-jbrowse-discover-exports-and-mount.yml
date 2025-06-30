@@ -17,6 +17,12 @@
         etc_exports: "/tmp/test-exports"
       when: target_environment == 'test'
 
+    - name: Add ubuntu user to www-data group
+      user:
+        name: ubuntu
+        groups: www-data
+        append: yes
+
     - name: Ensure group jbrowse-portal_user exists (system user)
       group:
         name: "{{ portal_user_name }}"
@@ -86,6 +92,12 @@
     portal_user_id: 16001
 
   tasks:
+    - name: Add ubuntu user to www-data group
+      user:
+        name: ubuntu
+        groups: www-data
+        append: yes
+
     - name: Ensure group jbrowse-portal_user exists
       group:
         name: "{{ portal_user_name }}"

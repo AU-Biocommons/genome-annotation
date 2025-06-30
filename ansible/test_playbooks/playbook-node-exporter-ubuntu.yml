@@ -10,5 +10,5 @@
   #   --limit apollo-monitor.genome.edu.au
   tasks:
     - import_role:
-        name: common-prometheus-node-exporter-ubuntu20
+        name: common-prometheus-node-exporter-ubuntu
 

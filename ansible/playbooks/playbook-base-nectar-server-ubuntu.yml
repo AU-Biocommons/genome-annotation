@@ -29,6 +29,8 @@
     - import_role:
         name: common-nagios-nrpe
     - import_role:
+        name: common-prometheus-node-exporter-ubuntu
+    - import_role:
         name: common-install-utils
     - import_role:                
         name: common-certbot-snapd

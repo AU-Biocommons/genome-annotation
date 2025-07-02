@@ -23,6 +23,7 @@
     user: "{{ item.username }}"
     key: "{{ lookup('file', item.key) }}"
   with_items: "{{ login_users }}"
+  when: not ansible_check_mode
 
 - name: "adding login_users to apollo_admin group (allows login)"
   user:

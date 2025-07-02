@@ -35,6 +35,12 @@ echo "... saved to apollo_user_organism_counts-${today}.txt"
 echo "------"
 echo
 
+echo "get last login or access time on each apollo..."
+cat apollo_usage-${today}.txt | grep 'Client tokens' > apollo_last-logins-${today}.txt
+echo "... saved to apollo_last-logins-${today}.txt"
+echo "------"
+echo
+
 echo "Summary counts from generated data..."
 echo "total number of apollos: $(grep -c '^apollo-[0-9]* Users:' apollo_user_organism_counts-${today}.txt)"
 echo "total unused apollos: $(grep -c 'Organisms: 0' apollo_user_organism_counts-${today}.txt)"

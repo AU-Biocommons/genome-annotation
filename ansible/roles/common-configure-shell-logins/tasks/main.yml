@@ -6,20 +6,15 @@
     state: present
     gid: 1001
 
-# deprecated - use apollo_admin
-#- name: "Ensure group QFAB is present"
-#  group:
-#    name: "QFAB"
-#    state: present
-#    gid: 40018
-
-- name: "adding system user {{ ansible_user }} to group apollo_admin"
+- name: "adding system user {{ ansible_user }} to group apollo_admin (and www-data)"
   user:
     name: "{{ ansible_user }}"
     groups: 
-     - "apollo_admin"
+      - "apollo_admin"
+      - "www-data"
     append: yes
   become: yes
+  when: not ansible_check_mode
 
 - name: "Ensure the system user's home directory is private"
   file:

@@ -17,11 +17,12 @@
         etc_exports: "/tmp/test-exports"
       when: target_environment == 'test'
 
-    - name: Add ubuntu user to www-data group
-      user:
-        name: ubuntu
-        groups: www-data
-        append: yes
+    # now done in common-configure-shell-logins
+    #- name: Add ubuntu user to www-data group
+    #  user:
+    #    name: ubuntu
+    #    groups: www-data
+    #    append: yes
 
     - name: Ensure group jbrowse-portal_user exists (system user)
       group:
@@ -92,11 +93,12 @@
     portal_user_id: 16001
 
   tasks:
-    - name: Add ubuntu user to www-data group
-      user:
-        name: ubuntu
-        groups: www-data
-        append: yes
+    # now done in common-configure-shell-logins
+    #- name: Add ubuntu user to www-data group
+    #  user:
+    #    name: ubuntu
+    #    groups: www-data
+    #    append: yes
 
     - name: Ensure group jbrowse-portal_user exists
       group:

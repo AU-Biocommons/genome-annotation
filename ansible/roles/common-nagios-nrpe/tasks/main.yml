@@ -50,4 +50,5 @@
   systemd:
     state: "restarted"
     name: "nagios-nrpe-server"
+  when: not ansible_check_mode
 

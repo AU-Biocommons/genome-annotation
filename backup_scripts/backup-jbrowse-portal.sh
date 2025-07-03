@@ -5,7 +5,7 @@ NAME="jbrowse-portal"
 
 ARCHIVE_DAY="Tuesday"
 DAY=$(date +"%Y%m%d")
-DAY_NUM_OF_WEEK=$(date +%w)
+DAY_OF_WEEK=$(date +%A)
 
 BACKUP_VOL="/mnt/backup00/nectar"
 BACKUP_DIR="${BACKUP_VOL}/${NAME}"
@@ -42,7 +42,7 @@ for j in $(ssh backup_user@$REMOTE_HOST 'ls -d /mnt/jbrowse-0* 2>/dev/null'); do
 done
 
 echo "rsyncing home directories ..."
-/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --exclude 'home/data' --delete-excluded --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
+/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --delete-excluded --delete-excluded --rsync-path="sudo rsync" backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
 echo "completed"
 
 echo "rsyncing web page and config directories ..."

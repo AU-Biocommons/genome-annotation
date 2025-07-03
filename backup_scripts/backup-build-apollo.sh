@@ -29,7 +29,7 @@ echo "rsyncing build data ..."
 echo "completed"
 
 echo "rsyncing home directories ..."
-/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --delete-excluded --rsync-path="sudo rsync" --exclude 'home/data' backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
+/usr/bin/rsync -e ssh -avr --delete --links --numeric-ids --exclude='*/.cache' --exclude='*/.local' --exclude='*/.cpanm' --exclude='*/.npm' --exclude='*/.nvm' --exclude='*/.yarn' --delete-excluded --rsync-path="sudo rsync" --exclude 'home/data' backup_user@$REMOTE_HOST:/home $BACKUP_DIR --log-file=$LOGFILE
 echo "completed"
 
 echo "rsyncing web page and config directories ..."

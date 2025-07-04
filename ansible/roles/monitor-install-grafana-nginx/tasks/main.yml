@@ -6,15 +6,8 @@
       - software-properties-common
       - curl
       - gnupg
-      - nginx
     state: present
     update_cache: yes
-
-- name: Allow HTTP(S) connections to Nginx
-  ufw:
-    rule: allow
-    name: 'Nginx Full'
-  when: not ansible_check_mode # nginx isn't installed yet
 
 - name: Add Grafana APT key
   apt_key:

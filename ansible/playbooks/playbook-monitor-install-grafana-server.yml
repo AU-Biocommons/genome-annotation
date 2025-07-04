@@ -10,6 +10,10 @@
   #   --limit apollo-monitor.genome.edu.au
   tasks:
     - import_role:
+        name: common-nginx
+    - import_role:
+        name: common-certbot-snapd # install here as not installed in base install
+    - import_role:
         name: monitor-install-grafana-nginx
     #- import_role:
     #    name: monitor-configure-grafana

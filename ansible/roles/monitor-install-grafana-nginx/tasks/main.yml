@@ -1,0 +1,84 @@
+---
+- name: Install required APT packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - software-properties-common
+      - curl
+      - gnupg
+    state: present
+    update_cache: yes
+
+- name: Add Grafana APT key
+  apt_key:
+    url: "{{ grafana_repo_key_url }}"
+    state: present
+
+- name: Add Grafana APT repository
+  apt_repository:
+    repo: "{{ grafana_repo }}"
+    filename: "grafana"
+    state: present
+    update_cache: yes
+
+- name: Install Grafana
+  apt:
+    name: grafana
+    state: present
+    update_cache: yes
+  when: not ansible_check_mode
+
+- name: Set Grafana admin password
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: '^;?admin_password ='
+    line: "admin_password = {{ grafana_admin_password }}"
+    state: present
+  when: not ansible_check_mode # file won't exist
+
+- name: Set Grafana domain
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: '^;?domain ='
+    line: "domain = {{ grafana_domain }}"
+    state: present
+  when: not ansible_check_mode # file won't exist
+
+- name: Ensure Grafana is started and enabled
+  systemd:
+    name: grafana-server
+    enabled: yes
+    state: started
+  when: not ansible_check_mode # Grafa not yet installed
+
+- name: Deploy NGINX configuration for Grafana
+  template:
+    src: grafana.nginx.conf.j2
+    dest: /etc/nginx/sites-available/grafana
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable Grafana site
+  file:
+    src: /etc/nginx/sites-available/grafana
+    dest: /etc/nginx/sites-enabled/grafana
+    state: link
+  when: not ansible_check_mode # file won't exist
+
+- name: Remove default NGINX site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  when: not ansible_check_mode # file won't exist
+
+- name: Obtain TLS certificate with Let's Encrypt
+  command: >
+    certbot {% if target_environment == 'test' %}--test-cert{% endif %}
+    --nginx -n --agree-tos --email {{ certbot_renew_email }}
+    --domains {{ grafana_domain }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ grafana_domain }}/fullchain.pem"
+  notify: Reload nginx
+  when: not ansible_check_mode # nginx service doesn't exist yet
+

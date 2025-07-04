@@ -1,0 +1,83 @@
+---
+- name: Install required APT packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - software-properties-common
+      - curl
+      - gnupg
+      - nginx
+    state: present
+    update_cache: yes
+
+- name: Allow HTTP(S) connections to Nginx
+  ufw:
+    rule: allow
+    name: 'Nginx Full'
+
+- name: Add Grafana APT key
+  apt_key:
+    url: "{{ grafana_repo_key_url }}"
+    state: present
+
+- name: Add Grafana APT repository
+  apt_repository:
+    repo: "{{ grafana_repo }}"
+    filename: "grafana"
+    state: present
+    update_cache: yes
+
+- name: Install Grafana
+  apt:
+    name: grafana
+    state: present
+    update_cache: yes
+
+- name: Set Grafana admin password
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: '^;?admin_password ='
+    line: "admin_password = {{ grafana_admin_password }}"
+    state: present
+
+- name: Set Grafana domain
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: '^;?domain ='
+    line: "domain = {{ grafana_domain }}"
+    state: present
+
+- name: Ensure Grafana is started and enabled
+  systemd:
+    name: grafana-server
+    enabled: yes
+    state: started
+
+- name: Deploy NGINX configuration for Grafana
+  template:
+    src: grafana.nginx.conf.j2
+    dest: /etc/nginx/sites-available/grafana
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable Grafana site
+  file:
+    src: /etc/nginx/sites-available/grafana
+    dest: /etc/nginx/sites-enabled/grafana
+    state: link
+
+- name: Remove default NGINX site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Obtain TLS certificate with Let's Encrypt
+  command: >
+    certbot {% if target_environment == 'test' %}--test-cert{% endif %}
+    --nginx -n --agree-tos --email {{ certbot_renew_email }}
+    --domains {{ grafana_domain }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ grafana_domain }}/fullchain.pem"
+  notify: Reload nginx
+

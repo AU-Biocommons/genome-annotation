@@ -1,0 +1,7 @@
+---
+grafana_admin_password: "{{ vault_grafana_password }}"
+grafana_domain: "grafana.genome.edu.au"
+certbot_renew_email: "ops@qfab.org"
+grafana_repo_key_url: "https://packages.grafana.com/gpg.key"
+grafana_repo: "deb https://packages.grafana.com/oss/deb stable main"
+

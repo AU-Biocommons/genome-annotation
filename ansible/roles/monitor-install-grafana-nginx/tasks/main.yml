@@ -95,3 +95,20 @@
   notify: Reload nginx
   when: not ansible_check_mode # nginx service doesn't exist yet
 
+- name: Provision Prometheus data source for Grafana
+  copy:
+    dest: /etc/grafana/provisioning/datasources/prometheus.yml
+    content: |
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://localhost:9090
+          isDefault: true
+    owner: root
+    group: grafana
+    mode: '0644'
+  notify: Restart grafana-server
+
+

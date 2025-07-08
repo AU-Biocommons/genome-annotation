@@ -3,3 +3,8 @@
     name: nginx
     state: reloaded
 
+- name: Restart grafana-server
+  systemd:
+    name: grafana-server
+    state: restarted
+

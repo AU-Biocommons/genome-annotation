@@ -4,7 +4,7 @@ apollo-backup.genome.edu.au
 [changeipvms]
 apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo
 apollo-user-nfs.genome.edu.au ansible_user=ubuntu admin_group=sudo
-#apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
 
 [changeipvms:vars]
 hostname_for_ip=apollo-backup

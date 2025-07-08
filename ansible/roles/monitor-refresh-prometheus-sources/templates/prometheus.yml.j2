@@ -1,0 +1,26 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'apollo-infrastructure'
+    static_configs:
+      - targets:
+{% for host in apollo_infrastructure_hosts %}
+          - {{ host }}:9100
+{% endfor %}
+        labels:
+          group: infrastructure
+
+  - job_name: 'apollo-internal'
+    file_sd_configs:
+      - files:
+          - {{ apollo_internal_sd_file | default('/etc/prometheus/file_sd/apollo-internal.json') }}
+        refresh_interval: 30s
+
+  - job_name: 'apollo-client'
+    file_sd_configs:
+      - files:
+          - {{ apollo_clients_sd_file | default('/etc/prometheus/file_sd/apollo-clients.json') }}
+        refresh_interval: 30s
+

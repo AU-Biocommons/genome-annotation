@@ -1,0 +1,72 @@
+---
+
+- name: Ensure file_sd directory exists
+  file:
+    path: "{{ apollo_clients_sd_file | dirname }}" # /etc/prometheus/file_sd
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+
+- name: Create empty apollo-internal SD config file with stub comment (if no hosts and doesn't exist)
+  copy:
+    dest: "{{ apollo_internal_sd_file }}"
+    content: "[]\n"
+    owner: prometheus
+    group: prometheus
+    mode: '0644'
+    force: no
+  when: apollo_internal_hosts | length == 0
+
+- name: Create empty apollo-client SD config file with stub comment (if no hosts and doesn't exist)
+  copy:
+    dest: "{{ apollo_clients_sd_file }}"
+    content: "[]\n"
+    owner: prometheus
+    group: prometheus
+    mode: '0644'
+    force: no
+  when: apollo_client_hosts | length == 0
+
+- name: Create apollo-internal SD config from template (if hosts are defined)
+  template:
+    src: apollo-internal-sd.json.j2
+    dest: "{{ apollo_internal_sd_file }}"
+    owner: prometheus
+    group: prometheus
+    mode: '0644'
+  when: apollo_internal_hosts | length > 0
+
+- name: Create apollo-client SD config from template (if hosts are defined)
+  template:
+    src: apollo-client-sd.json.j2
+    dest: "{{ apollo_clients_sd_file }}"
+    owner: prometheus
+    group: prometheus
+    mode: '0644'
+  when: apollo_client_hosts | length > 0
+
+- name: Deploy prometheus.yml with file_sd_config references
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Validate Prometheus config with promtool
+  command: promtool check config /etc/prometheus/prometheus.yml
+  register: promtool_result
+  changed_when: false
+  failed_when: promtool_result.rc != 0
+
+- name: Show Prometheus config validation output
+  debug:
+    var: promtool_result.stdout_lines
+
+- name: Reload Prometheus
+  systemd:
+    name: prometheus
+    state: reloaded
+  when: promtool_result.rc == 0
+

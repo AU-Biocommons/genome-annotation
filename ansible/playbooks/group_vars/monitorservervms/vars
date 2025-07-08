@@ -3,3 +3,12 @@ ansible_user: ubuntu
 admin_group: sudo
 target_environment: prod
 
+apollo_internal_hosts: >-
+  {{ groups['internalapollos'] | map('extract', hostvars, 'ansible_host') | map('default', inventory_hostname) | list }}
+
+apollo_client_hosts: >-
+  {{ groups['clientapollos'] | map('extract', hostvars, 'ansible_host') | map('default', inventory_hostname) | list }}
+
+apollo_infrastructure_hosts: >-
+  {{ groups['infrastructure'] | map('extract', hostvars, 'ansible_host') | map('default', inventory_hostname) | list }}
+

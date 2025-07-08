@@ -6,6 +6,7 @@
       - software-properties-common
       - curl
       - gnupg
+      - prometheus
     state: present
     update_cache: yes
 

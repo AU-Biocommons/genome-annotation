@@ -1,0 +1,11 @@
+---
+# This configures/refreshes Prometheus scrape configs and service discovery files
+# Run with standard inventory file to extract VMs for monitoring
+#   ansible-playbook playbook-monitor-refresh-prometheus-sources.yml --limit monitorservervms
+
+- name: Configure/Refresh Prometheus data sources on the monitoring server
+  hosts: monitorservervms
+  become: true
+  roles:
+    - monitor-refresh-prometheus-sources
+

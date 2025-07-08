@@ -1,0 +1,11 @@
+[
+{% for host in apollo_client_hosts %}
+  {
+    "targets": ["{{ host }}:9100"],
+    "labels": {
+      "group": "client"
+    }
+  }{% if not loop.last %},{% endif %}
+{% endfor %}
+]
+

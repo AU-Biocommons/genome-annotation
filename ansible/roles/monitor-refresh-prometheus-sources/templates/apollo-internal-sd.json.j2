@@ -1,0 +1,11 @@
+[
+{% for host in apollo_internal_hosts %}
+  {
+    "targets": ["{{ host }}:9100"],
+    "labels": {
+      "group": "internal"
+    }
+  }{% if not loop.last %},{% endif %}
+{% endfor %}
+]
+

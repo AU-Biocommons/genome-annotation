@@ -1,0 +1,12 @@
+---
+
+apollo_infrastructure_hosts:
+  - apollo-backup
+  - apollo-user-nfs
+  - apollo-monitor
+  - apollo-portal
+  - apollo-user-jbrowse
+
+apollo_internal_sd_file: /etc/prometheus/file_sd/apollo-internal.json
+apollo_clients_sd_file: /etc/prometheus/file_sd/apollo-clients.json
+

@@ -6,6 +6,7 @@
       - software-properties-common
       - curl
       - gnupg
+      - prometheus
     state: present
     update_cache: yes
 
@@ -51,6 +52,11 @@
     state: started
   when: not ansible_check_mode # Grafa not yet installed
 
+- name: Check if Grafana TLS certificate exists
+  stat:
+    path: "/etc/letsencrypt/live/{{ grafana_domain }}/fullchain.pem"
+  register: grafana_cert
+
 - name: Deploy NGINX configuration for Grafana
   template:
     src: grafana.nginx.conf.j2
@@ -58,6 +64,8 @@
     owner: root
     group: root
     mode: '0644'
+  vars:
+    cert_present: "{{ grafana_cert.stat.exists }}"
 
 - name: Enable Grafana site
   file:
@@ -71,6 +79,11 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
   when: not ansible_check_mode # file won't exist
+
+- name: Reload NGINX after initial config
+  systemd:
+    name: nginx
+    state: reloaded
 
 - name: Obtain TLS certificate with Let's Encrypt
   command: >

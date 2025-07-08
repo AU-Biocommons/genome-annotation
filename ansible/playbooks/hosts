@@ -1,8 +1,29 @@
+[infrastructure]
+apollo-backup.genome.edu.au # ansible_host=apollo-backup
+apollo-user-nfs.genome.edu.au ansible_host=apollo-user-nfs
+#apollo-portal-main.genome.edu.au # use this when apollo-portal redirects to apollo-portal-offline
+apollo-portal.genome.edu.au ansible_host=apollo-portal
+jbrowse-portal.genome.edu.au ansible_host=apollo-user-jbrowse
+apollo-monitor.genome.edu.au ansible_host=apollo-monitor
+
+# needs to be defined here as prometheus data sources are extracted from this inventory
+[monitorservervms]
+apollo-monitor.genome.edu.au
+
+[testvms]
+ubuntu-test.genome.edu.au
+
+# the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied
+[otherubuntuvms:children]
+infrastructure
+testvms
+
+[internalapollos]
+apollo-011.genome.edu.au ansible_host=apollo-011 allowed_groups="ubuntu apollo_admin backup_user sandpit_user"
 
 # the apollovms section defines the existing apollo instances
-[apollovms]
+[clientapollos]
 apollo-003.genome.edu.au ansible_host=apollo-003 allowed_groups="ubuntu apollo_admin backup_user bread-wheat-um_user"
-apollo-011.genome.edu.au ansible_host=apollo-011 allowed_groups="ubuntu apollo_admin backup_user sandpit_user"
 apollo-016.genome.edu.au ansible_host=apollo-016 allowed_groups="ubuntu apollo_admin backup_user pathogenomics_user"
 apollo-017.genome.edu.au ansible_host=apollo-017 allowed_groups="ubuntu apollo_admin backup_user pulsepathogens_user"
 apollo-019.genome.edu.au ansible_host=apollo-019 allowed_groups="ubuntu apollo_admin backup_user ccdm_user"
@@ -16,16 +37,12 @@ apollo-033.genome.edu.au ansible_host=apollo-033 allowed_groups="ubuntu apollo_a
 apollo-034.genome.edu.au ansible_host=apollo-034 allowed_groups="ubuntu apollo_admin backup_user ilrg-uq_user"
 apollo-035.genome.edu.au ansible_host=apollo-035 allowed_groups="ubuntu apollo_admin backup_user nbenth_user"
 
-# the otherubuntuvms section defines ubuntu-based hosts that will have system updates applied
-[otherubuntuvms]
-apollo-backup.genome.edu.au # ansible_host=apollo-backup
-apollo-user-nfs.genome.edu.au ansible_host=apollo-user-nfs
-#apollo-portal-main.genome.edu.au # use this when apollo-portal redirects to apollo-portal-offline
-apollo-portal.genome.edu.au ansible_host=apollo-portal
-jbrowse-portal.genome.edu.au ansible_host=apollo-user-jbrowse
-apollo-monitor.genome.edu.au
-ubuntu-test.genome.edu.au
+[apollovms:children]
+internalapollos
+clientapollos
 
+
+### Pawsey VMs not yet, or not to be migrated
 
 [oldubuntuvms]
 django-sandpit.genome.edu.au

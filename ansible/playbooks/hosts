@@ -1,5 +1,5 @@
 [infrastructure]
-apollo-backup.genome.edu.au # ansible_host=apollo-backup
+apollo-backup.genome.edu.au ansible_host=apollo-backup
 apollo-user-nfs.genome.edu.au ansible_host=apollo-user-nfs
 #apollo-portal-main.genome.edu.au # use this when apollo-portal redirects to apollo-portal-offline
 apollo-portal.genome.edu.au ansible_host=apollo-portal

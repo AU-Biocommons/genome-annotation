@@ -15,5 +15,5 @@
         name: monitor-refresh-prometheus-sources
     - name: Provision Grafana dashboards from discovered Prometheus targets
       include_role:
-        name: monitor-refresh-prometheus-sources
+        name: monitor-configure-grafana-dashboards
 

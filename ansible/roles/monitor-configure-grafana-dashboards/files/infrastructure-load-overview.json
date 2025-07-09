@@ -425,8 +425,8 @@
         "type": "query",
         "datasource": "Prometheus",
         "refresh": 1,
-        "definition": "label_values(node_load1, instance)",
-        "query": "label_values(node_load1, instance)",
+        "definition": "label_values(node_load1{group=\"infrastructure\"}, instance)",
+        "query": "label_values(node_load1{group=\"infrastructure\"}, instance)",
         "multi": true,
         "includeAll": true
       }

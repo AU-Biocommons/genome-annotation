@@ -32,7 +32,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "-- Grafana --"
+        "uid": "grafana"
       },
       "fieldConfig": {
         "defaults": {

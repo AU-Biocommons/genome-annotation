@@ -1,0 +1,36 @@
+---
+
+- name: Ensure Grafana provisioning directories exist
+  file:
+    path: "/etc/grafana/provisioning/dashboards"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install dashboard provisioning config
+  template:
+    src: dashboards.yml.j2
+    dest: /etc/grafana/provisioning/dashboards/dashboards.yml
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart grafana-server
+
+- name: Ensure custom dashboards directory exists
+  file:
+    path: "/var/lib/grafana/dashboards"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install load overview dashboard JSON
+  copy:
+    src: infrastructure-load-overview.json
+    dest: /var/lib/grafana/dashboards/infrastructure-load-overview.json
+    owner: grafana
+    group: grafana
+    mode: '0644'
+  notify: Restart grafana-server
+

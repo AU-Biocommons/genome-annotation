@@ -21,7 +21,7 @@
       }
     ]
   },
-  "description": "Infrastructure VM Loads",
+  "description": "All VM Stats",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -69,7 +69,7 @@
       },
       "targets": [
         {
-          "expr": "node_load1{instance=~\"$infrastructure\"}",
+          "expr": "node_load1{instance=~\"$all_vms\"}",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -117,7 +117,7 @@
       },
       "targets": [
         {
-          "expr": "node_load5{instance=~\"$infrastructure\"}",
+          "expr": "node_load5{instance=~\"$all_vms\"}",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -165,7 +165,7 @@
       },
       "targets": [
         {
-          "expr": "node_load15{instance=~\"$infrastructure\"}",
+          "expr": "node_load15{instance=~\"$all_vms\"}",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -213,7 +213,7 @@
       },
       "targets": [
         {
-          "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\",instance=~\"$infrastructure\"}[5m])) * 100)",
+          "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\",instance=~\"$all_vms\"}[5m])) * 100)",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -261,7 +261,7 @@
       },
       "targets": [
         {
-          "expr": "(node_memory_MemTotal_bytes{instance=~\"$infrastructure\"} - node_memory_MemAvailable_bytes{instance=~\"$infrastructure\"}) / node_memory_MemTotal_bytes{instance=~\"$infrastructure\"} * 100",
+          "expr": "(node_memory_MemTotal_bytes{instance=~\"$all_vms\"} - node_memory_MemAvailable_bytes{instance=~\"$all_vms\"}) / node_memory_MemTotal_bytes{instance=~\"$all_vms\"} * 100",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -309,7 +309,7 @@
       },
       "targets": [
         {
-          "expr": "(node_filesystem_size_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$infrastructure\"} - node_filesystem_free_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$infrastructure\"}) / node_filesystem_size_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$infrastructure\"} * 100",
+          "expr": "(node_filesystem_size_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$all_vms\"} - node_filesystem_free_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$all_vms\"}) / node_filesystem_size_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$all_vms\"} * 100",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -357,7 +357,7 @@
       },
       "targets": [
         {
-          "expr": "rate(node_network_receive_bytes_total{device!~\"lo\",instance=~\"$infrastructure\"}[5m])",
+          "expr": "rate(node_network_receive_bytes_total{device!~\"lo\",instance=~\"$all_vms\"}[5m])",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -405,7 +405,7 @@
       },
       "targets": [
         {
-          "expr": "rate(node_network_transmit_bytes_total{device!~\"lo\",instance=~\"$infrastructure\"}[5m])",
+          "expr": "rate(node_network_transmit_bytes_total{device!~\"lo\",instance=~\"$all_vms\"}[5m])",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -421,13 +421,14 @@
   "templating": {
     "list": [
       {
-        "name": "infrastructure",
+        "name": "all_vms",
         "type": "query",
         "datasource": "Prometheus",
         "refresh": 1,
-        "definition": "label_values(node_load1{group=\"infrastructure\"}, instance)",
-        "query": "label_values(node_load1{group=\"infrastructure\"}, instance)",
-        "includeAll": true
+        "definition": "label_values(node_load1, instance)",
+        "query": "label_values(node_load1, instance)",
+        "includeAll": true,
+        "multi": true
       }
     ]
   },
@@ -461,7 +462,7 @@
     ]
   },
   "timezone": "Australia/Brisbane",
-  "title": "Infrastructure VM Loads",
+  "title": "All VM Stats",
   "version": 1,
   "weekStart": ""
 }

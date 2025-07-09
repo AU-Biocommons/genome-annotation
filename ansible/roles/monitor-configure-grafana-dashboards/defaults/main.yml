@@ -1,4 +1,3 @@
 grafana_dashboards:
   - src: load-overview-apollo-infrastructure-grouped.json
-    dest: /etc/grafana/provisioning/dashboards/load-overview-apollo-infrastructure-grouped.json
 

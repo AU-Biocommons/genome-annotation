@@ -28,7 +28,7 @@
 - name: Install dashboard JSONs
   copy:
     src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    dest: "/var/lib/grafana/dashboards/{{ item.dest | default(item.src | basename) }}"
     owner: grafana
     group: grafana
     mode: '0644'

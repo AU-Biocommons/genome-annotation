@@ -25,12 +25,13 @@
     group: root
     mode: '0755'
 
-- name: Install load overview dashboard JSON
+- name: Install dashboard JSONs
   copy:
-    src: infrastructure-load-overview.json
-    dest: /var/lib/grafana/dashboards/infrastructure-load-overview.json
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: grafana
     group: grafana
     mode: '0644'
+  loop: "{{ grafana_dashboards }}"
   notify: Restart grafana-server
 

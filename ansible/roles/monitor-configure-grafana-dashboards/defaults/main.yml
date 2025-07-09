@@ -1,0 +1,4 @@
+grafana_dashboards:
+  - src: load-overview-apollo-infrastructure.json
+    dest: /etc/grafana/provisioning/dashboards/load-overview-apollo-infrastructure.json
+

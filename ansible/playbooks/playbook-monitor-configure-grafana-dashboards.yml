@@ -1,7 +1,0 @@
----
-- name: Configure Grafana dashboards
-  hosts: monitorservervms
-  become: true
-  roles:
-    - role: monitor-configure-grafana-dashboards
-

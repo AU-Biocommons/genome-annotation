@@ -1,0 +1,19 @@
+---
+# This configures/refreshes Prometheus scrape configs and service discovery files
+# then it provisions Grafana dashboards based on these sources
+#
+# Run with standard inventory file to extract VMs for monitoring
+#   ansible-playbook playbook-monitor-refresh-prometheus-sources.yml --limit monitorservervms
+
+- name: Configure/Refresh Prometheus sources on monitoring server and provision Grafana dashboards
+  hosts: monitorservervms
+  become: true
+
+  tasks:
+    - name: Refresh Prometheus data sources from inventory
+      include_role:
+        name: monitor-refresh-prometheus-sources
+    - name: Provision Grafana dashboards from discovered Prometheus targets
+      include_role:
+        name: monitor-refresh-prometheus-sources
+

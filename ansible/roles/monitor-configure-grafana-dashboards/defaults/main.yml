@@ -1,3 +1,6 @@
 grafana_dashboards:
-  - src: load-overview-apollo-infrastructure-grouped.json
+  - src: infrastructure-vm-overview-grouped-by-stat.json
+  - src: infrastructure-load-overview.json
+  - src: apollo-load-overview.json
+  - src: all-vms-load-overview.json
 

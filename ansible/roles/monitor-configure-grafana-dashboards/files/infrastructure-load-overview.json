@@ -21,7 +21,7 @@
       }
     ]
   },
-  "description": "Client Apollo Loads",
+  "description": "Infrastructure VM Loads",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -69,7 +69,7 @@
       },
       "targets": [
         {
-          "expr": "node_load1{instance=~\"$client_apollos\"}",
+          "expr": "node_load1{instance=~\"$infrastructure\"}",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -117,7 +117,7 @@
       },
       "targets": [
         {
-          "expr": "node_load5{instance=~\"$client_apollos\"}",
+          "expr": "node_load5{instance=~\"$infrastructure\"}",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -165,7 +165,7 @@
       },
       "targets": [
         {
-          "expr": "node_load15{instance=~\"$client_apollos\"}",
+          "expr": "node_load15{instance=~\"$infrastructure\"}",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -213,7 +213,7 @@
       },
       "targets": [
         {
-          "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\",instance=~\"$client_apollos\"}[5m])) * 100)",
+          "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\",instance=~\"$infrastructure\"}[5m])) * 100)",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -261,7 +261,7 @@
       },
       "targets": [
         {
-          "expr": "(node_memory_MemTotal_bytes{instance=~\"$client_apollos\"} - node_memory_MemAvailable_bytes{instance=~\"$client_apollos\"}) / node_memory_MemTotal_bytes{instance=~\"$client_apollos\"} * 100",
+          "expr": "(node_memory_MemTotal_bytes{instance=~\"$infrastructure\"} - node_memory_MemAvailable_bytes{instance=~\"$infrastructure\"}) / node_memory_MemTotal_bytes{instance=~\"$infrastructure\"} * 100",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -309,7 +309,7 @@
       },
       "targets": [
         {
-          "expr": "(node_filesystem_size_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$client_apollos\"} - node_filesystem_free_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$client_apollos\"}) / node_filesystem_size_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$client_apollos\"} * 100",
+          "expr": "(node_filesystem_size_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$infrastructure\"} - node_filesystem_free_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$infrastructure\"}) / node_filesystem_size_bytes{fstype!=\"tmpfs\",mountpoint=\"/\",instance=~\"$infrastructure\"} * 100",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -357,7 +357,7 @@
       },
       "targets": [
         {
-          "expr": "rate(node_network_receive_bytes_total{device!~\"lo\",instance=~\"$client_apollos\"}[5m])",
+          "expr": "rate(node_network_receive_bytes_total{device!~\"lo\",instance=~\"$infrastructure\"}[5m])",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -405,7 +405,7 @@
       },
       "targets": [
         {
-          "expr": "rate(node_network_transmit_bytes_total{device!~\"lo\",instance=~\"$client_apollos\"}[5m])",
+          "expr": "rate(node_network_transmit_bytes_total{device!~\"lo\",instance=~\"$infrastructure\"}[5m])",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
@@ -421,14 +421,13 @@
   "templating": {
     "list": [
       {
-        "name": "client_apollos",
+        "name": "infrastructure",
         "type": "query",
         "datasource": "Prometheus",
         "refresh": 1,
-        "definition": "label_values(node_load1{group=\"client\"}, instance)",
-        "query": "label_values(node_load1{group=\"client\"}, instance)",
-        "includeAll": true,
-        "multi": true
+        "definition": "label_values(node_load1{group=\"infrastructure\"}, instance)",
+        "query": "label_values(node_load1{group=\"infrastructure\"}, instance)",
+        "includeAll": true
       }
     ]
   },
@@ -462,7 +461,7 @@
     ]
   },
   "timezone": "Australia/Brisbane",
-  "title": " Client Apollo Loads",
+  "title": "Infrastructure VM Loads",
   "version": 1,
   "weekStart": ""
 }

@@ -3,12 +3,27 @@ ansible_user: ubuntu
 admin_group: sudo
 target_environment: prod
 
-apollo_internal_hosts: >-
-  {{ groups['internalapollos'] | map('extract', hostvars, 'ansible_host') | map('default', inventory_hostname) | list }}
-
-apollo_client_hosts: >-
-  {{ groups['clientapollos'] | map('extract', hostvars, 'ansible_host') | map('default', inventory_hostname) | list }}
-
+# Extracts ansible_host for infrastructure hosts, with fallback
 apollo_infrastructure_hosts: >-
-  {{ groups['infrastructure'] | map('extract', hostvars, 'ansible_host') | map('default', inventory_hostname) | list }}
+  {{ groups['infrastructure']
+     | map('extract', hostvars, 'ansible_host')
+     | zip(groups['infrastructure'])
+     | map('first')
+     | list | default(groups['infrastructure']) }}
+
+# Extracts ansible_host for internal apollo hosts, with fallback
+apollo_internal_hosts: >-
+  {{ groups['internalapollos']
+     | map('extract', hostvars, 'ansible_host')
+     | zip(groups['internalapollos'])
+     | map('first')
+     | list | default(groups['internalapollos']) }}
+
+# Extracts ansible_host for client apollo hosts, with fallback
+apollo_client_hosts: >-
+  {{ groups['clientapollos']
+     | map('extract', hostvars, 'ansible_host')
+     | zip(groups['clientapollos'])
+     | map('first')
+     | list | default(groups['clientapollos']) }}
 

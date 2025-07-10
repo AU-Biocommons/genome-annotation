@@ -27,13 +27,13 @@ jbrowse_builds:
         repo: "https://github.com/elsiklab/multibigwig"
       - name: FeatureSequence
         repo: "https://github.com/tsaari88/FeatureSequence"
-  - id: "jbrowse-008"
-    domains:
-      - degnan.genome.edu.au
-      - degnanmarine.genome.edu.au
-#  - id: "jbrowse-010"
+#  - id: "jbrowse-008"
 #    domains:
-#      - coral.genome.edu.au
+#      - degnan.genome.edu.au
+#      - degnanmarine.genome.edu.au
+  - id: "jbrowse-010"
+    domains:
+      - coral.genome.edu.au
 #  - id: "jbrowse-002"
 #    domains:
 #      - scu.genome.edu.au

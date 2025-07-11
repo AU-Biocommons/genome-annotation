@@ -39,7 +39,17 @@ jbrowse_builds:
   - id: "jbrowse-010"
     domains:
       - coral.genome.edu.au
+    plugins:
+      - name: multibigwig
+        repo: "https://github.com/elsiklab/multibigwig"
+      - name: ComboTrackSelector
+        repo: "https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector"
 #  - id: "jbrowse-002"
 #    domains:
 #      - scu.genome.edu.au
+#    plugins:
+#      - name: multibigwig
+#        repo: "https://github.com/elsiklab/multibigwig"
+#      - name: ComboTrackSelector
+#        repo: "https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector"
 

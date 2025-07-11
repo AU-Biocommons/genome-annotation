@@ -17,16 +17,14 @@ jbrowse_builds:
         repo: "https://github.com/elsiklab/multibigwig"
       - name: ComboTrackSelector
         repo: "https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector"
-  - id: "jbrowse-012"
+  - id: "jbrowse-002"
     domains:
-      - wheat-dawn.genome.edu.au
+      - scu.genome.edu.au
     plugins:
-      - name: GCContent
-        repo: "https://github.com/cmdcolin/gccontent"
-      - name: MultiBigWig
+      - name: multibigwig
         repo: "https://github.com/elsiklab/multibigwig"
-      - name: FeatureSequence
-        repo: "https://github.com/tsaari88/FeatureSequence"
+      - name: ComboTrackSelector
+        repo: "https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector"
   - id: "jbrowse-008"
     domains:
       - degnan.genome.edu.au
@@ -44,12 +42,14 @@ jbrowse_builds:
         repo: "https://github.com/elsiklab/multibigwig"
       - name: ComboTrackSelector
         repo: "https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector"
-#  - id: "jbrowse-002"
-#    domains:
-#      - scu.genome.edu.au
-#    plugins:
-#      - name: multibigwig
-#        repo: "https://github.com/elsiklab/multibigwig"
-#      - name: ComboTrackSelector
-#        repo: "https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector"
+  - id: "jbrowse-012"
+    domains:
+      - wheat-dawn.genome.edu.au
+    plugins:
+      - name: GCContent
+        repo: "https://github.com/cmdcolin/gccontent"
+      - name: MultiBigWig
+        repo: "https://github.com/elsiklab/multibigwig"
+      - name: FeatureSequence
+        repo: "https://github.com/tsaari88/FeatureSequence"
 

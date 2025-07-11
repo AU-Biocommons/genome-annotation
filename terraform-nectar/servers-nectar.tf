@@ -316,3 +316,19 @@ resource "openstack_networking_floatingip_associate_v2" "jbrowse_portal_fip_asso
     port_id     = data.openstack_networking_port_v2.jbrowse_portal_port.id
 }
 
+# create 100GB volume for jbrowse builds, to be attached to jbrowse-portal
+resource "openstack_blockstorage_volume_v3" "jbrowse_build_volume" {
+    name              = "JBrowse-Build"
+    size              = 100  # Size of the volume in GB
+    availability_zone = "ardc-syd-1"
+    description       = "100GB volume for jbrowse-portal"
+    depends_on        = [openstack_compute_instance_v2.tfs_jbrowse_portal_20250617]
+}
+
+# attach build volume to VM
+resource "openstack_compute_volume_attach_v2" "jbrowse_build_volume" {
+    instance_id       = openstack_compute_instance_v2.tfs_jbrowse_portal_20250617.id
+    volume_id         = openstack_blockstorage_volume_v3.jbrowse_build_volume.id
+    device            = "/dev/vdb"
+}
+

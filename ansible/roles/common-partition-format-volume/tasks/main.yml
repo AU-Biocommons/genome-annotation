@@ -18,7 +18,7 @@
 
 - name: "Count existing partitions"
   set_fact:
-    num_parts: "{{ vol_info.partitions | length | int }}"
+    num_parts: "{{ vol_info.partitions | length }}"
 
 - name: "Create GPT partition if none exists"
   parted:
@@ -26,7 +26,7 @@
     number: "{{ attached_volume.partition | default(1) }}"
     label: "{{ attached_volume.label_scheme | default('gpt') }}"
     state: present
-  when: num_parts == 0
+  when: num_parts | int == 0
   become: yes
 
 - name: "Refresh partition info"

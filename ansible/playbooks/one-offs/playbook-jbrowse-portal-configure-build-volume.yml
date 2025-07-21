@@ -12,9 +12,11 @@
 
   roles:
     - role: common-partition-format-volume
+      tags: [format]
     - role: common-mount-volume-by-label
       vars:
         volume_label: "{{ attached_volume.label }}"
         mount_point: "{{ attached_volume.path }}"
         mount_opts: "{{ attached_volume.opts }}"
+      tags: [mount]
 

@@ -50,7 +50,7 @@
   filesystem:
     fstype: "{{ attached_volume.fstype | default('ext4') }}"
     dev: "{{ device_part_name }}"
-  when: blkid_output.stdout == ""
+  when: "'TYPE={{ attached_volume.fstype | default('ext4') }}' not in blkid_output.stdout"
   become: yes
 
 - name: "Apply label {{ attached_volume.label }} to partition"

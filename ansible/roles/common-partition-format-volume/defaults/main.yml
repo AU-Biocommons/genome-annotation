@@ -1,0 +1,9 @@
+---
+attached_volume:
+  device: "" # this needs to be defined by hostvar as for example: /dev/vdb
+  partition: 1
+  fstype: "ext4"
+  label: "" # this needs to be defined by hostvar as for example: JBrowse-Build
+  path: "/mnt" # this needs to be defined by hostvar as for example: /opt/jbrowse-build
+  opts: "defaults"
+

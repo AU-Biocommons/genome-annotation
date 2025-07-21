@@ -1,0 +1,59 @@
+---
+
+- name: "Ensure device {{ attached_volume.device }} exists"
+  stat:
+    path: "{{ attached_volume.device }}"
+  register: device_stat
+
+- name: "Abort if device does not exist"
+  fail:
+    msg: "Device {{ attached_volume.device }} not found."
+  when: not device_stat.stat.exists
+
+- name: "Check partition table on device"
+  parted:
+    device: "{{ attached_volume.device }}"
+    unit: GiB
+  register: vol_info
+
+- name: "Count existing partitions"
+  set_fact:
+    num_parts: "{{ vol_info.partitions | length }}"
+
+- name: "Create GPT partition if none exists"
+  parted:
+    device: "{{ attached_volume.device }}"
+    number: "{{ attached_volume.partition | default(1) }}"
+    label: "{{ attached_volume.label_scheme | default('gpt') }}"
+    state: present
+  when: num_parts | int == 0
+  become: yes
+
+- name: "Refresh partition info"
+  parted:
+    device: "{{ attached_volume.device }}"
+    unit: GiB
+  register: vol_info2
+  become: yes
+
+- name: "Set partition device name"
+  set_fact:
+    device_part_name: "{{ attached_volume.device }}{{ 'p' if attached_volume.device is search('nvme') else '' }}{{ attached_volume.partition | default(1) }}"
+
+- name: "Check if partition is already formatted"
+  command: "blkid {{ device_part_name }}"
+  register: blkid_output
+  changed_when: false
+  failed_when: false
+
+- name: "Format partition with ext4"
+  filesystem:
+    fstype: "{{ attached_volume.fstype | default('ext4') }}"
+    dev: "{{ device_part_name }}"
+  when: "'TYPE={{ attached_volume.fstype | default('ext4') }}' not in blkid_output.stdout"
+  become: yes
+
+- name: "Apply label {{ attached_volume.label }} to partition"
+  command: "e2label {{ device_part_name }} {{ attached_volume.label }}"
+  become: yes
+

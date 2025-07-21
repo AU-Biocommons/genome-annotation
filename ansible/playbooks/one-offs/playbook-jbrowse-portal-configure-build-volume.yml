@@ -1,0 +1,22 @@
+- name: Prepare and mount volume for JBrowse Builds
+  hosts: jbrowse-portal.genome.edu.au
+  become: yes
+  vars:
+    attached_volume:
+      device: "/dev/vdb"
+      partition: 1
+      fstype: "ext4"
+      label: "JBrowse-Build"
+      path: "/opt/jbrowse"
+      opts: "defaults"
+
+  roles:
+    - role: common-partition-format-volume
+      tags: [format]
+    - role: common-mount-volume-by-label
+      vars:
+        volume_label: "{{ attached_volume.label }}"
+        mount_point: "{{ attached_volume.path }}"
+        mount_opts: "{{ attached_volume.opts }}"
+      tags: [mount]
+

@@ -32,8 +32,10 @@
     - import_role:
        # Need to install postgres 10 in a docker container in Ubuntu >= 20.04
         name: apollo-install-docker-postgres
-    #- import_role:
-    #    name: common-nagios-nrpe # nagios server not yet available
+    - import_role:
+        name: common-nagios-nrpe
+    - import_role:
+        name: common-prometheus-node-exporter-ubuntu
     - import_role:
         name: common-install-utils
     - import_role:

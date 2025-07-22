@@ -14,7 +14,7 @@ locals {
 
     # internal Apollo instance numbers and creation date: tfi_apollo_XXX_YYYYMMDD
     internal_apollo_numbers = {
-    #    "001" = "2025MMDD",
+        "001" = "20250722",
         "004" = "20250721",
         "011" = "20250501"
     }

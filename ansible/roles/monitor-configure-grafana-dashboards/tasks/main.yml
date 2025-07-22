@@ -21,8 +21,8 @@
   file:
     path: "/var/lib/grafana/dashboards"
     state: directory
-    owner: root
-    group: root
+    owner: grafana
+    group: grafana
     mode: '0755'
 
 - name: Install dashboard JSONs

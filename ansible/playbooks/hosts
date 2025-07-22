@@ -19,6 +19,7 @@ infrastructure
 testvms
 
 [internalapollos]
+apollo-001.genome.edu.au ansible_host=apollo-001 allowed_groups="ubuntu apollo_admin backup_user apollo3-sandpit_user"
 apollo-004.genome.edu.au ansible_host=apollo-004 allowed_groups="ubuntu apollo_admin backup_user mt-sandpit_user"
 apollo-011.genome.edu.au ansible_host=apollo-011 allowed_groups="ubuntu apollo_admin backup_user sandpit_user"
 
@@ -49,7 +50,6 @@ clientapollos
 django-sandpit.genome.edu.au
 
 [oldapollovms]
-#apollo-001.genome.edu.au allowed_groups="ubuntu apollo_admin backup_user"
 apollo-002.genome.edu.au ansible_host=apollo-002 allowed_groups="ubuntu apollo_admin backup_user scu_user"
 apollo-005.genome.edu.au ansible_host=apollo-005 allowed_groups="ubuntu apollo_admin backup_user training_user"
 apollo-006.genome.edu.au ansible_host=apollo-006 allowed_groups="ubuntu apollo_admin backup_user tsi-data"

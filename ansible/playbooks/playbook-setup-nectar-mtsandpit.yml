@@ -39,7 +39,7 @@
     - import_role:
         name: apollo-create-cli-user
     - import_role:
-        name: apollo-admin-users-groups
+        name: web-admin-users-groups
     - import_role:
         name: apollo-add-nfs-mount-to-fstab
     #- import_role:

@@ -26,22 +26,11 @@
     - import_role:
         name: common-configure-ufw
     - import_role:
-        name: apollo-openjdk8
-    - import_role:
-        name: apollo-tomcat9-ubuntu
-    - import_role:
-       # Need to install postgres 10 in a docker container in Ubuntu >= 20.04
-        name: apollo-install-docker-postgres
-    - import_role:
         name: common-nagios-nrpe
     - import_role:
         name: common-prometheus-node-exporter-ubuntu
     - import_role:
         name: common-install-utils
-    - import_role:
-        name: apollo-dependencies
-    - import_role:
-        name: apollo-build-dependencies
     - import_role: 
         # Use snapd to install certbot in Ubuntu >= 20.04
         name: common-certbot-snapd
@@ -50,24 +39,15 @@
     - import_role:
         name: apollo-create-cli-user
     - import_role:
+        name: web-admin-users-groups
+    - import_role:
         name: apollo-add-nfs-mount-to-fstab
-    - import_role:
-        name: apollo-certbot-create-cert
-    - import_role:
-        name: apollo-certbot-add-domain
-    - import_role:
-        name: apollo-nginx-set-conf
-    - import_role:
-        name: common-nginx-add-domain
-    - import_role:
-        name: apollo-docker-postgres-createdb
-    # from here won't work until apollo is up and running on the sandpit, so need to be run with tags
-    # run with --tags backup
-    - import_role:
-        name: apollo-docker-configure-backup
-      tags: [ never, backup ]
-    # run with --tags admin
-    - import_role:
-        name: apollo-docker-postgres-insert-admin
-      tags: [ never, admin ]
+    #- import_role:
+    #    name: apollo-certbot-create-cert
+    #- import_role:
+    #    name: apollo-certbot-add-domain
+    #- import_role:
+    #    name: apollo-nginx-set-conf
+    #- import_role:
+    #    name: common-nginx-add-domain
 

@@ -8,8 +8,8 @@
     etc_exports: /etc/exports # this will be overriden when running with target_environment=test
     jbrowse_export_root: /srv/export/data/nectar
     nfs_client_hostname: "{{ nfs_client }}"
-    portal_user_name: "jbrowse-portal_user"
-    portal_user_id: 15001
+    portal_user_id: 16001
+    portal_user_name: "apollo{{ portal_user_id }}_user" # consistent with apollo/jbrowse usage
 
   tasks:
     - name: Override etc_exports path if in test environment
@@ -89,8 +89,8 @@
 
   vars:
     nfs_server_hostname: "{{ nfs_hostname }}"
-    portal_user_name: "jbrowse-portal_user"
-    portal_user_id: 15001
+    portal_user_name: "jbrowse-portal_user" # local name
+    portal_user_id: 16001 # for jbrowse-001 dataset on NFS server
 
   tasks:
     # now done in common-configure-shell-logins

@@ -1,0 +1,32 @@
+[newapollovms]
+apollo-001.genome.edu.au ansible_host=apollo-001 target_environment=prod apollo_instance_number=001 apollo_subdomain_name=apollo3-sandpit allowed_groups="ubuntu apollo_admin backup_user apollo3-sandpit_user" apollo_root_disk_device=/dev/vda2 docker_users="['ubuntu', 'j.lee', 'apollo3-sandpit_user']"
+
+[changeipvms]
+apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-user-nfs.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
+
+[changeipvms:vars]
+hostname_for_ip=apollo-001
+private_ip=192.168.0.116
+
+[nfsservervms]
+apollo-user-nfs.genome.edu.au
+
+[nfsservervms:vars]
+apollo_instance_number=001
+
+[monitorservervms]
+apollo-monitor.genome.edu.au
+
+[monitorservervms:vars]
+apollo_instance_number=001
+private_ip=192.168.0.116
+apollo_root_disk_device=/dev/vda2
+
+[backupservervms]
+apollo-backup.genome.edu.au
+
+[backupservervms:vars]
+apollo_instance_number=001
+

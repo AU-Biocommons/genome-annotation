@@ -15,6 +15,7 @@ apollo-user-nfs.genome.edu.au
 
 [nfsservervms:vars]
 apollo_instance_number=001
+nfs_apollo_user_gid=apollo_admin
 
 [monitorservervms]
 apollo-monitor.genome.edu.au

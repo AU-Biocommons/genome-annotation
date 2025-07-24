@@ -1,0 +1,6 @@
+docker_install_compose_plugin: true
+docker_compose_package: docker-compose-plugin
+docker_compose_package_state: present
+docker_users:
+  - ubuntu
+

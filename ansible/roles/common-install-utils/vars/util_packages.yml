@@ -29,4 +29,4 @@ util_packages:
     - duf
     - xkcdpass
     - python3-passlib
-
+    - jq

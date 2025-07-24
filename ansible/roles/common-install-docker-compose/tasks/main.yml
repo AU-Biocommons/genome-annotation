@@ -1,0 +1,30 @@
+---
+# Remove old conflicting Docker sources
+- name: Ensure Docker-related APT sources are absent
+  file:
+    path: "{{ item }}"
+    state: absent
+    force: yes
+  with_fileglob:
+    - /etc/apt/sources.list.d/docker*
+
+# Install Docker using geerlingguy.docker
+- name: Include geerlingguy.docker role
+  import_role:
+    name: geerlingguy.docker
+
+# Optionally install the Docker Compose plugin
+- name: Ensure docker-compose plugin is installed (if enabled)
+  apt:
+    name: "{{ docker_compose_package }}"
+    state: "{{ docker_compose_package_state }}"
+  when: docker_install_compose_plugin
+
+# Ensure docker group membership
+- name: Add users to the docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: yes
+  loop: "{{ docker_users }}"
+

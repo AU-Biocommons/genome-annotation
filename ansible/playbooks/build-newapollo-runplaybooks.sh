@@ -130,21 +130,16 @@ if [ "$target_environment" = "test" ]; then
 	exit 0
 fi
 
-: <<'DISABLE_MONITORING_REGISTRATION'
-# ---------------------------
-# Skipping until monitoring is configured
-echo "add apollo instance to monitoring"
-echo "ansible-playbook playbook-apollo-ubuntu-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str"
-ansible-playbook playbook-apollo-ubuntu-monitor.yml --inventory-file $inventory_file --limit monitorservervms $check_str
+echo "add apollo instance to monitoring by updating prometheus data sources and grafana dashboard"
+echo "ansible-playbook playbook-monitor-refresh-sources-and-dashboards.yml --inventory-file $inventory_file --limit monitorservervms $check_str"
+ansible-playbook playbook-monitor-refresh-sources-and-dashboards.yml --inventory-file $inventory_file --limit monitorservervms $check_str
 if [ $? -ne 0 ] && [ -z "$check_str" ]; then
-  echo >&2 "Error running playbook-apollo-ubuntu-monitor.yml... aborting!"
+  echo >&2 "Error running playbook-monitor-refresh-sources-and-dashboards.yml... aborting!"
   exit 1
 fi
 echo
 echo "Done."
 echo 
-# ---------------------------
-DISABLE_MONITORING_REGISTRATION
 
 echo "add apollo instance to list of apollo's to backup"
 echo "ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file $inventory_file --limit backupservervms $check_str"

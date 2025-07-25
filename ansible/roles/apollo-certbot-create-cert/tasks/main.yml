@@ -1,5 +1,5 @@
 ---
 # non-interactively install Let's Encrypt SSL certificate for apollo-XXX.genome.edu.au
-- name: "install Let's Encrypt SSL certificate for {{apollo_domain_name}}"
-  command: "certbot certonly {% if target_environment == 'test' %}--test-cert{% endif %} --noninteractive --agree-tos --email {{apollo_admin_email}} --no-eff-email --nginx --domains {{apollo_domain_name}}"
+- name: "install Let's Encrypt SSL certificate for {{ apollo_domain_name }}"
+  command: "certbot certonly {% if target_environment == 'test' %}--test-cert{% endif %} --noninteractive --agree-tos --email {{ certbot_renew_email }} --no-eff-email --nginx --domains {{ apollo_domain_name }}"
 

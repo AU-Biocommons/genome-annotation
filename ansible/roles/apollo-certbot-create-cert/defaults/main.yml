@@ -1,4 +1,4 @@
 ---
-apollo_admin_email: "ops@qfab.org"
-apollo_domain_name: "{{apollo_full_domain_name}}"
+apollo_domain_name: "{{ apollo_full_domain_name }}"
+certbot_renew_email: "apollo-ops@biocommons.org.au"
 

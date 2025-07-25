@@ -4,7 +4,7 @@ admin_group: sudo
 target_environment: prod
 allowed_groups: "ubuntu apollo_admin backup_user"
 
-certbot_renew_email: "ops@qfab.org"
+certbot_renew_email: "apollo-ops@biocommons.org.au"
 
 jbrowse_builds:
   - id: "jbrowse-001"

@@ -13,7 +13,7 @@
 
 # If you don't want SSL certs, just flip this:
 certbot_ssl: true
-certbot_renew_email: "ops@qfab.org"
+certbot_renew_email: "apollo-ops@biocommons.org.au"
 
 # 4 web workers should be plenty - increase for machines with >2 CPUs
 # Allows occassional minor web thread blocking e.g. send email

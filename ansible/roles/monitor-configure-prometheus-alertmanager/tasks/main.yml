@@ -1,0 +1,19 @@
+- name: Configure default environment for Alertmanager
+  copy:
+    dest: /etc/default/prometheus-alertmanager
+    content: |
+      ARGS="--config.file={{ alertmanager_config_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart prometheus-alertmanager
+
+- name: Install Alertmanager configuration
+  template:
+    src: alertmanager.yml.j2
+    dest: "{{ alertmanager_config_path }}"
+    owner: prometheus
+    group: prometheus
+    mode: "0644"
+  notify: Restart prometheus-alertmanager
+

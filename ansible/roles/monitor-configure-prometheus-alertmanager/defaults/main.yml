@@ -1,0 +1,4 @@
+alertmanager_slack_webhook_url: "https://hooks.slack.com/services/{{ vault_slack_webhook_suffix }}"
+alertmanager_slack_channel: "#apollo-alerts"
+alertmanager_config_path: /etc/prometheus/alertmanager.yml
+

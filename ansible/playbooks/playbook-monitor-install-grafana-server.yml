@@ -15,6 +15,8 @@
         name: common-certbot-snapd # install here as not installed in base install
     - import_role:
         name: monitor-install-grafana-nginx
+    - import_role:
+        name: monitor-configure-prometheus-alertmanager
     - name: Provide information on next steps for configuring Grafana
       debug:
         msg: |

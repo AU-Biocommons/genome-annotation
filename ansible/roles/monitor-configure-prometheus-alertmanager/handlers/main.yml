@@ -1,0 +1,6 @@
+- name: Restart prometheus-alertmanager
+  systemd:
+    name: prometheus-alertmanager
+    state: restarted
+    daemon_reload: yes
+

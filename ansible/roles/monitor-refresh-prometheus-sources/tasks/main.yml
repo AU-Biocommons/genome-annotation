@@ -1,5 +1,21 @@
 ---
 
+- name: Ensure Prometheus rules directory exists
+  file:
+    path: "{{ prometheus_rules_dir }}" # /etc/prometheus/rules
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install Prometheus alert rule for Tomcat9 service on Apollo clients
+  template:
+    src: tomcat9.rules.yml.j2
+    dest: /etc/prometheus/rules/tomcat9.rules.yml
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: Ensure file_sd directory exists
   file:
     path: "{{ apollo_clients_sd_file | dirname }}" # /etc/prometheus/file_sd

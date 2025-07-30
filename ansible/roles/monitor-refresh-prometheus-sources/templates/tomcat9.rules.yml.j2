@@ -1,0 +1,23 @@
+groups:
+  - name: tomcat9-service.rules
+    rules:
+      - alert: Tomcat9ServiceDownWarning
+        expr: |
+          node_systemd_unit_state{name="tomcat9.service",state="active",group="client"} == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Tomcat9 service down on {{ '{{ $labels.instance }}' }} (5m warning)"
+          description: "The tomcat9 service on client {{ '{{ $labels.instance }}' }} has been down for at least 5 minutes."
+
+      - alert: Tomcat9ServiceDownCritical
+        expr: |
+          node_systemd_unit_state{name="tomcat9.service",state="active",group="client"} == 0
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          summary: "Tomcat9 service down on {{ '{{ $labels.instance }}' }} (1h critical)"
+          description: "The tomcat9 service on client {{ '{{ $labels.instance }}' }} has been continuously down for over 1 hour."
+

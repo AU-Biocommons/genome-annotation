@@ -7,6 +7,7 @@ apollo_infrastructure_hosts:
   - apollo-portal
   - apollo-user-jbrowse
 
+prometheus_rules_dir: /etc/prometheus/rules
 apollo_internal_sd_file: /etc/prometheus/file_sd/apollo-internal.json
 apollo_clients_sd_file: /etc/prometheus/file_sd/apollo-clients.json
 

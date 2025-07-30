@@ -1,3 +1,16 @@
+- name: Set timestamp for backup filename
+  ansible.builtin.set_fact:
+    alertmanager_backup_suffix: "{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+
+- name: Back up existing Alertmanager config with timestamp
+  ansible.builtin.copy:
+    src: "{{ alertmanager_config_path }}"
+    dest: "{{ alertmanager_config_path }}.{{ alertmanager_backup_suffix }}"
+    remote_src: true
+    force: yes
+  when: alertmanager_config_path is file
+  tags: backup
+
 - name: Configure default environment for Alertmanager
   copy:
     dest: /etc/default/prometheus-alertmanager

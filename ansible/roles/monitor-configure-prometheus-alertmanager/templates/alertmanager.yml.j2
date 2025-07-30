@@ -14,15 +14,14 @@ receivers:
       - api_url: "{{ alertmanager_slack_webhook_url }}"
         send_resolved: true
         channel: "{{ alertmanager_slack_channel }}"
-        title: "{{ '{{ .CommonAnnotations.summary }}' }}"
+        title: "{{ '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}' }}"
         text: |-
-          *Status:* {{ '{{ .Status }}' }}
-          *Description:* {{ '{{ .CommonAnnotations.description }}' }}
-          *Instance:* {{ '{{ .CommonLabels.instance }}' }}
-          *Job:* {{ '{{ .CommonLabels.job }}' }}
-          *Severity:* {{ '{{ .CommonLabels.severity }}' }}
+          {{ '{{ range .Alerts }}' }}
+          *Alert:* {{ '{{ .Labels.alertname }}' }}
+          *Instance:* {{ '{{ .Labels.instance }}' }}
+          *Severity:* {{ '{{ .Labels.severity }}' }}
+          *Description:* {{ '{{ .Annotations.description }}' }}
           *Starts At:* {{ '{{ .StartsAt }}' }}
-          {{ '{{ if eq .Status "resolved" }}' }}
           *Ends At:* {{ '{{ .EndsAt }}' }}
           {{ '{{ end }}' }}
 

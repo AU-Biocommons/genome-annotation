@@ -54,5 +54,5 @@
     - import_role:
         name: common-install-docker-compose
     - import_role:
-        name: common-install-nodejs-npm
+        name: common-install-nodejs-yarn
 

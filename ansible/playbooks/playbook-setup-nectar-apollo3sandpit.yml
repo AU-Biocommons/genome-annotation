@@ -53,6 +53,4 @@
     #    name: common-nginx-add-domain
     - import_role:
         name: common-install-docker-compose
-    - import_role:
-        name: common-install-nodejs-yarn
 

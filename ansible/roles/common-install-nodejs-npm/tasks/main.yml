@@ -1,0 +1,9 @@
+---
+- name: Install Node.js and npm package manager from ubuntu repositories
+  apt:
+    name:
+      - nodejs
+      - npm
+    state: present
+    update_cache: yes
+

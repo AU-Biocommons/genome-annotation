@@ -1,0 +1,9 @@
+---
+- name: Install Node.js and Yarn package manager from ubuntu repositories
+  apt:
+    name:
+      - nodejs
+      - yarn
+    state: present
+    update_cache: yes
+

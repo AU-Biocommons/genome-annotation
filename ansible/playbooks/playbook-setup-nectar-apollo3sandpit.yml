@@ -53,4 +53,10 @@
     #    name: common-nginx-add-domain
     - import_role:
         name: common-install-docker-compose
+    # install Node.js and Yarn 1.x with NVM for apollo3 CLI tools
+    - import_role:
+        name: jbrowse-install-nvm-nodejs
+      vars:
+        node_version: 18
+
 

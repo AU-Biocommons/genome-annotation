@@ -34,3 +34,24 @@
   become: false
   become_user: "{{ jbrowse_build_user }}"
 
+- name: Get Yarn global bin path for {{ jbrowse_build_user }}
+  shell: |
+    . $HOME/.nvm/nvm.sh && yarn global bin
+  args:
+    executable: /bin/bash
+    chdir: "$HOME"
+  become: false
+  become_user: "{{ jbrowse_build_user }}"
+  register: yarn_bin_path
+  failed_when: false  # prevent failure when running with --check before yarn installed
+  changed_when: false # don't mark it as a change
+
+- name: Ensure Yarn global bin path is in .bashrc for {{ jbrowse_build_user }}
+  lineinfile:
+    path: "/home/{{ jbrowse_build_user }}/.bashrc"
+    line: 'export PATH="{{ yarn_bin_path.stdout }}:$PATH"'
+    state: present
+    insertafter: EOF
+  become: false
+  become_user: "{{ jbrowse_build_user }}"
+

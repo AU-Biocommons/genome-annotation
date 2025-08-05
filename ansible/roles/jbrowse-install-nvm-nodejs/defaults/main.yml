@@ -1,5 +1,4 @@
 jbrowse_build_user: ubuntu
 nvm_version: "v0.40.1" # NVM version to download
 node_version: "16"     # this is the Node version to be used to compile JBrowse
-install_yarn1: false   # set to 'true' to install Yarn 1.x globally
 

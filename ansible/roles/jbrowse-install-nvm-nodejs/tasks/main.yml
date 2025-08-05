@@ -24,3 +24,13 @@
   become: false
   become_user: "{{ jbrowse_build_user }}"
 
+- name: Install Yarn 1.x globally with NVM
+  shell: |
+    . $HOME/.nvm/nvm.sh && npm install -g yarn
+  args:
+    executable: /bin/bash
+    chdir: "$HOME"
+    creates: "$HOME/.nvm/versions/node/v{{ node_version }}.*/lib/node_modules/yarn"
+  become: false
+  become_user: "{{ jbrowse_build_user }}"
+

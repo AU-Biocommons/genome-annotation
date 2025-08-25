@@ -5,22 +5,61 @@
       - apt-transport-https
       - software-properties-common
       - curl
-      - gnupg
+      - gnupg # needed for dearmor of grafana apt keyring
       - prometheus
     state: present
     update_cache: yes
 
-- name: Add Grafana APT key
-  apt_key:
-    url: "{{ grafana_repo_key_url }}"
-    state: present
+- name: Grafana APT keyring + repo setup
+  tags: [grafana_keyring]
+  block:
+  - name: Ensure APT keyrings directory exists
+    file:
+      path: "{{ grafana_keyring_path | dirname }}"
+      state: directory
+      mode: "0755"
 
-- name: Add Grafana APT repository
-  apt_repository:
-    repo: "{{ grafana_repo }}"
-    filename: "grafana"
-    state: present
-    update_cache: yes
+  - name: Download Grafana ASCII-armored GPG key
+    get_url:
+      url: "{{ grafana_key_url }}"
+      dest: "{{ grafana_keyring_path }}.asc"
+      mode: "0644"
+    register: grafana_key_ascii
+
+  - name: Convert Grafana key to dearmored keyring
+    ansible.builtin.command:
+      cmd: "gpg --dearmor -o {{ grafana_keyring_path }} {{ grafana_keyring_path }}.asc"
+    when: grafana_key_ascii is changed or not (grafana_keyring_path is exists)
+    register: grafana_keyring_cmd
+    changed_when: grafana_keyring_cmd.rc == 0
+
+  - name: Set keyring permissions for APT
+    file:
+      path: "{{ grafana_keyring_path }}"
+      mode: "0644"
+
+  # Remove the old repo line if it exists (packages.grafana.com without signed-by)
+  - name: Remove legacy Grafana repo entry
+    apt_repository:
+      repo: "{{ grafana_legacy_repo }}"
+      filename: "grafana"
+      state: absent
+    register: removed_legacy_repo
+
+  - name: Add Grafana APT repository (new style)
+    apt_repository:
+      repo: "deb [signed-by={{ grafana_keyring_path }}] {{ grafana_repo_url }} {{ grafana_repo_components }}"
+      filename: "grafana"
+      state: present
+      update_cache: yes
+
+  # clean up legacy global key to silence warnings
+  - name: Remove expired legacy Grafana key from trusted.gpg (ignore if absent)
+    command:
+      cmd: "gpg --batch --yes --no-default-keyring --keyring /etc/apt/trusted.gpg --delete-key {{ grafana_legacy_key }}"
+    register: _remove_legacy_key
+    changed_when: "'not found' not in (_remove_legacy_key.stderr | default(''))"
+    failed_when: false
 
 - name: Install Grafana
   apt:

@@ -2,6 +2,10 @@
 grafana_admin_password: "{{ vault_grafana_password }}"
 grafana_domain: "grafana.genome.edu.au"
 certbot_renew_email: "apollo-ops@biocommons.org.au"
-grafana_repo_key_url: "https://packages.grafana.com/gpg.key"
-grafana_repo: "deb https://packages.grafana.com/oss/deb stable main"
+grafana_repo_url: "https://apt.grafana.com"
+grafana_repo_components: "stable main"
+grafana_key_url: "https://apt.grafana.com/gpg.key"
+grafana_keyring_path: "/etc/apt/keyrings/grafana.gpg"
+grafana_legacy_repo: "deb https://packages.grafana.com/oss/deb stable main"
+grafana_legacy_key: "B53AE77BADB630A683046005963FA27710458545" # Grafana Labs <engineering@grafana.com>
 

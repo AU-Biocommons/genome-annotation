@@ -34,6 +34,7 @@ apollo-022.genome.edu.au ansible_host=apollo-022 allowed_groups="ubuntu apollo_a
 apollo-024.genome.edu.au ansible_host=apollo-024 allowed_groups="ubuntu apollo_admin backup_user ethtec_user"
 apollo-025.genome.edu.au ansible_host=apollo-025 allowed_groups="ubuntu apollo_admin backup_user samsonbio_user"
 apollo-026.genome.edu.au ansible_host=apollo-026 allowed_groups="ubuntu apollo_admin backup_user pan-pathogens_user"
+apollo-029.genome.edu.au ansible_host=apollo-029 allowed_groups="ubuntu apollo_admin backup_user frg_user"
 apollo-030.genome.edu.au ansible_host=apollo-030 allowed_groups="ubuntu apollo_admin backup_user ccdm-cereal-diseases_user"
 apollo-033.genome.edu.au ansible_host=apollo-033 allowed_groups="ubuntu apollo_admin backup_user tradis-vault_user"
 apollo-034.genome.edu.au ansible_host=apollo-034 allowed_groups="ubuntu apollo_admin backup_user ilrg-uq_user"
@@ -76,5 +77,4 @@ apollo-014.genome.edu.au ansible_host=apollo-014 allowed_groups="ubuntu apollo_a
 apollo-018.genome.edu.au ansible_host=apollo-018 allowed_groups="ubuntu apollo_admin backup_user dennislab_user"
 apollo-020.genome.edu.au ansible_host=apollo-020 allowed_groups="ubuntu apollo_admin backup_user prorocentrum_user"
 apollo-023.genome.edu.au ansible_host=apollo-023 allowed_groups="ubuntu apollo_admin backup_user workshop_user"
-apollo-029.genome.edu.au ansible_host=apollo-029 allowed_groups="ubuntu apollo_admin backup_user frg_user"
 

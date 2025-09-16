@@ -61,9 +61,11 @@ django-sandpit.genome.edu.au
 [deletedapollovms]
 apollo-006.genome.edu.au ansible_host=apollo-006 allowed_groups="ubuntu apollo_admin backup_user tsi-data"
 apollo-009.genome.edu.au ansible_host=apollo-009 allowed_groups="ubuntu apollo_admin backup_user slimsuite_user"
+apollo-015.genome.edu.au ansible_host=apollo-015 allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
 apollo-027.genome.edu.au ansible_host=apollo-027 allowed_groups="ubuntu apollo_admin backup_user beetle-research_user"
 apollo-028.genome.edu.au ansible_host=apollo-028 allowed_groups="ubuntu apollo_admin backup_user gene30004-training_user"
 apollo-031.genome.edu.au ansible_host=apollo-031 allowed_groups="ubuntu apollo_admin backup_user gap_user"
+apollo-036.genome.edu.au ansible_host=apollo-036 allowed_groups="ubuntu apollo_admin backup_user phage-therapy_user"
 
 # not yet migrated - to be requested
 [oldapollovms]
@@ -71,10 +73,8 @@ apollo-005.genome.edu.au ansible_host=apollo-005 allowed_groups="ubuntu apollo_a
 apollo-007.genome.edu.au ansible_host=apollo-007 allowed_groups="ubuntu apollo_admin backup_user moths_user"
 apollo-013.genome.edu.au ansible_host=apollo-013 allowed_groups="ubuntu apollo_admin backup_user evogenmq_user"
 apollo-014.genome.edu.au ansible_host=apollo-014 allowed_groups="ubuntu apollo_admin backup_user frankenberg_user"
-apollo-015.genome.edu.au ansible_host=apollo-015 allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
 apollo-018.genome.edu.au ansible_host=apollo-018 allowed_groups="ubuntu apollo_admin backup_user dennislab_user"
 apollo-020.genome.edu.au ansible_host=apollo-020 allowed_groups="ubuntu apollo_admin backup_user prorocentrum_user"
 apollo-023.genome.edu.au ansible_host=apollo-023 allowed_groups="ubuntu apollo_admin backup_user workshop_user"
 apollo-029.genome.edu.au ansible_host=apollo-029 allowed_groups="ubuntu apollo_admin backup_user frg_user"
-apollo-036.genome.edu.au ansible_host=apollo-036 allowed_groups="ubuntu apollo_admin backup_user phage-therapy_user"
 

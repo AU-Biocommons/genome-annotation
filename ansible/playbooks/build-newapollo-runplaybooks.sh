@@ -124,15 +124,19 @@ echo
 echo "Done."
 echo 
 
+if [ -n "$skip_tags" ]; then # restoring apollo from database, stop here
+    exit 0
+fi
+
 if [ "$target_environment" = "test" ]; then
 	echo "Apollo test VM build complete! Note: test apollo not added to monitoring or backups"
 	echo
 	exit 0
 fi
 
-echo "add apollo instance to monitoring by updating prometheus data sources and grafana dashboard"
-echo "ansible-playbook playbook-monitor-refresh-sources-and-dashboards.yml --inventory-file $inventory_file --limit monitorservervms $check_str"
-ansible-playbook playbook-monitor-refresh-sources-and-dashboards.yml --inventory-file $inventory_file --limit monitorservervms $check_str
+echo "add apollo instance to monitoring by updating prometheus data sources and grafana dashboard from 'hosts' file"
+echo "ansible-playbook playbook-monitor-refresh-sources-and-dashboards.yml --limit monitorservervms $check_str"
+ansible-playbook playbook-monitor-refresh-sources-and-dashboards.yml --limit monitorservervms $check_str
 if [ $? -ne 0 ] && [ -z "$check_str" ]; then
   echo >&2 "Error running playbook-monitor-refresh-sources-and-dashboards.yml... aborting!"
   exit 1

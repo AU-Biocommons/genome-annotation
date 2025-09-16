@@ -124,6 +124,10 @@ echo
 echo "Done."
 echo 
 
+if [ -n "$skip_tags" ]; then # restoring apollo from database, stop here
+    exit 0
+fi
+
 if [ "$target_environment" = "test" ]; then
 	echo "Apollo test VM build complete! Note: test apollo not added to monitoring or backups"
 	echo

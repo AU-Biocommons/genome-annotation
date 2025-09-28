@@ -38,8 +38,8 @@ echo "ansible-playbook playbook-system-updates-ubuntu.yml --limit apollovms"
 ansible-playbook playbook-system-updates-ubuntu.yml --limit apollovms
 
 echo "system updates completed!"
-echo "check that all systems are up and running from Nagios:"
-echo "    http://nagios.genome.edu.au/nagios4/"
+echo "check that all systems are up and running from Grafana:"
+echo "    http://grafana.genome.edu.au"
 
 popd > /dev/null
 

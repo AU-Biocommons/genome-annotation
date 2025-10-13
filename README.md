@@ -1,44 +1,41 @@
-# Genome Annotation
-Australian Biocommons Genome Annotation (Apollo). The purpose of this repo is to **`Automate`** the installation of all required software and its dependencies in an **`Apollo VM`** using **`Ansible`**.  
+# Australian BioCommons Genome Annotation (Apollo Service) Infrastructure
 
-# Ansible
+This repository defines and automates deployment of the **Australian Apollo Service** hosted on the **Nectar Research Cloud**.
+Infrastructure is provisioned with **Terraform** and configured with **Ansible**.
 
-[Ansible](https://www.ansible.com/) is an automation tool for defining the target state of a host VM. Tasks to be run are specified using YAML.
-1. Tasks are the atomic changes made to a host VM. 
-2. Tasks are grouped into [roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).
-3. Roles can be used by [playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html) to make the steps for each system easy to understand and define.
+## Overview
 
-# Folder Structure of the Genome Annotation Repo
-The structure of this repo is as below: 
+This repository supports production and development environments for the Apollo Service, including the Apollo Portal, client Apollo and JBrowse instances, shared storage, monitoring, backups, and sandpit systems used for testing.
 
-1. The **playbooks** folder inside the **ansible** folder. The **playbooks** folder has the below content:
-   
-   - `ansible.cfg`: Ansible configuration file
-   - `hosts`: Ansible inventory file with **`ALL`** VMs, meaning prod VMs and test VMs
-   - `playbook-*`: playbooks are `lightweight` and contain a list of roles to be executed for a `purpose`
-   - For more information see **`README`** files in [ansible/playbooks/README.md](ansible/playbooks/README.md) 
+## Repository structure
 
-2. The **roles** folder inside the **ansible** folder. The **roles** folder has all ansible roles that can be used by playbooks placed in  **playbooks** folder: 
+| Directory | Description |
+|---|---|
+| **ansible/** | Ansible content for configuring all VMs. See `ansible/playbooks/README.md`. |
+| **ansible/playbooks/** | Playbooks that deploy/configure portal, backup, NFS, monitoring, JBrowse, and client instances. Inventory at `ansible/playbooks/hosts` (FQDNs and internal shortnames only). |
+| **ansible/roles/** | Supporting roles used by the playbooks. |
+| **ansible-galaxy/** | External roles supplied by [Ansible Galaxy](https://galaxy.ansible.com/). |
+| **backup_scripts/** | Backup and usage scripts, backup scheduling example (crontab).  |
+| **terraform-nectar/** | Terraform configuration for VMs, networks, and related infrastructure on Nectar. Security groups in `terraform-nectar/secgroups-nectar.tf` and applied via variables (e.g. `apollo_security_groups` in `terraform-nectar/apollo-varsanddata.tf`). |
+| **other/** | Miscellaneous supporting files and examples. |
+| **pawsey-deprecated/** | Archived materials from the retired Pawsey deployment (history only). |
 
-   - `Roles`: Ansible Roles contain a list of tasks to be executed in the target server. The roles are named by what they do. In example: **common-install-nginx** is a role that will install nginx package and the prefix `common` means it can be used by different playbooks.  The name of the folder is the name of the role and each role folder has to comply with required folder structure for ansible roles. See [Ansible Roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html) documentation for more details.
+## Getting started
 
-3. The **local_dev** folder is optional to be used for "local development" as its name suggests. This folder has the below content:
-   - `ansible.cfg`: Ansible configuration file
-   - `Vagrantfile`: Vagrant configuration file
-   - `playbook-test-roles.yml`: Ansible playbook for testing ansible roles in local Vagrant development environment
-   - For more information see **`README`** files in [local_dev/README.md](local_dev/README.md) 
+- **Ansible:** see `ansible/playbooks/README.md` for playbook usage and operational notes.  
+- **Terraform:** see `terraform-nectar/README.md` for provisioning workflows and environment setup.  
+- **Backups:** see `backup_scripts/README.md` and `backup_scripts/crontab.txt`.
 
-# How to Create/Modify Ansible Roles
-For more information see **`README`** file in [ansible/README.md](ansible/README.md)
+## Security and privacy
 
-# What is an Apollo VM
-An Apollo VM will run an [Apollo Web App](https://genomearchitect.readthedocs.io/en/latest/Setup.html) software and all its dependencies on Ubuntu OS. In summary the dependencies and software installed in an Apollo VM are as below:
-1. nginx
-2. tomcat
-3. postgres
-4. openjdk
-5. Apollo Web App
-6. Monitoring tools
-7. Among Others
+Do **not** commit credentials, tokens, or secrets in the open. Provide secrets via environment variables, a local gitignored `terraform.tfvars`, or Ansible Vault (see for example `ansible/playbooks/group_vars/newapollovms/vault`).
+Terraform state files are kept out of version control (use a remote backend or store locally outside Git).
+  
+## License / Contact
 
-For more details refer to old manual instructions [Apollo Deployment Document](https://qcif.sharepoint.com/:w:/r/sites/3.Services/_layouts/15/Doc.aspx?sourcedoc=%7B0616808E-B7D0-4AAF-BE19-77A293661CD1%7D&file=Deploying%20a%20Production%20Web%20Apollo%20Instance.docx&action=default&mobileredirect=true). Note that this document is only for reference and to give a better understanding of all that is required to have an Apollo VM up and running as currently the Ansible Playbooks will automate the software installation process.
+This repository is maintained by the Australian Apollo Service team. For questions or access requests, contact the Apollo service administrators via the [apollo-portal](https://apollo-portal.genome.edu.au).
+
+## Credits
+
+[Contributors](https://github.com/AU-Biocommons/genome-annotation/graphs/contributors)
+

@@ -4,12 +4,12 @@ Infrastructure-as-code for provisioning Nectar OpenStack resources that host the
 
 - Provider: OpenStack (Nectar)
 - State: keep out of Git (remote backend recommended)
-- Configuration: non-secret variables are versioned; never commit credentials (including the `openrc.sh` file).
+- Configuration: non-secret variables are versioned; never commit credentials (including the `apollo-openrc.sh` file).
 
 ## Prerequisites
 
 1) Terraform installed from OS distro or inside a virtual environment.
-2) OpenStack credentials exported to shell with `source openrc.sh`, using the RC file obtained from Nectar for the Apollo tenancy. Requires entering your Nectar API password password.
+2) OpenStack credentials exported to shell with `source apollo-openrc.sh`, using the RC file obtained from Nectar for the Apollo tenancy. Requires entering your Nectar API password.
 3) Network prerequisite (manual):
 - Internal network `apollo-internal-network` with subnet `192.168.0.0/24` must exist before applying these configs.
 - Public networking and floating IPs should be available in the project.
@@ -59,8 +59,8 @@ Prefix notes:
 - `servers-nectar.tf` to create a new server VM;
 - `apollo-varsanddata.tf` to create a new apollo VM by adding an entry to `client_apollo_numbers` for example.
 4) Test changes with `terraform plan`.
-5) Proceed to create the new VM with `terraform plan`. This will result in a VM named `tf<TYPE>_<HOST_NAME>_<YYYYMMDD>`.
-6) Obtain details of VM created today (easiest and most general approach), with `openstack server list | grep YYYYMMDD`. Record internal `192.168.0` subnet IP address and external (floating IP) address. Other useful details can be obtained with `openstack server show <VM-NAME>`
+5) Proceed to create the new VM with `terraform apply`. This will result in a VM named `tf<TYPE>_<HOST_NAME>_<YYYYMMDD>`.
+6) Obtain details of VM created today (easiest and most general approach), with `openstack server list | grep YYYYMMDD`. Record internal `192.168.0.0/24` subnet IP address and external (floating IP) address. Other useful details can be obtained with `openstack server show <VM-NAME>`
 
 **Post creation**:
 7) Add A Record and CNAME Entries for New VM to Cloudflare DNS.
@@ -72,11 +72,11 @@ Prefix notes:
 
 **Next Steps**:
 10) Login to new VM using the ssh keypair defined by `key_pair` (in the VM definition) as the default user defined by the OS image (e.g. `ubuntu`).
-11) Ensure new hostnames with local IP addresses appear in the Ansible inventory (`ansible/playbooks/hosts`) as needed.  
+11) Ensure the new A record hostnames appear in the Ansible inventory (`ansible/playbooks/hosts`). In the case of Apollo clients the hostname will be of the form `apollo-XXX.genome.edu.au`. An internally resolvable (via /etc/hosts) entry can also be provided, with for example `ansible_host=apollo-XXX`.
 12) Proceed with configuration using Ansible playbooks (see `ansible/playbooks/README.md`).
 
 ## State and secrets
 - Do not commit state files. Use a remote backend or keep local state outside Git.  
-- Do not commit credentials or tokens. Provide them via environment variables (`openrc.sh`) or your chosen secrets manager.  
+- Do not commit credentials or tokens. Provide them via environment variables (`apollo-openrc.sh`) or your chosen secrets manager.
 - Non-secret variables (including security groups and VM definitions) are versioned in Git by design.
 

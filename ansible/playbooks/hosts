@@ -44,13 +44,13 @@ apollo-035.genome.edu.au ansible_host=apollo-035 allowed_groups="ubuntu apollo_a
 internalapollos
 clientapollos
 
-# for reference only - these were client apollos, now hosted as jbrowse websites on jbrowse-portal
+# these were client apollos, now hosted as jbrowse websites on jbrowse-portal
 # these apollo numbers should not be reused as they point to jbrowse-XYZ datasets
 [jbrowseportalhosted]
-apollo-002.genome.edu.au ansible_host=apollo-002 allowed_groups="ubuntu apollo_admin backup_user scu_user"
-apollo-008.genome.edu.au ansible_host=apollo-008 allowed_groups="ubuntu apollo_admin backup_user degnan_user"
-apollo-010.genome.edu.au ansible_host=apollo-010 allowed_groups="ubuntu apollo_admin backup_user coral_user"
-apollo-012.genome.edu.au ansible_host=apollo-012 allowed_groups="ubuntu apollo_admin backup_user wheat-dawn_user"
+scu.genome.edu.au apollo_number=apollo-002 jbrowse_number=jbrowse-002
+degnan.genome.edu.au apollo_number=apollo-008 jbrowse_number=jbrowse-008
+coral.genome.edu.au apollo_number=apollo-010 jbrowse_number=jbrowse-010
+wheat-dawn.genome.edu.au apollo_number=apollo-012 jbrowse_number=jbrowse-012
 
 
 ### Pawsey VMs not yet, or not to be migrated

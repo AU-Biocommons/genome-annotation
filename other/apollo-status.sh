@@ -20,7 +20,10 @@ check_web_status() {
   done
 }
 
-ANSIBLE_PLAYBOOK_DIR=/opt/github-ansible/ansible/playbooks/ # on apollo-deploy
+# extract apollo and jbrowse clients from the inventory file, located with the playbooks
+# on apollo-deploy this is in /opt/github-ansible/ansible/playbooks
+# override if required by exporting this in the shell environment
+ANSIBLE_PLAYBOOK_DIR="${ANSIBLE_PLAYBOOK_DIR:-/opt/github-ansible/ansible/playbooks}"
 pushd . > /dev/null # save current directory quietly
 cd $ANSIBLE_PLAYBOOK_DIR
 

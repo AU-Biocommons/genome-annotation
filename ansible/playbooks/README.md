@@ -62,7 +62,7 @@ Ansible is configured with the `ansible.cfg` located in this directory. This cur
 - `vault_password_file`: `./.vault_pass`. Ansible vault operations run this script which looks for the shell environment variable `VAULT_PASSWORD` to pass to the vault as the requested password. If it is not defined but `VAULT_PASS_ALLOW_NULL` is defined then a dummy password is passed to ansible for those ansible operations that don't require access to the vault.
 
 
-## Inventory
+## Ansible Inventory
 The main **ansible inventory**, located in `./hosts` defines managed hosts, host groups and variables. This is primarily used when running playbooks that apply updates across many hosts, or for targetting groups, such as client apollos.
 
 Note: **Host builds do not use `./hosts`**, instead they use **host-based inventory files** (see below).
@@ -220,4 +220,23 @@ buildapollo.template
 
 ### System Maintenance Playbooks
 playbook-system-updates-ubuntu.yml
+
+
+## Typical build flow (high-level)
+
+1. **Provision VM(s)** with Terraform (see `../../terraform-nectar/README.md`),
+2. **Select the appropriate host-based inventory** (e.g. `buildapollosandpit.inventory`, `buildwebservervms.inventory`, `buildnewportalvms.inventory`).
+3. **Run playbooks to integrate host with Apollo infrastructure servers**. For example:
+    - add local IP to hosts: `ansible-playbook playbook-set-etc-hosts-ip.yml --inventory-file buildapollosandpit.inventory --limit changeipvms`
+    - add export for apollo to NFS: `ansible-playbook playbook-apollo-ubuntu-nfs-server.yml --inventory-file buildapollosandpit.inventory --limit nfsservervms`
+4.  For infrastructure servers *only*. **Run the base playbook** for baseline OS hardening, adding admins, installing standard sofware, etc.  For example:
+    - base build (apollo-portal):  `ansible-playbook playbook-base-nectar-server-ubuntu.yml --inventory-file buildwebservervms.inventory --limit apollo-portal.genome.edu.au`
+5. **Run the host-specific setup playbook(s)** for the target role. For example:
+    - setup host (apollo-sandpit): `ansible-playbook playbook-setup-nectar-apollosandpit.yml --inventory-file buildapollosandpit.inventory --limit newapollovms`
+    - setup host (apollo-portal): `ansible-playbook playbook-setup-nectar-portal.yml --inventory-file buildnewportalvms.inventory --limit apollo-portal.genome.edu.au`
+6. **Apply post-build tasks** (backups, monitoring, mounts). For example:
+    - add to monitoring (uses `hosts` inventory: `ansible-playbook playbook-monitor-refresh-sources-and-dashboards.yml --limit monitorservervms`
+    - add to apollo2 backups: `ansible-playbook playbook-apollo-add-to-backup-server.yml --inventory-file buildsandpit.inventory --limit backupservervms`
+7. **Verify**: service reachability, certificates, systemd services, backups and Prometheus targets.
+
 

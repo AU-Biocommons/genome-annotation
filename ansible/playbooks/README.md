@@ -1,34 +1,39 @@
 # Ansible Playbooks
 
-This directory contains the Ansible playbooks, inventory files and apollo build scripts (to simplify and automate running the ansible scripts) for configuring and maintaining all the hosts that make up the Australian Apollo Service. The sub-folder `group_vars` contains definitions for the various inventory groups, and Ansible Vaults in `group_vars/<group>/vault` contain passwords and other credentials required in host builds. Playbooks in `one-offs` are rarely required and often execute only one or two tasks.
+This directory contains the **Ansible playbooks**, **inventory files** and **Apollo build scripts** (wrappers that simplify running the playbooks) for configuring and maintaining all the hosts that make up the Australian Apollo Service.
+
+- Group variables live in `group_vars/`.
+- Ansible Vaults live under `group_vars/<group>/vault` and contain passwords and credentials required during builds.
+- Playbooks under `one-offs/` are rarely required and typically execute one or two tasks.
 
 There are specific playbooks for building each of the host types that make up the Australian Apollo Service:
-- Core infrastructure servers:
-    - Backup and deployment server;
-    - NFS server;
+- **Core infrastructure servers**
+    - Backup and deployment server
+    - NFS server
     - Monitoring server
-- Web servers:
+- **Web servers**
     - Apollo Portal
     - JBrowse portal
-- Apollo instances
-- Sandpit VMs for development and testing
+- **Apollo instances**
+- **Sandpit VMs** for development and testing
 
-There are a few other non-build related playbooks, such as for running system updates, that will also be covered below.
+Other non-build related playbooks, such as for running system updates, are documented below.
 
 
 ## Prerequisites
 
-- SSH access to target hosts is required, typically using the keypair defined when VMs are created, and the account running ansible playbooks should configure ssh to connect to hosts with the required username and ssh key.
-- Ansible needs to be installed and configured. The `./ansible.cfg` is used to configure the location of the ansible inventatory and roles, and redirects ansible vault operations to use the password script defined in `./.vault_pass`.
-- Inventory: `./hosts` (FQDNs and internal shortnames only; no public IPs).
-- Secrets: do not commit. Use environment variables or Ansible Vault for any credentials/tokens.
+- **SSH access** to target hosts is required using the keypair defined at VM creation time.
+- **Ansible installed and configured**: `./ansible.cfg` (defines inventory location, roles path, and vault password script).
+- **Inventory**: `./hosts` (FQDNs and internal shortnames only; no public IPs).
+- **Secrets**: do not commit. Use environment variables and/or Ansible Vault.
 
 
 ## Configuration
 
 ### SSH Configuration
 
-For ease of use, and as the scripts that automate Apollo builds do not explicitly define the private key to use to connect to the destination, the account used for running ansible (typically the ubuntu account on the deployment server) should have its `.ssh/config` configured for connecting to hosts with the required username and ssh key. This is done in `playbook-setup-nectar-deployment-server.yml`, resulting in the following ssh config::
+For convenience (and because build scripts do not pass an explicit private key), the Ansible control account (typically `ubuntu` on the deployment server) should have an SSH config like below. This is applied by `playbook-setup-nectar-deployment-server.yml`.
+
 ```
 # disable ssh agent-loaded identities by default (fixes multi-key auth failures)
 Host *
@@ -47,7 +52,7 @@ Host *.genome.edu.au
      StrictHostKeyChecking no
 ```
 
-If ansible is being run from another account, the ssh config should be configured as shown above.
+If running Ansible from a different account, replicate this SSH configuration.
 
 
 ### Ansible Configuration
@@ -58,40 +63,95 @@ Ansible is configured with the `ansible.cfg` located in this directory. This cur
 
 
 ## Inventory
-The main ansible inventory, located in `./hosts` defines all the defined hosts that ansible will perform operations on, along with host groups and variables. The `hosts` file is primarily used when running playbooks that apply updates across many hosts, or for providing a list of hosts within a particular group, such as client apollos. The `hosts` file is *not* used when building new hosts, for which specific host-based inventory files are used.
+The main **ansible inventory**, located in `./hosts` defines managed hosts, host groups and variables. This is primarily used when running playbooks that apply updates across many hosts, or for targetting groups, such as client apollos.
+
+Note: **Host builds do not use `./hosts`**, instead they use **host-based inventory files** (see below).
 
 ### Host-based Inventory files
-buildapollo3sandpit.inventory
-builddeploy.inventory
-buildjbrowse.inventory
-buildmonitor.inventory
-buildmtsandpit.inventory
-buildnewportalvms.inventory
-buildnfs.inventory
-buildsandpit.inventory
-buildubuntutest.inventory
-buildwebservervms.inventory
+These inventory files are passed to multiple playbooks and are used to configure variables for host builds and for integrating the specified host with other infrastructure servers.
 
-buildapollo.template - see Apollo build scripts
+An example is using `changeipvms` with playbook-set-etc-hosts-ip.yml to populate `/etc/hosts` on the infrastructure servers:
+```
+ansible-playbook playbook-set-etc-hosts-ip.yml --inventory-file buildapollo3sandpit.inventory --limit changeipvms
+```
 
-## Group Vars
-apollovms
-changeipvms
-jbrowseportalvms
-monitorservervms
-newapollovms
-newmonitorservervms
-newportalvms
-newservervms
-newubuntutestvms
-newwebservervms
-nfsservervms
-otherubuntuvms
+The general format of host inventory files is:
+```
+[GROUPNAME]
+HOST.genome.edu.au
+
+[GROUPNAME:vars]
+LOCALVAR=SOME_VALUE
+
+# populate host and local IP in these servers /etc/hosts
+[changeipvms]
+apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-user-nfs.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
+
+[changeipvms:vars]
+hostname_for_ip=HOST
+private_ip=192.168.0.XY
+
+# configure NFS exports for apollo/jbrowse hosts
+[nfsservervms]
+apollo-user-nfs.genome.edu.au
+
+[nfsservervms:vars]
+# use internal hostname
+nfs_client=HOST
+
+# add to apollo-specific backups - apollo hosts only
+[backupservervms]
+apollo-backup.genome.edu.au
+
+[backupservervms:vars]
+apollo_instance_number=XYZ
+```
+
+The following are the host inventory files and the host associated with them
+- `buildapollo3sandpit.inventory`: apollo3-sandpit inventory
+- `builddeploy.inventory`: apollo-backup/apollo-deploy inventory
+- `buildjbrowse.inventory`: jbrowse-portal (apollo-user-jbrowse) inventory
+- `buildmonitor.inventory`: apollo-monitor inventory
+- `buildmtsandpit.inventory`: mt-sandpit (jbrowse2 sandpit) inventory
+- `buildnewportalvms.inventory`: inventory used by playbook-deploy-portal.yml to deploy django website on apollo-portal
+- `buildnfs.inventory`: apollo-user-nfs inventory
+- `buildsandpit.inventory`: apollo-sandpit (apollo2 build VM) inventory
+- `buildubuntutest.inventory`: test VM inventory
+- `buildwebservervms.inventory`: inventory used for web server builds (apollo-portal)
+
+There is also a `buildapollo.template` which is used to create apollo inventories by the Apollo build scripts.
+
+## Group Vars and Vaults
+For each of the groups defined in the inventory files there is a corresponding group directory. At a minimum these contain a `vars` file defining some variables that the playbooks will need, while for host groups that need access to secrets, there will also be a `vault` file.
+
+As an example, `group_vars/apollovms/vars` contains:
+```
+---
+ansible_user: ubuntu
+admin_group: sudo
+allowed_groups: "ubuntu apollo_admin backup_user"
+target_environment: prod
+```
+
+- apollovms: default vars for  playbooks run on apollo hosts.
+- changeipvms: defines production environment by default for populating `/etc/hosts`.
+- jbrowseportalvms: jbrowse-portal (apollo-user-jbrowse) settings.
+- monitorservervms: settings for adding hosts to Grafana/Prometheus on apollo-monitor.
+- newapollovms: variables needed for building new apollo VMs. Includes a vault.
+- newmonitorservervms: variables for building new apollo-monitor. Includes a vault.
+- newportalvms: variables for configuring django web portal on apollo-portal. Includes a vault.
+- newservervms: default vars for building infrastructure servers.
+- newubuntutestvms: default vars for building a new test VM.
+- newwebservervms: default vars for building a new web server,
+- nfsservervms: default vars for playbooks run on NFS server (apollo-user-nfs).
+- otherubuntuvms: default vars for other ubuntu VMs.
 
 ### Vaults
-`group_vars/newportalvms/vault`
-`group_vars/newapollovms/vault`
-`group_vars/newmonitorservervms/vault`
+- `group_vars/newportalvms/vault`: stores secrets needed to build django apollo-portal website.
+- `group_vars/newapollovms/vault`: stores secrets needed to build an apollo instance.
+- `group_vars/newmonitorservervms/vault`: stores secrets needed to build Grafana monitor.
 
 
 ## Playbooks

@@ -39,7 +39,7 @@ ansible-playbook playbook-system-updates-ubuntu.yml --limit apollovms
 
 echo "system updates completed!"
 echo "check that all systems are up and running from Grafana:"
-echo "    http://grafana.genome.edu.au"
+echo "    https://grafana.genome.edu.au"
 
 popd > /dev/null
 

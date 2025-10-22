@@ -213,11 +213,12 @@ Host-specific playbooks are used to configure a host with its intended functiona
 
 
 ## Apollo Playbooks and build scripts
+
 ### Playbooks
-- build apollo instance
-  playbook-build-nectar-apollo.yml
-- restore apollo database from backup
-  playbook-restore-apollo-db.yml
+- **`playbook-build-nectar-apollo.yml`**
+    Build a new Apollo2 instance end-to-end on a fresh VM.
+- **`playbook-restore-apollo-db.yml`**
+    Restore Apollo2 PostgreSQL database from backup.
 
 ### Scripts
 - main script
@@ -227,12 +228,26 @@ Host-specific playbooks are used to configure a host with its intended functiona
   build-newapollo-runplaybooks.sh
   build-newapollo-groupadd-apollovms.sh
 
-### Inventory Templates
-buildapollo.template
+- **Main script**
+  - **`build-newapollo.sh`**
+    Orchestrates a new Apollo build including generating host inventory, checking if this is a restore of an old apollo (additionally run `playbook-restore-apollo-db.yml`), running apollo build playbook (`playbook-build-nectar-apollo.yml`), and adding apollo to ansible inventory.
+
+- **Supporting scripts**
+  - **`build-newapollo-inventory.sh`**
+    Generate per-build host inventory from template.
+  - **`build-newapollo-runplaybooks.sh`**
+    Run the canonical playbook sequence for building an Apollo2 instance.
+  - **`build-newapollo-groupadd-apollovms.sh`**
+    Add the new host to the `apollovms` group in the ansible inventory.
+
+### Inventory templates
+- **`buildapollo.template`**
+    Template consumed by the Apollo build scripts.
 
 
-### System Maintenance Playbooks
-playbook-system-updates-ubuntu.yml
+## System Maintenance Playbooks
+- **`playbook-system-updates-ubuntu.yml`**
+    Apply OS updates across selected hosts/groups.
 
 
 ## Typical build flow (high-level)

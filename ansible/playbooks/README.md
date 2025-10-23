@@ -70,7 +70,7 @@ Note: **Host builds do not use `./hosts`**, instead they use **host-based invent
 ### Host-based Inventory files
 These inventory files are passed to multiple playbooks and are used to configure variables for host builds and for integrating the specified host with other infrastructure servers.
 
-An example is using `changeipvms` with playbook-set-etc-hosts-ip.yml to populate `/etc/hosts` on the infrastructure servers:
+An example is using `changeipvms` with `playbook-set-etc-hosts-ip.yml` to populate `/etc/hosts` on the infrastructure servers:
 ```
 ansible-playbook playbook-set-etc-hosts-ip.yml --inventory-file buildapollo3sandpit.inventory --limit changeipvms
 ```
@@ -136,18 +136,18 @@ allowed_groups: "ubuntu apollo_admin backup_user"
 target_environment: prod
 ```
 
-- apollovms: default vars for  playbooks run on apollo hosts.
-- changeipvms: defines production environment by default for populating `/etc/hosts`.
-- jbrowseportalvms: jbrowse-portal (apollo-user-jbrowse) settings.
-- monitorservervms: settings for adding hosts to Grafana/Prometheus on apollo-monitor.
-- newapollovms: variables needed for building new apollo VMs. Includes a vault.
-- newmonitorservervms: variables for building new apollo-monitor. Includes a vault.
-- newportalvms: variables for configuring django web portal on apollo-portal. Includes a vault.
-- newservervms: default vars for building infrastructure servers.
-- newubuntutestvms: default vars for building a new test VM.
-- newwebservervms: default vars for building a new web server,
-- nfsservervms: default vars for playbooks run on NFS server (apollo-user-nfs).
-- otherubuntuvms: default vars for other ubuntu VMs.
+- `apollovms`: default vars for  playbooks run on apollo hosts.
+- `changeipvms`: defines production environment by default for populating `/etc/hosts`.
+- `jbrowseportalvms`: jbrowse-portal (apollo-user-jbrowse) settings.
+- `monitorservervms`: settings for adding hosts to Grafana/Prometheus on apollo-monitor.
+- `newapollovms`: variables needed for building new apollo VMs. Includes a vault.
+- `newmonitorservervms`: variables for building new apollo-monitor. Includes a vault.
+- `newportalvms`: variables for configuring django web portal on apollo-portal. Includes a vault.
+- `newservervms`: default vars for building infrastructure servers.
+- `newubuntutestvms`: default vars for building a new test VM.
+- `newwebservervms`: default vars for building a new web server,
+- `nfsservervms`: default vars for playbooks run on NFS server (apollo-user-nfs).
+- `otherubuntuvms`: default vars for other ubuntu VMs.
 
 ### Vaults
 - `group_vars/newportalvms/vault`: stores secrets needed to build django apollo-portal website.
@@ -157,59 +157,101 @@ target_environment: prod
 
 ## Playbooks
 
+For each host build, several playbooks will need to be run. Infrastructure servers, web servers and sandpits utilise a base configuration playbook on top of which a host specific setup playbook is applied. Apollo instances are configured with a single playbook. In addition there a other playbooks that are used to integrate the new host with existing infrastructure (monitoring, backups, NFS exports, etc). Host build playbooks utilise host-specific inventories to define variables for the build host and other infrastructure hosts.
+
 ### General Build Playbooks
 
-- **`playbook-base-nectar-server-ubuntu.yml`**
+- **`playbook-base-nectar-server-ubuntu.yml`**,
     Baseline for all infrastructure, web server and sandpit hosts. This performs OS hardening, adding admin users, and common packages. Run this before any role-specific `playbook-setup-nectar-*` playbook.
+
+    **Inventory:** use the **host-based inventory** that matches the target (see below), e.g. `buildnfs.inventory`, `buildnewportalvms.inventory`, `buildjbrowse.inventory`, etc.
 
 ### Host Specific Build Playbooks
 Host-specific playbooks are used to configure a host with its intended functionality. These are elaborated in the sub sections below.
 
 #### Core infrastructure servers:
 
-- **`playbook-set-etc-hosts-ip.yml`**
-  Update `/etc/hosts` on infrastructure servers with internal IP/name mappings.
+- **`playbook-set-etc-hosts-ip.yml`**,
+    Update `/etc/hosts` on infrastructure servers with internal IP/name mappings.
+
+    **Inventory:** use the **host-based inventory** that matches the target (see below), e.g. `buildapollo3sandpit.inventory`, `buildjbrowse.inventory`, etc. This will be applied to the hosts in the inventory defined in group `changeipvms` using the variables defined in `changeipvms:vars` (`hostname_for_ip` and `private_ip`).
 
 - **Backup and deployment server**
-  - Setup host with **`playbook-setup-nectar-deployment-server.yml`**
+  - Setup host with **`playbook-setup-nectar-deployment-server.yml`**.
     Install and configure the deployment/backup host with github repo, ansible and terraform deployments, and backup tooling.
-  - Update backup targets with **`playbook-apollo-add-to-backup-server.yml`**
+
+    **Inventory:** `builddeploy.inventory`
+
+  - Update backup targets with **`playbook-apollo-add-to-backup-server.yml`**.
     Register Apollo instances on the backup server.
+
+    **Inventory:** use the **host-based inventory** that matches the target (this will be a generated apollo inventory like `buildapollo.999.inventory`). This will be applied to the hosts in the inventory defined in group `backupservervms` using the variables defined in `backupservervms:vars` (`apollo_instance_number`).
+
 - **NFS server**
-  - Setup host with **`playbook-setup-nectar-nfs-server.yml`**
+  - Setup host with **`playbook-setup-nectar-nfs-server.yml`**.
     Install and configure NFSv4 and user quotas.
-  - Refresh exports with **`playbook-apollo-ubuntu-nfs-server.yml`**
+
+    **Inventory:** `buildnfs.inventory`
+
+  - Refresh exports with **`playbook-apollo-ubuntu-nfs-server.yml`**.
     Update client Apollo mounts served from the NFS server.
+
+    **Inventory:** use the **host-based inventory** that matches the target (this will usually be a generated apollo inventory like `buildapollo.999.inventory`). This will be applied to the hosts in the inventory defined in group `nfsservervms` using the variables defined in `nfsservervms:vars` (`apollo_instance_number`, `nfs_apollo_user_gid`)
+
 - **Monitoring server**
-  - Setup host with **`playbook-monitor-install-grafana-server.yml`**
+  - Setup host with **`playbook-monitor-install-grafana-server.yml`**.
     Install and configure Nginx TLS/proxy, Grafana with Prometheus and Alertmanager
-  - Refresh monitoring targets with **`playbook-monitor-refresh-sources-and-dashboards.yml`**
+
+    **Inventory:** `buildmonitor.inventory`
+
+  - Refresh monitoring targets with **`playbook-monitor-refresh-sources-and-dashboards.yml`**.
     Refresh scrape targets in the apollo network (from ansible `hosts` inventory) and update Grafana dashboards to inventory.
+
+    **Inventory:** `hosts` (default inventory). This will be applied to the hosts in the inventory defined in group `monitorservervms` using the hosts defined in groups `infrastructure` and hosts that belong to groups under `apollovms:children`.
 
 #### Web servers:
 - **Apollo Portal**
-  - **`playbook-setup-nectar-portal.yml`** — Deploy Django portal application, PostgreSQL init/migrate, Nginx TLS/proxy.
+  - **`playbook-setup-nectar-portal.yml`**.
+    Deploy Django portal application, PostgreSQL init/migrate, Nginx TLS/proxy.
+
+    **Inventory:** `buildnewportalvms.inventory`
 
 - **JBrowse portal**
-  - No setup playbook required, this functionality is included in `playbook-jbrowse-build-instances-on-portal.yml`, which is run after JBrowse clients have been refreshed.
-  - Refresh Jbrowse clients with **`playbook-jbrowse-discover-exports-and-mount.yml`**
+  - No setup playbook required, as the required functionality is included in `playbook-jbrowse-build-instances-on-portal.yml`, which is run after JBrowse clients have been refreshed.
+  - Refresh Jbrowse clients with **`playbook-jbrowse-discover-exports-and-mount.yml`**.
     Discover NFS exports for JBrowse instances, mount datasets and JBrowse config.
-  - **`playbook-jbrowse-build-instances-on-portal.yml`**
+
+    **Inventory:** `buildjbrowse.inventory`
+
+  - **`playbook-jbrowse-build-instances-on-portal.yml`**.
     Build/refresh JBrowse1 instances hosted on the portal (includes Nginx and Nodejs install and config).
+
+    **Inventory:** `buildjbrowse.inventory`
 
 #### Sandpit hosts for development and testing
 - **apollo sandpit (apollo builds)**
-  - **`playbook-setup-nectar-sandpit.yml`**
+  - **`playbook-setup-nectar-sandpit.yml`**.
     Configure host with all required components for building, testing and hosting apollo2 software stack.
+
+    **Inventory:** `buildsandpit.inventory`
+
 - **apollo3 sandpit**
-  - **`playbook-setup-nectar-apollo3sandpit.yml`**
+  - **`playbook-setup-nectar-apollo3sandpit.yml`**.
     Install Nginx, Docker Compose stack (Apollo3/JBrowse2/MongoDB), Node.js and Yarn 1.x with NVM for apollo3 CLI tools.
+
+    **Inventory:** `buildapollo3sandpit.inventory`
+
 - **mtsandpit (Jbrowse2 sandpit)**
-  - **`playbook-setup-nectar-mtsandpit.yml`**
+  - **`playbook-setup-nectar-mtsandpit.yml`**.
     Install components required for building and hosting a web application - JBrowse2.
 
+    **Inventory:** `buildmtsandpit.inventory`
+
 #### Apollo instances
-- See **Apollo playbooks and build scripts** below.
+
+- See **Apollo playbooks and build scripts** (wrappers) below. These **generate a per-build inventory** from `buildapollo.template`.
+
+  **Inventory:** generated by `build-newapollo-inventory.sh` (not `./hosts`).
 
 
 ## Apollo Playbooks and build scripts
@@ -217,37 +259,32 @@ Host-specific playbooks are used to configure a host with its intended functiona
 ### Playbooks
 - **`playbook-build-nectar-apollo.yml`**
     Build a new Apollo2 instance end-to-end on a fresh VM.
+
+    **Inventory:** generated by `build-newapollo-inventory.sh` in the form `buildapollo.XXX.inventory`, where `XXX` is a number from 001 - 999.
+
 - **`playbook-restore-apollo-db.yml`**
-    Restore Apollo2 PostgreSQL database from backup.
+    Restore Apollo2 PostgreSQL database from backup when rebuilding on a fresh VM.
+
+    **Inventory:** generated by `build-newapollo-inventory.sh` in the form `buildapollo.XXX.inventory`, where `XXX` is a number from 001 - 999.
 
 ### Scripts
-- main script
-  build-newapollo.sh
-- supporting scripts called by main script
-  build-newapollo-inventory.sh
-  build-newapollo-runplaybooks.sh
-  build-newapollo-groupadd-apollovms.sh
 
 - **Main script**
-  - **`build-newapollo.sh`**
-    Orchestrates a new Apollo build including generating host inventory, checking if this is a restore of an old apollo (additionally run `playbook-restore-apollo-db.yml`), running apollo build playbook (`playbook-build-nectar-apollo.yml`), and adding apollo to ansible inventory.
+  - **`build-newapollo.sh`**. Orchestrates a new Apollo build including generating host inventory, checking if this is a restore of an old apollo (additionally run `playbook-restore-apollo-db.yml`), running apollo build playbook (`playbook-build-nectar-apollo.yml`), and adding apollo to main ansible inventory (`hosts`).
 
 - **Supporting scripts**
-  - **`build-newapollo-inventory.sh`**
-    Generate per-build host inventory from template.
-  - **`build-newapollo-runplaybooks.sh`**
-    Run the canonical playbook sequence for building an Apollo2 instance.
-  - **`build-newapollo-groupadd-apollovms.sh`**
-    Add the new host to the `apollovms` group in the ansible inventory.
+  - **`build-newapollo-inventory.sh`**. Generate per-build host inventory from template.
+  - **`build-newapollo-runplaybooks.sh`**. Run the canonical playbook sequence for building an Apollo2 instance.
+  - **`build-newapollo-groupadd-apollovms.sh`**. Add the new host to the `apollovms` group in the ansible inventory.
 
 ### Inventory templates
-- **`buildapollo.template`**
-    Template consumed by the Apollo build scripts.
+- **`buildapollo.template`**. Template consumed by the Apollo build scripts.
 
 
 ## System Maintenance Playbooks
-- **`playbook-system-updates-ubuntu.yml`**
-    Apply OS updates across selected hosts/groups.
+- **`playbook-system-updates-ubuntu.yml`**. Apply OS updates across selected hosts/groups.
+
+    **Inventory:** typically the default `hosts`, but limited to specific host groups with `--limit otherubuntuvms` for infrastructure, and `--limit apollovms` for apollo instances.
 
 
 ## Typical build flow (high-level)

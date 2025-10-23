@@ -24,7 +24,7 @@ This repository supports production and development environments for the Apollo 
 
 - **Ansible:** see `ansible/playbooks/README.md` for playbook usage and operational notes.  
 - **Terraform:** see `terraform-nectar/README.md` for provisioning workflows and environment setup.  
-- **Backups:** see `backup_scripts/README.md` and `backup_scripts/crontab.txt`.
+- **Backups:** see `backup_scripts/README.md`.
 
 ## Security and privacy
 

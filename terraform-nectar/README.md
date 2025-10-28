@@ -10,8 +10,9 @@ Infrastructure-as-code for provisioning Nectar OpenStack resources that host the
 
 1) Terraform installed from OS distro or inside a virtual environment.
 2) OpenStack credentials exported to shell with `source apollo-openrc.sh`, using the RC file obtained from Nectar for the Apollo tenancy. Requires entering your Nectar API password.
-3) Network prerequisite (manual):
-- Internal network `apollo-internal-network` with subnet `192.168.0.0/24` must exist before applying these configs.
+3) Network prerequisite (manual) prior to applying Terraform configurations:
+- Router connected to external network (`ardc-syd`) needs to be created (or be pre-existing).
+- Internal network `apollo-internal-network` connected to router with subnet `192.168.0.0/24` must be created.
 - Public networking and floating IPs should be available in the project.
 
 ## Layout and naming scheme
@@ -45,7 +46,7 @@ Notes on large volumes that are intentionally not managed by Terraform.
 - `test-vm-definition.txt`
 Template for testing VM definitions. Duplicate and rename to `.tf` to use during experiments.
 
-Prefix notes:
+**Prefix notes:**
 - `tfs_`: infrastructure-only, protected by `prevent_destroy`
 - `tfi_`: internal sandpit resources
 - `tft_`: temporary, frequently recreated resources

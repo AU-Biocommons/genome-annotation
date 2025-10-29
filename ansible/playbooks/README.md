@@ -177,6 +177,7 @@ Host-specific playbooks are used to configure a host with its intended functiona
     **Inventory:** use the **host-based inventory** that matches the target (see below), e.g. `buildapollo3sandpit.inventory`, `buildjbrowse.inventory`, etc. This will be applied to the hosts in the inventory defined in group `changeipvms` using the variables defined in `changeipvms:vars` (`hostname_for_ip` and `private_ip`).
 
 - **Backup and deployment server**
+  - Apply base server config to host with **`playbook-base-nectar-server-ubuntu.yml`**,
   - Setup host with **`playbook-setup-nectar-deployment-server.yml`**.
     Install and configure the deployment/backup host with github repo, ansible and terraform deployments, and backup tooling.
 
@@ -188,6 +189,7 @@ Host-specific playbooks are used to configure a host with its intended functiona
     **Inventory:** use the **host-based inventory** that matches the target (this will be a generated apollo inventory like `buildapollo.999.inventory`). This will be applied to the hosts in the inventory defined in group `backupservervms` using the variables defined in `backupservervms:vars` (`apollo_instance_number`).
 
 - **NFS server**
+  - Apply base server config to host with **`playbook-base-nectar-server-ubuntu.yml`**,
   - Setup host with **`playbook-setup-nectar-nfs-server.yml`**.
     Install and configure NFSv4 and user quotas.
 
@@ -199,6 +201,7 @@ Host-specific playbooks are used to configure a host with its intended functiona
     **Inventory:** use the **host-based inventory** that matches the target (this will usually be a generated apollo inventory like `buildapollo.999.inventory`). This will be applied to the hosts in the inventory defined in group `nfsservervms` using the variables defined in `nfsservervms:vars` (`apollo_instance_number`, `nfs_apollo_user_gid`)
 
 - **Monitoring server**
+  - Apply base server config to host with **`playbook-base-nectar-server-ubuntu.yml`**,
   - Setup host with **`playbook-monitor-install-grafana-server.yml`**.
     Install and configure Nginx TLS/proxy, Grafana with Prometheus and Alertmanager
 
@@ -211,12 +214,14 @@ Host-specific playbooks are used to configure a host with its intended functiona
 
 #### Web servers:
 - **Apollo Portal**
+  - Apply base web server config to host with **`playbook-base-nectar-server-ubuntu.yml`**,
   - **`playbook-setup-nectar-portal.yml`**.
     Deploy Django portal application, PostgreSQL init/migrate, Nginx TLS/proxy.
 
     **Inventory:** `buildnewportalvms.inventory`
 
 - **JBrowse portal**
+  - Apply base web server config to host with **`playbook-base-nectar-server-ubuntu.yml`**,
   - No setup playbook required, as the required functionality is included in `playbook-jbrowse-build-instances-on-portal.yml`, which is run after JBrowse clients have been refreshed.
   - Refresh Jbrowse clients with **`playbook-jbrowse-discover-exports-and-mount.yml`**.
     Discover NFS exports for JBrowse instances, mount datasets and JBrowse config.
@@ -231,19 +236,19 @@ Host-specific playbooks are used to configure a host with its intended functiona
 #### Sandpit hosts for development and testing
 - **apollo sandpit (apollo builds)**
   - **`playbook-setup-nectar-sandpit.yml`**.
-    Configure host with all required components for building, testing and hosting apollo2 software stack.
+    Configure host with *all* required components for building, testing and hosting apollo2 software stack.
 
     **Inventory:** `buildsandpit.inventory`
 
 - **apollo3 sandpit**
   - **`playbook-setup-nectar-apollo3sandpit.yml`**.
-    Install Nginx, Docker Compose stack (Apollo3/JBrowse2/MongoDB), Node.js and Yarn 1.x with NVM for apollo3 CLI tools.
+    Configure host with *all* required components for building, testing and hosting apollo3 in Docker. This installs Nginx, Docker Compose stack (Apollo3/JBrowse2/MongoDB), Node.js and Yarn 1.x with NVM for apollo3 CLI tools.
 
     **Inventory:** `buildapollo3sandpit.inventory`
 
 - **mtsandpit (Jbrowse2 sandpit)**
   - **`playbook-setup-nectar-mtsandpit.yml`**.
-    Install components required for building and hosting a web application - JBrowse2.
+    Configure host with *all* components required for building and hosting the JBrowse2 web application.
 
     **Inventory:** `buildmtsandpit.inventory`
 
@@ -290,7 +295,7 @@ Host-specific playbooks are used to configure a host with its intended functiona
 ## Typical build flow (high-level)
 
 1. **Provision VM(s)** with Terraform (see `../../terraform-nectar/README.md`),
-2. **Select the appropriate host-based inventory** (e.g. `buildapollosandpit.inventory`, `buildwebservervms.inventory`, `buildnewportalvms.inventory`).
+2. **Select the appropriate host-based inventory** (e.g. `buildapollosandpit.inventory`, `buildwebservervms.inventory`, `buildnewportalvms.inventory`, etc.).
 3. **Run playbooks to integrate host with Apollo infrastructure servers**. For example:
     - add local IP to hosts: `ansible-playbook playbook-set-etc-hosts-ip.yml --inventory-file buildapollosandpit.inventory --limit changeipvms`
     - add export for apollo to NFS: `ansible-playbook playbook-apollo-ubuntu-nfs-server.yml --inventory-file buildapollosandpit.inventory --limit nfsservervms`

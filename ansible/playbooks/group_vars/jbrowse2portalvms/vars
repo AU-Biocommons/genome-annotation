@@ -1,0 +1,17 @@
+---
+ansible_user: ubuntu
+admin_group: sudo
+target_environment: prod
+allowed_groups: "ubuntu apollo_admin backup_user"
+
+certbot_renew_email: "apollo-ops@biocommons.org.au"
+
+#jbrowse2_builds:
+#  - id: "jbrowse-001"
+#    domains:
+#      - jbrowse2-sandpit.genome.edu.au
+#    #force_rebuild: true # rebuild even if no changes
+#    force_redeploy: false # change to true if need to re-issue SSL certs
+#    plugins:
+#      - name: MultiQuantitativeTrack # for multibigwig format
+

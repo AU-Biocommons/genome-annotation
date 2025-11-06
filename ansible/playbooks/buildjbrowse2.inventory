@@ -1,0 +1,24 @@
+[jbrowseportalvms]
+jbrowse2-portal.genome.edu.au
+
+[jbrowseportalvms:vars]
+nfs_ip=192.168.0.86
+nfs_hostname=apollo-user-nfs
+
+[nfsservervms]
+apollo-user-nfs.genome.edu.au
+
+[nfsservervms:vars]
+# use internal hostname
+nfs_client=apollo-user-jbrowse2
+
+[changeipvms]
+apollo-backup.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-user-nfs.genome.edu.au ansible_user=ubuntu admin_group=sudo
+apollo-monitor.genome.edu.au ansible_user=ubuntu admin_group=sudo
+
+[changeipvms:vars]
+# jbrowse2-portal is the public name but doesn't match apollo-* so need to use apollo-user-jbrowse2 internally
+hostname_for_ip=apollo-user-jbrowse2
+private_ip=192.168.0.96
+

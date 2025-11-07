@@ -1,0 +1,3 @@
+jbrowse_build_user: ubuntu
+node_version: "24"     # this is the Node version to be used to compile JBrowse
+

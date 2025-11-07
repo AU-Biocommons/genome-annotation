@@ -169,7 +169,7 @@ For each host build, several playbooks will need to be run. Infrastructure serve
 ### Host Specific Build Playbooks
 Host-specific playbooks are used to configure a host with its intended functionality. These are elaborated in the sub sections below.
 
-#### Core infrastructure servers:
+#### Core infrastructure servers
 
 - **`playbook-set-etc-hosts-ip.yml`**,
     Update `/etc/hosts` on infrastructure servers with internal IP/name mappings.
@@ -212,7 +212,7 @@ Host-specific playbooks are used to configure a host with its intended functiona
 
     **Inventory:** `hosts` (default inventory). This will be applied to the hosts in the inventory defined in group `monitorservervms` using the hosts defined in groups `infrastructure` and hosts that belong to groups under `apollovms:children`.
 
-#### Web servers:
+#### Web servers
 - **Apollo Portal**
   - Apply base web server config to host with **`playbook-base-nectar-server-ubuntu.yml`**,
   - **`playbook-setup-nectar-portal.yml`**.
@@ -222,14 +222,18 @@ Host-specific playbooks are used to configure a host with its intended functiona
 
 - **JBrowse portal**
   - Apply base web server config to host with **`playbook-base-nectar-server-ubuntu.yml`**,
-  - No setup playbook required, as the required functionality is included in `playbook-jbrowse-build-instances-on-portal.yml`, which is run after JBrowse clients have been refreshed.
+  - **`playbook-setup-nectar-jbrowse.yml`**.
+    Install JBrowse software dependencies (includes Nodejs install and config) and configure admin users. Note this doesn't build the JBrowse clients - see the following two playbooks.
+
+    **Inventory:** `buildjbrowse.inventory`
+
   - Refresh Jbrowse clients with **`playbook-jbrowse-discover-exports-and-mount.yml`**.
-    Discover NFS exports for JBrowse instances, mount datasets and JBrowse config.
+    Discover NFS exports for JBrowse instances, mount datasets and JBrowse config for clients.
 
     **Inventory:** `buildjbrowse.inventory`
 
   - **`playbook-jbrowse-build-instances-on-portal.yml`**.
-    Build/refresh JBrowse1 instances hosted on the portal (includes Nginx and Nodejs install and config).
+    Build/refresh JBrowse1 instances hosted on the portal.
 
     **Inventory:** `buildjbrowse.inventory`
 

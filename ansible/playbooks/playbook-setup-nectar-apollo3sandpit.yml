@@ -58,5 +58,10 @@
         name: jbrowse-install-nvm-nodejs
       vars:
         node_version: 18
+    - import_role:
+        name: jbrowse-install-yarn1 # requires NVM and Node.js installed first
+      vars:
+        node_version: 18
+
 
 

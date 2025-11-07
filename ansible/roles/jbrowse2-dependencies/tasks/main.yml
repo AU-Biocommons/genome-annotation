@@ -1,0 +1,11 @@
+---
+- name: "Include JBrowse dependencies variables"
+  include_vars:
+    file: "jbrowse2_deps.yml"
+
+- name: "install JBrowse2 dependencies"
+  apt:
+    pkg: "{{ jbrowse2_deps }}"
+    state: present
+    update_cache: yes
+

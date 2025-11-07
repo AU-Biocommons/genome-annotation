@@ -1,0 +1,48 @@
+---
+
+- name: Get installed Node.js version string - fail if not installed
+  shell: |
+    . $HOME/.nvm/nvm.sh && nvm use {{ node_version }} && node -v
+  args:
+    executable: /bin/bash
+  become: false
+  become_user: "{{ jbrowse_build_user }}"
+  register: node_version_full
+  changed_when: false
+  failed_when: >
+    node_version_full.rc != 0 or
+    (node_version_full.stdout | trim) == ""
+
+- name: Install a stable version of Yarn 2.x with NVM and Corepack
+  shell: |
+    . $HOME/.nvm/nvm.sh && nvm use {{ node_version }} && corepack enable yarn && corepack prepare yarn@stable --activate
+  args:
+    executable: /bin/bash
+    chdir: "$HOME"
+    creates: "$HOME/.node/corepack/yarn"
+  become: false
+  become_user: "{{ jbrowse_build_user }}"
+
+- name: Get installed Yarn version
+  shell: |
+    . $HOME/.nvm/nvm.sh && nvm use {{ node_version }} && yarn -v
+  args:
+    executable: /bin/bash
+  become: false
+  become_user: "{{ jbrowse_build_user }}"
+  register: yarn_version
+  changed_when: false
+
+- name: Print installed Yarn version
+  debug:
+    var: yarn_version.stdout
+
+- name: Ensure Corepack Yarn binary path is in .bashrc for {{ jbrowse_build_user }}
+  lineinfile:
+    path: "/home/{{ jbrowse_build_user }}/.bashrc"
+    line: 'export PATH="$HOME/.node/corepack:$PATH"'
+    state: present
+    insertafter: EOF
+  become: false
+  become_user: "{{ jbrowse_build_user }}"
+

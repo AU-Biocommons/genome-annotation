@@ -1,9 +1,13 @@
 ---
-- hosts: all
+- name: Nectar JBrowse2 Setup
+  hosts: all
   remote_user: ubuntu
   become: yes
   become_method: sudo
   connection: "ssh"
+
+  vars:
+    node_version: 24
 
   tasks:
     - import_role:
@@ -16,10 +20,8 @@
         name: jbrowse2-dependencies
     - import_role:
         name: jbrowse-install-nvm-nodejs
-      vars:
-        node_version: 24
-    import_role:
+    - import_role:
         name: jbrowse-install-yarn2 # requires NVM and Node.js installed first
-      vars:
-        node_version: 24
+    - import_role:
+        name: jbrowse2-install-jbrowse-cli # requires NVM and Node.js installed first
 

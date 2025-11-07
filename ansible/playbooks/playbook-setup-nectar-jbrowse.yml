@@ -16,4 +16,6 @@
         name: jbrowse-dependencies
     - import_role:
         name: jbrowse-install-nvm-nodejs
+    - import_role:
+        name: jbrowse-install-yarn1 # requires NVM and Node.js installed first
 

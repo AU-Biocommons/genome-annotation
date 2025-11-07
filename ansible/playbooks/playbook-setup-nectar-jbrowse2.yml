@@ -1,0 +1,25 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  connection: "ssh"
+
+  tasks:
+    - import_role:
+        name: common-certbot-snapd
+    - import_role:
+        name: common-nginx
+    - import_role:
+        name: jbrowse-admin-users-groups
+    - import_role:
+        name: jbrowse2-dependencies
+    - import_role:
+        name: jbrowse-install-nvm-nodejs
+      vars:
+        node_version: 24
+    import_role:
+        name: jbrowse-install-yarn2 # requires NVM and Node.js installed first
+      vars:
+        node_version: 24
+

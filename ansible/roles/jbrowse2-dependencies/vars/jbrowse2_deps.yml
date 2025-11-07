@@ -1,0 +1,5 @@
+---
+jbrowse2_deps:
+    - samtools
+    - tabix
+

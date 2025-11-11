@@ -52,6 +52,82 @@ Template for testing VM definitions. Duplicate and rename to `.tf` to use during
 - `tft_`: temporary, frequently recreated resources
 - `tfc_`: client resources
 
+## Restart procedure
+
+This sequence minimizes false alerts, avoids stale NFS mounts, and keeps users informed via the offline portal.
+
+### Preparation
+
+- Prepare the **offline portal**:
+  - Update the outage page on `apollo-portal-offline` with start/end time and contact info.
+  - Verify TLS on `apollo-portal-offline.genome.edu.au` (renew if needed).
+
+---
+
+### Shutdown order
+
+1) **Monitoring**
+   - Stop `apollo-monitor` first to avoid alert storms.
+
+2) **Public portal cutover**
+   - On `apollo-portal-offline`, publish the outage page.
+   - Switch DNS: point `apollo-portal.genome.edu.au` **CNAME** to `apollo-portal-offline.genome.edu.au`.
+   - Verify the offline portal is serving over HTTPS.
+   - Shut down the main `apollo-portal` VM.
+
+3) **Application tier**
+   - Shut down all **Apollo** and **JBrowse** hosts (and any **test/sandpit** VMs).
+
+4) **NFS**
+   - After all clients are down, shut down `apollo-user-nfs`. This _(Prevents stale NFS handles.)_
+
+5) **Deployment/backup**
+   - Shut down `apollo-backup` last.
+
+> Notes
+> - If any host refuses to stop cleanly, use the cloud console to issue a shutdown.
+
+---
+
+### Startup order
+
+1) **Deployment/backup**
+   - Start `apollo-backup`. Verify SSH and local services (e.g., crond, backup volume mounted).
+
+2) **NFS**
+   - Start `apollo-user-nfs`. Confirm exports are active:
+     ```bash
+     showmount -e localhost
+     exportfs -v
+     ```
+
+3) **Application tier**
+   - Start all **Apollo** and **JBrowse** hosts (and test VMs).
+   - On a representative Apollo host, confirm mounts and services:
+     ```bash
+     mount | grep nfs
+     systemctl status nginx tomcat9
+     ```
+
+4) **Public portal**
+   - Start `apollo-portal`.
+   - Switch DNS: point `apollo-portal.genome.edu.au` **CNAME** back to the main portal
+     `apollo-portal-main.genome.edu.au`.
+   - After DNS propagation, verify website is available and TLS (renew if needed).
+
+5) **Monitoring**
+   - Start `apollo-monitor`. Confirm Prometheus targets are up and Grafana is reachable.
+
+---
+
+### Post-restart checks
+
+- **DNS**: `dig +short CNAME apollo-portal.genome.edu.au` shows the main portal target; HTTPS ok.
+- **NFS**: clients have mounts; `dmesg` shows no NFS stale file handle errors.
+- **Apollo**: key instances respond (200/302), Tomcat healthy, DB connections OK.
+- **Backups**: `apollo-backup` has the backup volume mounted; next cron window will run normally.
+- **Monitoring**: Prometheus targets green; Grafana dashboards load; no persistent critical alerts.
+
 ## Typical workflow for apollo VM creation
 
 1. Change into directory containing these definitions and terraform state files.

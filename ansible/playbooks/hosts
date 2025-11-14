@@ -37,6 +37,7 @@ apollo-025.genome.edu.au ansible_host=apollo-025 allowed_groups="ubuntu apollo_a
 apollo-026.genome.edu.au ansible_host=apollo-026 allowed_groups="ubuntu apollo_admin backup_user pan-pathogens_user"
 apollo-029.genome.edu.au ansible_host=apollo-029 allowed_groups="ubuntu apollo_admin backup_user frg_user"
 apollo-030.genome.edu.au ansible_host=apollo-030 allowed_groups="ubuntu apollo_admin backup_user ccdm-cereal-diseases_user"
+apollo-031.genome.edu.au ansible_host=apollo-031 allowed_groups="ubuntu apollo_admin backup_user griffithecology_user"
 apollo-033.genome.edu.au ansible_host=apollo-033 allowed_groups="ubuntu apollo_admin backup_user tradis-vault_user"
 apollo-034.genome.edu.au ansible_host=apollo-034 allowed_groups="ubuntu apollo_admin backup_user ilrg-uq_user"
 apollo-035.genome.edu.au ansible_host=apollo-035 allowed_groups="ubuntu apollo_admin backup_user nbenth_user"
@@ -59,7 +60,7 @@ wheat-dawn.genome.edu.au apollo_number=apollo-012 jbrowse_number=jbrowse-012
 [oldubuntuvms]
 django-sandpit.genome.edu.au
 
-# no longer required client apollos - not migrated
+# no longer required client apollos - not migrated - apollo numbers available for re-use
 [deletedapollovms]
 apollo-006.genome.edu.au ansible_host=apollo-006 allowed_groups="ubuntu apollo_admin backup_user tsi-data"
 apollo-007.genome.edu.au ansible_host=apollo-007 allowed_groups="ubuntu apollo_admin backup_user moths_user"
@@ -67,7 +68,6 @@ apollo-009.genome.edu.au ansible_host=apollo-009 allowed_groups="ubuntu apollo_a
 apollo-015.genome.edu.au ansible_host=apollo-015 allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
 apollo-027.genome.edu.au ansible_host=apollo-027 allowed_groups="ubuntu apollo_admin backup_user beetle-research_user"
 apollo-028.genome.edu.au ansible_host=apollo-028 allowed_groups="ubuntu apollo_admin backup_user gene30004-training_user"
-apollo-031.genome.edu.au ansible_host=apollo-031 allowed_groups="ubuntu apollo_admin backup_user gap_user"
 apollo-036.genome.edu.au ansible_host=apollo-036 allowed_groups="ubuntu apollo_admin backup_user phage-therapy_user"
 
 # not yet migrated - to be requested

@@ -8,6 +8,7 @@
 
   vars:
     node_version: 24
+    nvm_version: 0.40.3
 
   tasks:
     - import_role:

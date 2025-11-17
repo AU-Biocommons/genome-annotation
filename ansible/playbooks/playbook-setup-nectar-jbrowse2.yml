@@ -7,8 +7,8 @@
   connection: "ssh"
 
   vars:
-    node_version: 24
-    nvm_version: 0.40.3
+    node_version: "24"
+    nvm_version: "v0.40.3"
 
   tasks:
     - import_role:

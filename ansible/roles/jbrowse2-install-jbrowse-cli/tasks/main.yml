@@ -5,8 +5,11 @@
     . $HOME/.nvm/nvm.sh && nvm use {{ node_version }} && node -v
   args:
     executable: /bin/bash
-  become: false
+    chdir: "/home/{{ jbrowse_build_user }}"
+  become: true
   become_user: "{{ jbrowse_build_user }}"
+  environment:
+    HOME: "/home/{{ jbrowse_build_user }}"
   register: node_version_full
   changed_when: false
   failed_when: >
@@ -18,8 +21,10 @@
     . $HOME/.nvm/nvm.sh && nvm use {{ node_version }} && npm install -g @jbrowse/cli
   args:
     executable: /bin/bash
-    chdir: "$HOME"
-    creates: "$HOME/.nvm/versions/node/{{ node_version_full.stdout }}/bin/jbrowse"
-  become: false
+    chdir: "/home/{{ jbrowse_build_user }}"
+    creates: "/home/{{ jbrowse_build_user }}/.nvm/versions/node/{{ node_version_full.stdout }}/bin/jbrowse"
+  become: true
   become_user: "{{ jbrowse_build_user }}"
+  environment:
+    HOME: "/home/{{ jbrowse_build_user }}"
 

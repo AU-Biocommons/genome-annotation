@@ -5,8 +5,11 @@
     . $HOME/.nvm/nvm.sh && nvm use {{ node_version }} && node -v
   args:
     executable: /bin/bash
-  become: false
+    chdir: "/home/{{ jbrowse_build_user }}"
+  become: true
   become_user: "{{ jbrowse_build_user }}"
+  environment:
+    HOME: "/home/{{ jbrowse_build_user }}"
   register: node_version_full
   changed_when: false
   failed_when: >
@@ -18,18 +21,23 @@
     . $HOME/.nvm/nvm.sh && nvm use {{ node_version }} && corepack enable yarn && corepack prepare yarn@stable --activate
   args:
     executable: /bin/bash
-    chdir: "$HOME"
-    creates: "$HOME/.node/corepack/yarn"
-  become: false
+    chdir: "/home/{{ jbrowse_build_user }}"
+    creates: "/home/{{ jbrowse_build_user }}/.node/corepack/yarn"
+  become: true
   become_user: "{{ jbrowse_build_user }}"
+  environment:
+    HOME: "/home/{{ jbrowse_build_user }}"
 
 - name: Get installed Yarn version
   shell: |
     . $HOME/.nvm/nvm.sh && nvm use {{ node_version }} && yarn -v
   args:
     executable: /bin/bash
-  become: false
+    chdir: "/home/{{ jbrowse_build_user }}"
+  become: true
   become_user: "{{ jbrowse_build_user }}"
+  environment:
+    HOME: "/home/{{ jbrowse_build_user }}"
   register: yarn_version
   changed_when: false
 
@@ -43,6 +51,8 @@
     line: 'export PATH="$HOME/.node/corepack:$PATH"'
     state: present
     insertafter: EOF
-  become: false
+  become: true
   become_user: "{{ jbrowse_build_user }}"
+  environment:
+    HOME: "/home/{{ jbrowse_build_user }}"
 

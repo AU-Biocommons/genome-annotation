@@ -1,0 +1,18 @@
+---
+
+- name: Add JBrowse2 location block before custom landing page comment
+  blockinfile:
+    path: "/etc/nginx/sites-available/{{ item }}.conf"
+    marker: "# {mark} ANSIBLE MANAGED JBrowse2 block"
+    insertbefore: '^\s*# uncomment for a static root page'
+    indentation: 8 # match existing indentation inside server block
+    block: |
+      location /jbrowse2 {
+          root /var/www/{{ apollo_internal_domain_name }}/jbrowse2;
+          index index.html index.htm;
+      }
+  loop:
+    - "{{ apollo_internal_domain_name }}"
+    - "{{ apollo_custom_domain_name }}"
+  notify: reload nginx
+

@@ -1,0 +1,80 @@
+---
+# Install JBrowse2 Web into the specified domain's web directory
+
+- name: Ensure JBrowse2 install directory exists
+  file:
+    path: "/var/www/{{ jbrowse_domain }}/jbrowse2"
+    state: directory
+    owner: {{ jbrowse_build_user }}
+    group: www-data
+    mode: "2775"
+
+- name: Fetch latest JBrowse2 release from GitHub
+  uri:
+    url: "https://api.github.com/repos/GMOD/jbrowse-components/releases/latest"
+    method: GET
+    return_content: true
+  register: jbrowse_api
+  when: jbrowse_version == ""
+
+- name: Set jbrowse_effective_version
+  set_fact:
+    jbrowse_install_version: >-
+      {{ jbrowse_version
+         if jbrowse_version != ""
+         else (jbrowse_api.json.tag_name | regex_replace('^v', '')) }}
+
+- name: Download JBrowse2 Web release {{ jbrowse_install_version }}
+  get_url:
+    url: "https://github.com/GMOD/jbrowse-components/releases/download/v{{ jbrowse_install_version }}/jbrowse-web-v{{ jbrowse_install_version }}.zip"
+    dest: "/tmp/jbrowse-web-{{ jbrowse_install_version }}.zip"
+    mode: "0644"
+  register: jbrowse_zip
+
+- name: Extract JBrowse2 Web into target directory
+  unarchive:
+    src: "/tmp/jbrowse-web-{{ jbrowse_install_version }}.zip"
+    dest: "/var/www/{{ jbrowse_domain }}/jbrowse2"
+    remote_src: true
+    extra_opts: [ "-o" ]     # unzip -o (overwrite only when needed)
+  when: jbrowse_zip is changed
+  notify: reload nginx
+
+# Fix ownership of jbrowse2
+- name: Fix ownership on jbrowse2 directory tree
+  file:
+    path: "/var/www/{{ jbrowse_domain }}/jbrowse2"
+    owner: "{{ jbrowse_build_user }}"
+    group: "www-data"
+    recurse: yes
+
+- name: Ensure directories under jbrowse2 have correct permissions
+  find:
+    paths: "/var/www/{{ jbrowse_domain }}/jbrowse2"
+    file_type: directory
+  register: jbrowse_dirs
+
+- name: Fix directory permissions
+  file:
+    path: "{{ item.path }}"
+    mode: "2775"
+  loop: "{{ jbrowse_dirs.files }}"
+
+- name: Ensure files under jbrowse2 have correct permissions
+  find:
+    paths: "/var/www/{{ jbrowse_domain }}/jbrowse2"
+    file_type: file
+  register: jbrowse_files
+
+- name: Fix file permissions
+  file:
+    path: "{{ item.path }}"
+    mode: "u+rw,g+rw"
+  loop: "{{ jbrowse_files.files }}"
+
+- name: Remove JBrowse2 ZIP file
+  file:
+    path: "/tmp/jbrowse-web-{{ jbrowse_install_version }}.zip"
+    state: absent
+
+

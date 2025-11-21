@@ -41,6 +41,7 @@ apollo-031.genome.edu.au ansible_host=apollo-031 allowed_groups="ubuntu apollo_a
 apollo-033.genome.edu.au ansible_host=apollo-033 allowed_groups="ubuntu apollo_admin backup_user tradis-vault_user"
 apollo-034.genome.edu.au ansible_host=apollo-034 allowed_groups="ubuntu apollo_admin backup_user ilrg-uq_user"
 apollo-035.genome.edu.au ansible_host=apollo-035 allowed_groups="ubuntu apollo_admin backup_user nbenth_user"
+apollo-036.genome.edu.au ansible_host=apollo-036 allowed_groups="ubuntu apollo_admin backup_user baxtergroup_user"
 
 [apollovms:children]
 internalapollos
@@ -68,7 +69,6 @@ apollo-009.genome.edu.au ansible_host=apollo-009 allowed_groups="ubuntu apollo_a
 apollo-015.genome.edu.au ansible_host=apollo-015 allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
 apollo-027.genome.edu.au ansible_host=apollo-027 allowed_groups="ubuntu apollo_admin backup_user beetle-research_user"
 apollo-028.genome.edu.au ansible_host=apollo-028 allowed_groups="ubuntu apollo_admin backup_user gene30004-training_user"
-apollo-036.genome.edu.au ansible_host=apollo-036 allowed_groups="ubuntu apollo_admin backup_user phage-therapy_user"
 
 # not yet migrated - to be requested
 [oldapollovms]

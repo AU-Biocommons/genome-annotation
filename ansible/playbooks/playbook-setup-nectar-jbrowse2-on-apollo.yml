@@ -10,6 +10,7 @@
     ansible_become_flags: "-H" # forces sudo to simulate a login shell and reset HOME correctly
     node_version: "24"
     nvm_version: "v0.40.3"
+    #jbrowse_version: "3.7.0" # override to use specific version instead of latest
     jbrowse_build_user: "{{ (apollo_subdomain_name ~ '_user') if apollo_subdomain_name is defined else 'ubuntu' }}" # use <subdomain>_user if defined, otherwise default to ubuntu
     apollo_internal_domain_name: >-
       {{ 'apollo-%03d.genome.edu.au' | format(apollo_instance_number|int)
@@ -19,6 +20,7 @@
       {{ apollo_subdomain_name ~ '.genome.edu.au'
          if apollo_subdomain_name is defined
          else '' }}
+    jbrowse_domain: "{{ apollo_internal_domain_name }}"
 
   tasks:
     - import_role:
@@ -31,6 +33,8 @@
         name: jbrowse-install-yarn2 # requires NVM and Node.js installed first
     - import_role:
         name: jbrowse2-install-jbrowse-cli # requires NVM and Node.js installed first
+    - import_role:
+        name: jbrowse2-install-web
     - import_role:
         name: apollo-nginx-conf-add-jbrowse2
 

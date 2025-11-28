@@ -7,8 +7,8 @@
     insertbefore: '^\s*# uncomment for a static root page'
     block: |
       location /jbrowse2 {
-          root /var/www/{{ apollo_internal_domain_name }}/jbrowse2;
-          index index.html index.htm;
+          alias /var/www/{{ apollo_internal_domain_name }}/jbrowse2/;
+          try_files $uri $uri/ /jbrowse2/index.html;
       }
   loop:
     - "{{ apollo_internal_domain_name }}"

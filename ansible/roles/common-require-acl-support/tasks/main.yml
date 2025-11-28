@@ -1,0 +1,23 @@
+---
+
+# Ansible requirement:
+# --------------------
+# When a task uses `become_user` to switch from root to a non-root user,
+# Ansible must create a temporary working directory owned by that user.
+# To do this safely, Ansible uses POSIX ACL tools (`setfacl`, `getfacl`)
+# to adjust permissions on the temp directory.
+#
+# If the `acl` package is missing, Ansible falls back to invalid chmod
+# ACL syntax (e.g. "A+user:..."), causing tasks to fail *before* they run.
+#
+# Therefore, ACL tools must be installed before any role uses
+# `become: true` + `become_user: some_user`.
+#
+# Note: You can avoid this only if SSH pipelining is enabled and the task
+# does not require a temporary script file (most multi-line shell tasks do).
+
+- name: Ensure ACL tools are installed (Ansible requires setfacl when using become_user)
+  apt:
+    name: acl
+    state: present
+

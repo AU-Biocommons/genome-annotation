@@ -5,7 +5,7 @@
   file:
     path: "/var/www/{{ jbrowse_domain }}/jbrowse2"
     state: directory
-    owner: {{ jbrowse_build_user }}
+    owner: "{{ jbrowse_build_user }}"
     group: www-data
     mode: "2775"
 

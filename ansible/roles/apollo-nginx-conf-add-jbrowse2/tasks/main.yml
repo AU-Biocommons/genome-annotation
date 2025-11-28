@@ -6,8 +6,15 @@
     marker: "# {mark} ANSIBLE MANAGED JBrowse2 block"
     insertbefore: '^\s*# uncomment for a static root page'
     block: |
-      location /jbrowse2 {
+      location /jbrowse2/ {
           alias /var/www/{{ apollo_internal_domain_name }}/jbrowse2/;
+
+          # For JSON files: return 404 if not present to enable default JBrowse2 "sample config" behavior
+          location ~ ^/jbrowse2/.*\.json$ {
+              try_files $uri =404;
+          }
+
+          # Single-Page Application fallback for everything else
           try_files $uri $uri/ /jbrowse2/index.html;
       }
   loop:

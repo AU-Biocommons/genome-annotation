@@ -6,6 +6,11 @@
     marker: "# {mark} ANSIBLE MANAGED JBrowse2 block"
     insertbefore: '^\s*# uncomment for a static root page'
     block: |
+      # Ensure trailing slash so that relative paths resolve correctly
+      location = /jbrowse2 {
+          return 301 /jbrowse2/;
+      }
+
       location /jbrowse2/ {
           alias /var/www/{{ apollo_internal_domain_name }}/jbrowse2/;
 

@@ -28,6 +28,8 @@
     - import_role:
         name: jbrowse2-dependencies
     - import_role:
+        name: common-require-acl-support # Ansible needs setfacl when using become_user for non-root users
+    - import_role:
         name: jbrowse-install-nvm-nodejs
     - import_role:
         name: jbrowse-install-yarn2 # requires NVM and Node.js installed first

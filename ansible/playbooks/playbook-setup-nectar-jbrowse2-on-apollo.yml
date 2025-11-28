@@ -2,12 +2,12 @@
 - name: Nectar JBrowse2 Setup on existing Apollo2
   hosts: all
   remote_user: ubuntu
-  become: yes
+  become: true
+  become_flags: "-H -S" # -H forces sudo to simulate a login shell and reset HOME correctly, -S tells sudo to use the default security policy, don’t attempt ACL operations
   become_method: sudo
   connection: "ssh"
 
   vars:
-    ansible_become_flags: "-H -S" # -H forces sudo to simulate a login shell and reset HOME correctly, -S tells sudo to use the default security policy, don’t attempt ACL operations
     node_version: "24"
     nvm_version: "v0.40.3"
     #jbrowse_version: "3.7.0" # override to use specific version instead of latest

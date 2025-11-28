@@ -5,7 +5,6 @@
     path: "/etc/nginx/sites-available/{{ item }}.conf"
     marker: "# {mark} ANSIBLE MANAGED JBrowse2 block"
     insertbefore: '^\s*# uncomment for a static root page'
-    indentation: 8 # match existing indentation inside server block
     block: |
       location /jbrowse2 {
           root /var/www/{{ apollo_internal_domain_name }}/jbrowse2;

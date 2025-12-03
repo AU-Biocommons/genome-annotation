@@ -57,25 +57,29 @@ coral.genome.edu.au apollo_number=apollo-010 jbrowse_number=jbrowse-010
 wheat-dawn.genome.edu.au apollo_number=apollo-012 jbrowse_number=jbrowse-012
 
 
-### Pawsey VMs not yet, or not to be migrated
+### Pawsey VMs not yet, or not to be migrated and cleaned up
 
+# old internal dev VMs available for reuse
 [oldubuntuvms]
 django-sandpit.genome.edu.au
+
+# old internal apollos available for reuse
+[oldinternalapollovms]
+apollo-005.genome.edu.au ansible_host=apollo-005 allowed_groups="ubuntu apollo_admin backup_user training_user"
+apollo-023.genome.edu.au ansible_host=apollo-023 allowed_groups="ubuntu apollo_admin backup_user workshop_user"
 
 # no longer required client apollos - not migrated - apollo numbers available for re-use
 [deletedapollovms]
 apollo-006.genome.edu.au ansible_host=apollo-006 allowed_groups="ubuntu apollo_admin backup_user tsi-data"
 apollo-007.genome.edu.au ansible_host=apollo-007 allowed_groups="ubuntu apollo_admin backup_user moths_user"
 apollo-009.genome.edu.au ansible_host=apollo-009 allowed_groups="ubuntu apollo_admin backup_user slimsuite_user"
+apollo-013.genome.edu.au ansible_host=apollo-013 allowed_groups="ubuntu apollo_admin backup_user evogenmq_user"
 apollo-015.genome.edu.au ansible_host=apollo-015 allowed_groups="ubuntu apollo_admin backup_user ozsorghum_user"
 apollo-027.genome.edu.au ansible_host=apollo-027 allowed_groups="ubuntu apollo_admin backup_user beetle-research_user"
 apollo-028.genome.edu.au ansible_host=apollo-028 allowed_groups="ubuntu apollo_admin backup_user gene30004-training_user"
 
 # not yet migrated - to be requested
-[oldapollovms]
-apollo-005.genome.edu.au ansible_host=apollo-005 allowed_groups="ubuntu apollo_admin backup_user training_user"
-apollo-013.genome.edu.au ansible_host=apollo-013 allowed_groups="ubuntu apollo_admin backup_user evogenmq_user"
+[oldclientapollovms]
 apollo-014.genome.edu.au ansible_host=apollo-014 allowed_groups="ubuntu apollo_admin backup_user frankenberg_user"
 apollo-020.genome.edu.au ansible_host=apollo-020 allowed_groups="ubuntu apollo_admin backup_user prorocentrum_user"
-apollo-023.genome.edu.au ansible_host=apollo-023 allowed_groups="ubuntu apollo_admin backup_user workshop_user"
 

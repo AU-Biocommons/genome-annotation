@@ -17,6 +17,7 @@ apollo_deps:
     - zlib1g-dev
     - libexpat1-dev
     - ant
+    - ack # also includes libfile-next-perl required by generate-names.pl
     - atop
     - tree
     - plocate

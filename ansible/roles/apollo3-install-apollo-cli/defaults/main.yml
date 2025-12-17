@@ -1,0 +1,3 @@
+apollo3_build_user: ubuntu
+node_version: "24"     # this is the Node version used with JBrowse2 and Apollo3
+

@@ -1,0 +1,19 @@
+---
+
+- name: "Copy nginx conf file for {{ apollo_full_domain_name }} from template"
+  template:
+    src: host-nginx-apollo3-docker-ssl.conf.j2
+    dest: "/etc/nginx/sites-available/{{ apollo_full_domain_name }}.conf"
+    force: yes
+    backup: no
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+- name: Enable NGINX site for domain
+  file:
+    src: "/etc/nginx/sites-available/{{ apollo_full_domain_name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ apollo_full_domain_name }}.conf"
+    state: link
+    force: yes
+

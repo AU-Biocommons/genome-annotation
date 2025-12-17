@@ -1,0 +1,18 @@
+---
+ansible_user: ubuntu
+admin_group: sudo
+allowed_groups: "ubuntu apollo_admin backup_user"
+target_environment: prod
+
+apollo3_build_user: ubuntu
+apollo3_build_dir: "/home/{{ apollo3_build_user }}/apollo"
+
+JBROWSE_VERSION: 3.6.5
+APOLLO_VERSION: 0.3.8
+    
+JWT_SECRET: "{{ VAULT_JWT_SECRET }}"
+SESSION_SECRET: "{{ VAULT_SESSION_SECRET }}"
+ROOT_USER_PASSWORD: "{{ VAULT_ROOT_USER_PASSWORD }}"
+GOOGLE_CLIENT_ID: "{{ VAULT_GOOGLE_CLIENT_ID }}"
+GOOGLE_CLIENT_SECRET: "{{ VAULT_GOOGLE_CLIENT_SECRET }}"
+

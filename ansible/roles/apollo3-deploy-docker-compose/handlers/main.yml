@@ -1,0 +1,9 @@
+---
+
+- name: Restart Apollo3
+  command: docker compose up -d
+  args:
+    chdir: "{{ apollo3_build_dir }}"
+  become: true
+  become_user: "{{ apollo3_build_user }}"
+

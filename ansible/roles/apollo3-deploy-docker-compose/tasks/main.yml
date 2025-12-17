@@ -1,0 +1,39 @@
+---
+
+- name: Ensure Apollo3 build directory exists
+  file:
+    path: "{{ apollo3_build_dir }}"
+    state: directory
+    owner: "{{ apollo3_build_user }}"
+    group: "{{ apollo3_build_user }}"
+    mode: "0755"
+  become: true
+  become_user: "{{ apollo3_build_user }}"
+
+- name: Copy Apollo3 files ready to build Dockerised Apollo3
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ apollo3_build_dir }}/{{ item.dest }}"
+    owner: "{{ apollo3_build_user }}"
+    group: "{{ apollo3_build_user }}"
+    mode: "{{ item.mode }}"
+  become: true
+  become_user: "{{ apollo3_build_user }}"
+  loop:
+    - src: compose.yml.j2
+      dest: compose.yml
+      mode: "0644"
+
+    - src: apollo.env.j2
+      dest: apollo.env
+      mode: "0600"
+
+    - src: Dockerfile.nginx.http.j2
+      dest: Dockerfile.nginx.http
+      mode: "0644"
+
+    - src: apollo-client.nginx.conf.j2
+      dest: apollo-client.nginx.conf
+      mode: "0644"
+  notify: Restart Apollo3
+

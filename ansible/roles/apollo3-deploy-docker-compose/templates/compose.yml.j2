@@ -1,0 +1,101 @@
+name: apollo3-docker-server
+
+services:
+  apollo-collaboration-server:
+    image: ghcr.io/gmod/apollo-collaboration-server
+    depends_on:
+      mongo-node-1:
+        condition: service_healthy
+    env_file: apollo.env
+    ports:
+      - 3999:3999
+    user: "1000:33"        # run as ubuntu:www-data (internally node:www-data)
+    # wrap the default entrypoint/cmd with a cooperative umask (only needed for UID!=GID above)
+    command: ["/bin/sh","-lc","umask 0002; exec yarn start:prod"]
+    volumes:
+      - /home/data/apollo_data/uploads:/data/uploads # map /data/uploads to external location
+        #- uploaded-files-volume:/data/uploads # map /data/uploads to docker volume
+    restart: unless-stopped
+
+  apollo-client:
+    build:
+      args:
+        JBROWSE_VERSION: {{ JBROWSE_VERSION }}
+        APOLLO_VERSION: {{ APOLLO_VERSION }}
+      context: .
+      #dockerfile: Dockerfile.apache.http # this is the default provided Dockerfile
+      dockerfile: Dockerfile.nginx.http # if named other than Dockerfile
+    depends_on:
+      - apollo-collaboration-server
+    ports:
+      - '127.0.0.1:8080:80' # http-based apollo-client listening on port 8080 reverse proxy from host's Nginx
+    volumes:
+      #- /home/data/apollo_data/jbrowse_data/:/usr/local/apache2/htdocs/data/          # apache version
+      - /home/data/apollo_data/jbrowse_data/:/usr/share/nginx/html/data/               # nginx version
+      #- /home/data/sourcedata/demo_data/data/:/usr/local/apache2/htdocs/demoData/     # optional (apache)
+      - /home/data/sourcedata/demo_data/data/:/usr/share/nginx/html/demoData/          # optional (nginx)
+    restart: unless-stopped
+
+  mongo-node-1:
+    image: mongo:7
+    container_name: mongo-node-1
+    hostname: mongo-node-1
+    command:
+      - '--replSet'
+      - rs0
+      - '--bind_ip_all'
+      - '--port'
+      - '27017'
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_interval: 5s
+      start_period: 2m
+      test: |
+        mongosh --port 27017 --quiet --eval "
+        try {
+          rs.status()
+          console.log('replica set ok')
+        } catch {
+          rs.initiate({
+            _id: 'rs0',
+            members: [
+              { _id: 0, host: 'mongo-node-1:27017', priority: 1 },
+              { _id: 1, host: 'mongo-node-2:27018', priority: 0.5 },
+            ],
+          })
+          console.log('replica set initiated')
+        }
+        "
+      timeout: 10s
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-node-1_data:/data/db
+      - mongo-node-1_config:/data/configdb
+    restart: unless-stopped
+
+  mongo-node-2:
+    image: mongo:7
+    container_name: mongo-node-2
+    hostname: mongo-node-2
+    command:
+      - '--replSet'
+      - rs0
+      - '--bind_ip_all'
+      - '--port'
+      - '27018'
+    ports:
+      - '27018:27018'
+    volumes:
+      - mongo-node-2_data:/data/db
+      - mongo-node-2_config:/data/configdb
+    restart: unless-stopped
+
+volumes:
+  mongo-node-1_config: null
+  mongo-node-1_data: null
+  mongo-node-2_config: null
+  mongo-node-2_data: null
+  #uploaded-files-volume: null # uncomment if mapping /data/uploads to a docker volume
+

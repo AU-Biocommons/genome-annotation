@@ -57,5 +57,5 @@ if [ $DAY_OF_WEEK == $ARCHIVE_DAY ]; then
 fi
 
 # delete archive files older than 13 days
-find $ARCHIVE_DIR -type f -name $REMOTE_HOST"*.tgz" -mtime +13 -exec rm {} \;
+find $ARCHIVE_DIR -type f -name $NAME"*.tgz" -mtime +13 -exec rm {} \;
 

@@ -50,7 +50,7 @@ pg_dump apollo-production -h $REMOTE_HOST -U backup_user > $BACKUP_DIR"/"$REMOTE
 echo "completed"
 
 # delete archive files older than 13 days
-find $ARCHIVE_DIR -type f -name $REMOTE_HOST"*.tgz" -mtime +13 -exec rm {} \;
+find $ARCHIVE_DIR -type f -name $NAME"*.tgz" -mtime +13 -exec rm {} \;
 # delete sql dumps in older than 30 days - this means there could be 30 in each archive. 
 find $BACKUP_DIR -type f -name $REMOTE_HOST"*.sql" -mtime +30 -exec rm {} \;
 
